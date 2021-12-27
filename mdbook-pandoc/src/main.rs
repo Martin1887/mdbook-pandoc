@@ -21,8 +21,10 @@
 //! of the file and that header is used as its header, the name of the file is
 //! ignored.
 
+mod config;
 mod parse;
 
+use config::TitleLabels;
 use mdbook::renderer::RenderContext;
 use parse::parse_book;
 use std::io;
@@ -32,9 +34,11 @@ fn main() {
     let mut stdin = io::stdin();
     let ctx = RenderContext::from_json(&mut stdin).unwrap();
 
-    let preamble_text = "Preamble";
-    let chapters_text = "Chapters";
-    let annexes_text = "Annexes";
+    let title_labels = TitleLabels {
+        preamble: String::from("Preamble"),
+        chapters: String::from("Chapters"),
+        annexes: String::from("Annexes"),
+    };
 
-    parse_book(&ctx, preamble_text, chapters_text, annexes_text);
+    parse_book(&ctx, &title_labels);
 }
