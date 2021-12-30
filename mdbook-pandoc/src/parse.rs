@@ -78,7 +78,13 @@ fn new_header_level(line: &str, hierarchy_level: usize, header_type: HeaderType)
 /// Return the transformed `line` and `next_line` analyzing header patterns.
 /// The `new_line` is the same than original unless it defines a setext header
 /// and the `line` header is returned changing its level and appending
-/// '.unnumbered' and '.unlisted' classes to remove numbers and from TOC.
+/// '.unnumbered' and '.unlisted' classes to remove numbers and entries from TOC.
+///
+/// # Parameters
+/// - `line`: The line of the header.
+/// - `next_line`: The next line to check Setext headers.
+/// - `hierarchy_level`: The hierarchy level to be added to the current level header.
+/// - `first_transform`: `bool` to not remove from the table of contents the first header.
 fn transform_header<'a>(
     line: &str,
     next_line: &'a str,
@@ -105,7 +111,7 @@ fn transform_header<'a>(
                 // The first transformation does not remove the numeration because
                 // it is the section title
                 format!(
-                    "{} {} {}",
+                    "{} {}{}",
                     "#".repeat(new_header_level),
                     clean_line.trim(),
                     if first_transform {
