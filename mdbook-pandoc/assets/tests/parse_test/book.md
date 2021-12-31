@@ -8,11 +8,9 @@ This is a example chapter.
 
 
 ### Subsection
-
 In this subsection we write text.
 
 #### Subsection of the subsection {.unnumbered .unlisted}
-
 
 This is a example subsection.
 
