@@ -176,23 +176,19 @@ fn test_new_header_level() {
 fn test_transform_header() {
     assert_eq!(
         transform_header("# Title", "Other things", 1, false),
-        (
-            format!("## Title{}", UNNUMBERED_UNLISTED),
-            "Other things",
-            true
-        )
+        (format!("## Title{}", UNNUMBERED_UNLISTED), false, true)
     );
     assert_eq!(
         transform_header("# Title", "Other things", 1, true),
-        (String::from("## Title"), "Other things", true)
+        (String::from("## Title"), false, true)
     );
     assert_eq!(
         transform_header("Title", "======", 1, true),
-        (String::from("## Title"), "", true)
+        (String::from("## Title"), true, true)
     );
     assert_eq!(
         transform_header("Things", "Other things", 1, true),
-        (String::from("Things"), "Other things", false)
+        (String::from("Things"), false, false)
     );
 }
 

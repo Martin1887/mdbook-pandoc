@@ -85,25 +85,31 @@ fn new_header_level(line: &str, hierarchy_level: usize, header_type: HeaderType)
 /// '.unnumbered' and '.unlisted' classes to remove numbers and entries from TOC.
 ///
 /// # Parameters
+///
 /// - `line`: The line of the header.
 /// - `next_line`: The next line to check Setext headers.
 /// - `hierarchy_level`: The hierarchy level to be added to the current level header.
 /// - `first_transform`: `bool` to not remove from the table of contents the first header.
+///
+/// # Returns
+///
+/// The modified line, if the next line must be skipped and if the line has been
+/// transformed.
 fn transform_header<'a>(
     line: &str,
     next_line: &'a str,
     hierarchy_level: usize,
     first_transform: bool,
-) -> (String, &'a str, bool) {
+) -> (String, bool, bool) {
     match header_type(&line, &next_line) {
         None => {
             // Unmodified lines
-            (String::from(line), next_line, false)
+            (String::from(line), false, false)
         }
         Some(header_type) => {
-            let transformed_next_line = match header_type {
-                HeaderType::Atx => next_line,
-                _ => "",
+            let skip_next_line = match header_type {
+                HeaderType::Atx => false,
+                _ => true,
             };
             let new_header_level = new_header_level(&line, hierarchy_level, header_type);
             let clean_line = String::from(line.replace("#", "").trim());
@@ -126,7 +132,7 @@ fn transform_header<'a>(
                 )
             };
 
-            (transformed_line, transformed_next_line, true)
+            (transformed_line, skip_next_line, true)
         }
     }
 }
@@ -141,11 +147,22 @@ fn transform_md(md: &str, level: usize) -> String {
     let mut lines = md.lines().chain("\n".lines());
     let mut prev_line: &str = lines.next().unwrap_or("");
     let mut first_transform = true;
+    let mut skip_line = false;
     for line in lines {
-        let (transformed_line, new_line, is_transformed) =
+        if skip_line {
+            skip_line = false;
+            prev_line = line;
+            continue;
+        }
+        let (transformed_line, skip_next_line, is_transformed) =
             transform_header(&prev_line, &line, level, first_transform);
         formatted.push_str(&format!("{}\n", transformed_line));
-        prev_line = new_line;
+        if skip_next_line {
+            // `prev_line` is filled in the next step in which no transformation is done
+            skip_line = true;
+        } else {
+            prev_line = line;
+        }
         if is_transformed {
             first_transform = false;
         }
