@@ -28,6 +28,10 @@ use std::{
 
 use crate::config::TitleLabels;
 
+/// Test private functions to find easily find the bugs.
+#[cfg(test)]
+mod tests;
+
 /// Label appended to headers to add the classes `.unnumbered` and `.unlisted`
 const UNNUMBERED_UNLISTED: &'static str = " {.unnumbered .unlisted}";
 
