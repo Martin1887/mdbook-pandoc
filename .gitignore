@@ -11,3 +11,6 @@
 
 # VSCode/ium folder
 .vscode
+
+# compiled tests
+mdbook-pandoc/assets/tests/**/book

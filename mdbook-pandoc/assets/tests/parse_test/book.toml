@@ -1,0 +1,10 @@
+[book]
+authors = ["Martin1887"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Test book"
+
+[output.html]
+
+[output.pandoc]

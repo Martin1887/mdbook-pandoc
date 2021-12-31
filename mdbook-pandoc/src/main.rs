@@ -23,6 +23,8 @@
 
 mod config;
 mod parse;
+#[cfg(test)]
+mod tests;
 
 use config::TitleLabels;
 use mdbook::renderer::RenderContext;
