@@ -276,12 +276,9 @@ fn parse_book_contents(
 }
 
 /// Write the parsed contents into the Pandoc MD file and return that path
-/// (`./book/pandoc/md/book.md file`)
-fn write_pandoc_md_file(root_path: &Path, parsed_content: &str) -> PathBuf {
-    let mut pandoc_path = root_path.to_owned().clone();
-    pandoc_path.push("book");
-    pandoc_path.push("pandoc");
-    let mut md_path = pandoc_path.clone();
+/// (`./book/pandoc/md/book.md`)
+fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
+    let mut md_path = dest_path.to_owned().clone();
     md_path.push("md");
     // Create the output directory
     fs::create_dir_all(&md_path).expect("Error creating the output directory");
@@ -293,7 +290,7 @@ fn write_pandoc_md_file(root_path: &Path, parsed_content: &str) -> PathBuf {
         .write_all(parsed_content.as_bytes())
         .expect("Error writing the parsed MD File");
 
-    pandoc_path
+    md_path
 }
 
 /// Parse a full mdBook getting (and adding) parts and concatenating prefixes,
@@ -312,5 +309,5 @@ pub(crate) fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> Pat
         title_labels,
     );
 
-    write_pandoc_md_file(&ctx.root, &parsed_contents)
+    write_pandoc_md_file(&ctx.destination, &parsed_contents)
 }
