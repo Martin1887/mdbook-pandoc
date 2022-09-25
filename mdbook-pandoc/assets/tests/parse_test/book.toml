@@ -6,5 +6,6 @@ src = "src"
 title = "Test book"
 
 [output.html]
+mathjax-support = true
 
 [output.pandoc]

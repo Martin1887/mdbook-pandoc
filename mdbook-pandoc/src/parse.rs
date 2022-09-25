@@ -19,6 +19,7 @@ use mdbook::{
     renderer::RenderContext,
     BookItem,
 };
+use regex::Regex;
 use std::{
     fs,
     fs::File,
@@ -138,6 +139,24 @@ fn transform_header<'a>(
     }
 }
 
+/// Replace the math delimiters of mdBook by the pandoc ones
+fn replace_math_delimiters(text: &str) -> String {
+    lazy_static! {
+        // \\( and \\) with any number of spaces
+        static ref INLINE_MATH_RE: Regex = Regex::new(
+            r"(\\{2}\(\s*|\s*\\{2}\))"
+        ).unwrap();
+        // \\[ and \\] with any number of spaces
+        static ref DISPLAY_MATH_RE: Regex = Regex::new(
+            r"(\\{2}\[\s*|\s*\\{2}\])").unwrap();
+    }
+    let mut formatted = INLINE_MATH_RE.replace_all(text, "$").to_string();
+    // `Replacer` uses 4 `$` to put only 2 `$`
+    formatted = DISPLAY_MATH_RE.replace_all(&formatted, "$$$$").to_string();
+
+    formatted
+}
+
 /// Transform the full Markdown file iterating over pairs of lines (to handle
 /// setext headers) and transforming them setting classes and level.
 fn transform_md(md: &str, level: usize) -> String {
@@ -169,7 +188,7 @@ fn transform_md(md: &str, level: usize) -> String {
         }
     }
 
-    formatted
+    replace_math_delimiters(&formatted)
 }
 
 /// Concatenate recursively a list of `BookItem` (with their children).

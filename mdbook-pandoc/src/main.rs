@@ -26,6 +26,9 @@ mod parse;
 #[cfg(test)]
 mod tests;
 
+#[macro_use]
+extern crate lazy_static;
+
 use config::TitleLabels;
 use mdbook::renderer::RenderContext;
 use parse::parse_book;
@@ -36,6 +39,7 @@ fn main() {
     let mut stdin = io::stdin();
     let ctx = RenderContext::from_json(&mut stdin).unwrap();
 
+    // TODO: Read from configs
     let title_labels = TitleLabels {
         preamble: String::from("Preamble"),
         chapters: String::from("Chapters"),

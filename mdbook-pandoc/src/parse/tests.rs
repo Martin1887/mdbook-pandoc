@@ -240,6 +240,37 @@ fn test_transform_header() {
 }
 
 #[test]
+fn test_replace_math_delimiters() {
+    assert_eq!("Without math", replace_math_delimiters("Without math"));
+    // inline math
+    assert_eq!(
+        r"Inline math $x + 1$",
+        replace_math_delimiters(r"Inline math \\( x + 1 \\)")
+    );
+    assert_eq!(
+        r"Inline math $x + 1$",
+        replace_math_delimiters(r"Inline math \\(   x + 1   \\)")
+    );
+    assert_eq!(
+        r"Inline math $x + 1$",
+        replace_math_delimiters(r"Inline math \\(x + 1\\)")
+    );
+    // display math
+    assert_eq!(
+        r"Inline math $$x + 1$$",
+        replace_math_delimiters(r"Inline math \\[ x + 1 \\]")
+    );
+    assert_eq!(
+        r"Inline math $$x + 1$$",
+        replace_math_delimiters(r"Inline math \\[   x + 1   \\]")
+    );
+    assert_eq!(
+        r"Inline math $$x + 1$$",
+        replace_math_delimiters(r"Inline math \\[x + 1\\]")
+    );
+}
+
+#[test]
 fn test_chapters_have_parts() {
     let data = get_test_data();
     assert_eq!(chapters_have_parts(&data["without_parts"].0), false);
