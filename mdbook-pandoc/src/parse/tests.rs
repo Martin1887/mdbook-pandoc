@@ -191,6 +191,26 @@ fn test_header_type() {
         "Fail detecting Atx header"
     );
     assert!(
+        matches!(header_type("#Title", ""), None),
+        "Fail detecting no header starting with '#'"
+    );
+    assert!(
+        matches!(header_type(" ## Subtitle", ""), Some(HeaderType::Atx)),
+        "Fail detecting header starting with space"
+    );
+    assert!(
+        matches!(header_type("   #### Section", ""), Some(HeaderType::Atx)),
+        "Fail detecting header starting with three spaces"
+    );
+    assert!(
+        matches!(header_type("    # False title", ""), None),
+        "Fail detecting no header starting with four spaces"
+    );
+    assert!(
+        matches!(header_type(" ####### Seventh level", ""), None),
+        "Fail detecting no title with 7 '#"
+    );
+    assert!(
         matches!(header_type("Title", "===="), Some(HeaderType::Setext1)),
         "Fail detecting Setext header of level 1"
     );

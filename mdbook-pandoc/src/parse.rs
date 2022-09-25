@@ -46,7 +46,14 @@ enum HeaderType {
 
 /// Return the header type of the line or `None` if it is not a header.
 fn header_type(line: &str, next_line: &str) -> Option<HeaderType> {
-    if line.starts_with("#") {
+    lazy_static! {
+        // 0-3 spaces before the first '#', at most 6 '#' and whitespace or end
+        // of line after the last '#'
+        static ref ATX_RE: Regex = Regex::new(
+            r"^[ ]{0,3}#{1,6}(\s|$).*$?"
+        ).unwrap();
+    }
+    if ATX_RE.is_match(&line) {
         Some(HeaderType::Atx)
     } else {
         match next_line.chars().next() {
