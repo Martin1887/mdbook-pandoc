@@ -17,6 +17,7 @@
 use mdbook::{
     book::{parse_summary, Summary, SummaryItem},
     renderer::RenderContext,
+    BookItem,
 };
 use std::{
     fs,
@@ -28,7 +29,7 @@ use std::{
 
 use crate::config::TitleLabels;
 
-/// Test private functions to find easily find the bugs.
+/// Test private functions to easily find the bugs.
 #[cfg(test)]
 mod tests;
 
@@ -151,7 +152,7 @@ fn transform_md(md: &str, level: usize) -> String {
     for line in lines {
         if skip_line {
             skip_line = false;
-            prev_line = line;
+            prev_line = &line;
             continue;
         }
         let (transformed_line, skip_next_line, is_transformed) =
@@ -161,7 +162,7 @@ fn transform_md(md: &str, level: usize) -> String {
             // `prev_line` is filled in the next step in which no transformation is done
             skip_line = true;
         } else {
-            prev_line = line;
+            prev_line = &line;
         }
         if is_transformed {
             first_transform = false;
@@ -171,40 +172,19 @@ fn transform_md(md: &str, level: usize) -> String {
     formatted
 }
 
-/// Read the Markdown file in memory and transform it.
-fn read_and_transform_md(src_path: &PathBuf, file_path: &PathBuf, level: usize) -> String {
-    let mut orig_contents = String::new();
-    let mut path = src_path.clone();
-    path.push(file_path);
-    File::open(path.clone())
-        .expect(&format!("Failed to open file {:?}", path))
-        .read_to_string(&mut orig_contents)
-        .expect(&format!("Error reading file {:?}", path));
-
-    transform_md(&orig_contents, level)
-}
-
-/// Concatenate recursively a list of `SummaryItem` (with their children).
-fn recursively_concatenate_book(items: &[SummaryItem], src_path: &PathBuf, level: usize) -> String {
+/// Concatenate recursively a list of `BookItem` (with their children).
+fn recursively_concatenate_book(items: &[BookItem], level: usize) -> String {
     let mut parsed_contents = String::new();
     for item in items {
         parsed_contents.push_str("\n");
         match item {
-            SummaryItem::Link(ref link) => {
-                parsed_contents.push_str(&read_and_transform_md(
-                    src_path,
-                    &(link.location.clone().unwrap()),
-                    level,
-                ));
-                parsed_contents.push_str(&recursively_concatenate_book(
-                    &link.nested_items,
-                    src_path,
-                    level + 1,
-                ));
+            BookItem::Chapter(ref c) => {
+                parsed_contents.push_str(&transform_md(&c.content, level));
+                parsed_contents.push_str(&recursively_concatenate_book(&c.sub_items, level + 1));
             }
             // Separators are ignored, they make no sense in documents
-            SummaryItem::Separator => (),
-            SummaryItem::PartTitle(title) => {
+            BookItem::Separator => (),
+            BookItem::PartTitle(title) => {
                 parsed_contents.push_str(&format!("\n# {}", title));
             }
         }
@@ -228,51 +208,104 @@ fn get_summary(root_path: &Path) -> Summary {
 }
 
 /// Return `true` if the chapters contains at least one part and `false` otherwise.
-fn chapters_have_parts(summary: &Summary) -> bool {
-    summary
-        .numbered_chapters
+fn chapters_have_parts(book_items: &[BookItem]) -> bool {
+    book_items
         .iter()
         .filter(|ch| -> bool {
             match ch {
-                SummaryItem::Link(_) => false,
-                SummaryItem::Separator => false,
-                SummaryItem::PartTitle(_) => true,
+                BookItem::Chapter(_) => false,
+                BookItem::Separator => false,
+                BookItem::PartTitle(_) => true,
             }
         })
         .count()
         > 0
 }
 
+/// Map a collection of chapters and parts into their names or nothing for separators
+fn map_chapters_parts_names(chapters: &[SummaryItem]) -> Vec<String> {
+    chapters
+        .iter()
+        .filter(|i| match i {
+            SummaryItem::Separator => false,
+            _ => true,
+        })
+        .map(|i| match i {
+            SummaryItem::Link(l) => l.name.clone(),
+            SummaryItem::PartTitle(t) => t.to_string(),
+            SummaryItem::Separator => "".to_string(),
+        })
+        .collect()
+}
+
+/// Map a book item into its name or nothing if it is a separator
+fn book_item_name(item: &BookItem) -> String {
+    match item {
+        BookItem::Chapter(c) => c.name.clone(),
+        BookItem::Separator => String::from(""),
+        BookItem::PartTitle(t) => t.to_owned(),
+    }
+}
+
+/// Get the chapters corresponding to prefix, numbered or suffix using the
+/// summary information
+fn filter_per_chapter_type(
+    book_items: &[BookItem],
+    summary_type_chapters: &[SummaryItem],
+) -> Vec<BookItem> {
+    book_items
+        .iter()
+        .filter(|item| {
+            map_chapters_parts_names(summary_type_chapters).contains(&book_item_name(item))
+        })
+        .map(|i| i.to_owned())
+        .collect()
+}
+
+/// Analyze the summary returning the first hierarchy level, the prefix chapters,
+/// the content chapters and the suffix chapters.
 /// The initial hierarchy level is 1 if there are prefixes, suffixes or the
 /// chapters have parts and 0 otherwise.
-fn initial_hierarchy_level(summary: &Summary, chapters_have_parts: bool) -> usize {
-    if !summary.prefix_chapters.is_empty()
+fn analyze_summary(
+    summary: &Summary,
+    book_items: &[BookItem],
+    chapters_have_parts: bool,
+) -> (usize, Vec<BookItem>, Vec<BookItem>, Vec<BookItem>) {
+    let initial_hierarchy = if !summary.prefix_chapters.is_empty()
         || !summary.suffix_chapters.is_empty()
         || chapters_have_parts
     {
         1
     } else {
         0
-    }
+    };
+
+    let prefix_chapters = filter_per_chapter_type(book_items, &summary.prefix_chapters);
+    let content_chapters = filter_per_chapter_type(book_items, &summary.numbered_chapters);
+    let suffix_chapters = filter_per_chapter_type(book_items, &summary.suffix_chapters);
+
+    (
+        initial_hierarchy,
+        prefix_chapters,
+        content_chapters,
+        suffix_chapters,
+    )
 }
 
 /// Parse the book contents and return the result of parse all chapters.
 fn parse_book_contents(
-    root_path: &Path,
-    summary: &Summary,
+    prefix_chapters: &[BookItem],
+    content_chapters: &[BookItem],
+    suffix_chapters: &[BookItem],
     chapters_have_parts: bool,
     initial_level: usize,
     title_labels: &TitleLabels,
 ) -> String {
-    let mut src_path = root_path.to_owned().clone();
-    src_path.push("src");
-
     let mut parsed_content = String::new();
-    if !summary.prefix_chapters.is_empty() {
+    if !prefix_chapters.is_empty() {
         parsed_content.push_str(&format!("\n# {}", title_labels.preamble));
         parsed_content.push_str(&recursively_concatenate_book(
-            &summary.prefix_chapters,
-            &src_path,
+            prefix_chapters,
             initial_level,
         ));
     }
@@ -280,15 +313,13 @@ fn parse_book_contents(
         parsed_content.push_str(&format!("\n# {}", title_labels.chapters));
     }
     parsed_content.push_str(&recursively_concatenate_book(
-        &summary.numbered_chapters,
-        &src_path,
+        content_chapters,
         initial_level,
     ));
-    if !summary.suffix_chapters.is_empty() {
+    if !suffix_chapters.is_empty() {
         parsed_content.push_str(&format!("\n# {}", title_labels.annexes));
         parsed_content.push_str(&recursively_concatenate_book(
-            &summary.suffix_chapters,
-            &src_path,
+            suffix_chapters,
             initial_level,
         ));
     }
@@ -318,13 +349,18 @@ fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
 /// numbered chapters and suffixes, writing the contents in the file
 /// `book/pandoc/md/book.md` and returning that path.
 pub(crate) fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> PathBuf {
+    // `BookItems` inner reference is problematic and `.sections` return all sections
+    // instead of only the first-depth ones, so this is convenient
+    let book_items: Vec<BookItem> = ctx.book.iter().map(|i| i.clone()).collect();
+    let chapters_have_parts = chapters_have_parts(&book_items);
     let summary = get_summary(&ctx.root);
-    let chapters_have_parts = chapters_have_parts(&summary);
-    let initial_level = initial_hierarchy_level(&summary, chapters_have_parts);
+    let (initial_level, prefix_chapters, content_chapters, suffix_chapters) =
+        analyze_summary(&summary, &book_items, chapters_have_parts);
 
     let parsed_contents = parse_book_contents(
-        &ctx.root,
-        &summary,
+        &prefix_chapters,
+        &content_chapters,
+        &suffix_chapters,
         chapters_have_parts,
         initial_level,
         title_labels,

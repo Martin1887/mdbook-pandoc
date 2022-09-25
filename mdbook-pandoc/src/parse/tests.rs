@@ -1,130 +1,177 @@
 use std::collections::HashMap;
 
 use super::*;
-use mdbook::book::{Link, Summary};
+use mdbook::book::{Chapter, Link, Summary};
 
-fn get_test_summaries() -> HashMap<&'static str, Summary> {
+/// Return a HashMap of test vec of `BookItem` representing the first level of
+/// the book and their summary.
+fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
     let mut map = HashMap::new();
+    let dummy_chapter = BookItem::Chapter(Chapter::new(
+        "Link",
+        String::from("Link"),
+        "None",
+        Vec::new(),
+    ));
+    let dummy_prefix = BookItem::Chapter(Chapter::new(
+        "Prefix Link",
+        String::from("Prefix Link"),
+        "None",
+        Vec::new(),
+    ));
+    let dummy_suffix = BookItem::Chapter(Chapter::new(
+        "Suffix Link",
+        String::from("Suffix Link"),
+        "None",
+        Vec::new(),
+    ));
+    let dummy_part = BookItem::PartTitle(String::from("Part 1"));
 
     map.insert(
         "without_parts",
-        Summary {
-            title: Some(String::from("Title")),
-            prefix_chapters: Vec::new(),
-            numbered_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-            suffix_chapters: Vec::new(),
-        },
+        (
+            vec![dummy_chapter.clone()],
+            Summary {
+                title: Some(String::from("Title")),
+                prefix_chapters: Vec::new(),
+                numbered_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+                suffix_chapters: Vec::new(),
+            },
+        ),
     );
 
     map.insert(
         "with_parts",
-        Summary {
-            title: Some(String::from("Title")),
-            prefix_chapters: Vec::new(),
-            numbered_chapters: vec![
-                SummaryItem::Link(Link {
-                    name: String::from("Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                }),
-                SummaryItem::PartTitle(String::from("Part 1")),
-            ],
-            suffix_chapters: Vec::new(),
-        },
+        (
+            vec![dummy_part.clone(), dummy_chapter.clone()],
+            Summary {
+                title: Some(String::from("Title")),
+                prefix_chapters: Vec::new(),
+                numbered_chapters: vec![
+                    SummaryItem::Link(Link {
+                        name: String::from("Link"),
+                        location: None,
+                        number: None,
+                        nested_items: Vec::new(),
+                    }),
+                    SummaryItem::PartTitle(String::from("Part 1")),
+                ],
+                suffix_chapters: Vec::new(),
+            },
+        ),
     );
 
     map.insert(
         "with_prefix",
-        Summary {
-            title: Some(String::from("Title")),
-            prefix_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Prefix Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-            numbered_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-            suffix_chapters: Vec::new(),
-        },
-    );
-
-    map.insert(
-        "with_suffix",
-        Summary {
-            title: Some(String::from("Title")),
-            prefix_chapters: Vec::new(),
-            numbered_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-            suffix_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Suffix Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-        },
-    );
-
-    map.insert(
-        "with_parts_and_suffix",
-        Summary {
-            title: Some(String::from("Title")),
-            prefix_chapters: Vec::new(),
-            numbered_chapters: vec![
-                SummaryItem::Link(Link {
+        (
+            vec![dummy_prefix.clone(), dummy_chapter.clone()],
+            Summary {
+                title: Some(String::from("Title")),
+                prefix_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Prefix Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+                numbered_chapters: vec![SummaryItem::Link(Link {
                     name: String::from("Link"),
                     location: None,
                     number: None,
                     nested_items: Vec::new(),
-                }),
-                SummaryItem::PartTitle(String::from("Part 1")),
+                })],
+                suffix_chapters: Vec::new(),
+            },
+        ),
+    );
+
+    map.insert(
+        "with_suffix",
+        (
+            vec![dummy_chapter.clone(), dummy_suffix.clone()],
+            Summary {
+                title: Some(String::from("Title")),
+                prefix_chapters: Vec::new(),
+                numbered_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+                suffix_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Suffix Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+            },
+        ),
+    );
+
+    map.insert(
+        "with_parts_and_suffix",
+        (
+            vec![
+                dummy_part.clone(),
+                dummy_chapter.clone(),
+                dummy_suffix.clone(),
             ],
-            suffix_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Suffix Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-        },
+            Summary {
+                title: Some(String::from("Title")),
+                prefix_chapters: Vec::new(),
+                numbered_chapters: vec![
+                    SummaryItem::Link(Link {
+                        name: String::from("Link"),
+                        location: None,
+                        number: None,
+                        nested_items: Vec::new(),
+                    }),
+                    SummaryItem::PartTitle(String::from("Part 1")),
+                ],
+                suffix_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Suffix Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+            },
+        ),
     );
 
     map.insert(
         "with_prefix_and_suffix",
-        Summary {
-            title: Some(String::from("Title")),
-            prefix_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Prefix Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-            numbered_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-            suffix_chapters: vec![SummaryItem::Link(Link {
-                name: String::from("Suffix Link"),
-                location: None,
-                number: None,
-                nested_items: Vec::new(),
-            })],
-        },
+        (
+            vec![
+                dummy_prefix.clone(),
+                dummy_chapter.clone(),
+                dummy_suffix.clone(),
+            ],
+            Summary {
+                title: Some(String::from("Title")),
+                prefix_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Prefix Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+                numbered_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+                suffix_chapters: vec![SummaryItem::Link(Link {
+                    name: String::from("Suffix Link"),
+                    location: None,
+                    number: None,
+                    nested_items: Vec::new(),
+                })],
+            },
+        ),
     );
 
     map
@@ -194,37 +241,53 @@ fn test_transform_header() {
 
 #[test]
 fn test_chapters_have_parts() {
-    let summaries = get_test_summaries();
-    assert_eq!(chapters_have_parts(&summaries["without_parts"]), false);
-    assert_eq!(chapters_have_parts(&summaries["with_parts"]), true);
-    assert_eq!(chapters_have_parts(&summaries["with_prefix"]), false);
-    assert_eq!(chapters_have_parts(&summaries["with_suffix"]), false);
+    let data = get_test_data();
+    assert_eq!(chapters_have_parts(&data["without_parts"].0), false);
+    assert_eq!(chapters_have_parts(&data["with_parts"].0), true);
+    assert_eq!(chapters_have_parts(&data["with_prefix"].0), false);
+    assert_eq!(chapters_have_parts(&data["with_suffix"].0), false);
+    assert_eq!(chapters_have_parts(&data["with_parts_and_suffix"].0), true);
     assert_eq!(
-        chapters_have_parts(&summaries["with_parts_and_suffix"]),
-        true
-    );
-    assert_eq!(
-        chapters_have_parts(&summaries["with_prefix_and_suffix"]),
+        chapters_have_parts(&data["with_prefix_and_suffix"].0),
         false
     );
 }
 
 #[test]
 fn test_initial_hierarchy_level() {
-    let summaries = get_test_summaries();
+    let data = get_test_data();
     assert_eq!(
-        initial_hierarchy_level(&summaries["without_parts"], false),
+        analyze_summary(&data["without_parts"].1, &data["without_parts"].0, false).0,
         0
     );
-    assert_eq!(initial_hierarchy_level(&summaries["with_parts"], true), 1);
-    assert_eq!(initial_hierarchy_level(&summaries["with_prefix"], false), 1);
-    assert_eq!(initial_hierarchy_level(&summaries["with_suffix"], false), 1);
     assert_eq!(
-        initial_hierarchy_level(&summaries["with_parts_and_suffix"], true),
+        analyze_summary(&data["with_parts"].1, &data["with_parts"].0, true).0,
         1
     );
     assert_eq!(
-        initial_hierarchy_level(&summaries["with_prefix_and_suffix"], true),
+        analyze_summary(&data["with_prefix"].1, &data["with_prefix"].0, false).0,
+        1
+    );
+    assert_eq!(
+        analyze_summary(&data["with_suffix"].1, &data["with_suffix"].0, false).0,
+        1
+    );
+    assert_eq!(
+        analyze_summary(
+            &data["with_parts_and_suffix"].1,
+            &data["with_parts_and_suffix"].0,
+            true
+        )
+        .0,
+        1
+    );
+    assert_eq!(
+        analyze_summary(
+            &data["with_prefix_and_suffix"].1,
+            &data["with_prefix_and_suffix"].0,
+            true
+        )
+        .0,
         1
     );
 }

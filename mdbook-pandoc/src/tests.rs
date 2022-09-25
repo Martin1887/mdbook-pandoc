@@ -1,6 +1,6 @@
 use std::{fs::File, io::Read, path::PathBuf};
 
-use mdbook::{book::Book, renderer::RenderContext, Config};
+use mdbook::{renderer::RenderContext, Config, MDBook};
 
 use crate::{config::TitleLabels, parse::parse_book};
 
@@ -15,13 +15,17 @@ fn test_parse_book() {
         chapters: String::from("Chapters"),
         annexes: String::from("Annexes"),
     };
+
+    let root_path = PathBuf::from(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/assets/tests/parse_test"
+    ));
+
     let ctx = RenderContext::new(
-        PathBuf::from(concat!(
-            env!("CARGO_MANIFEST_DIR"),
-            "/assets/tests/parse_test"
-        )),
-        // the book itself is not used by the `parse_book` function so never mind
-        Book::new(),
+        root_path.clone(),
+        MDBook::load(root_path)
+            .expect("Error loading the book")
+            .book,
         // config is also not used
         Config::default(),
         PathBuf::from(concat!(
