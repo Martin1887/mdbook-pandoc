@@ -32,13 +32,12 @@ extern crate lazy_static;
 use config::TitleLabels;
 use mdbook::renderer::RenderContext;
 use parse::parse_book;
-use std::io;
 
-/// The main function that parses the book and generates outputs.
-fn main() {
-    let mut stdin = io::stdin();
-    let ctx = RenderContext::from_json(&mut stdin).unwrap();
-
+/// Main function that:
+/// - reads configuration
+/// - parse book
+/// - convert book in the specified formats using pandoc.
+pub fn run(ctx: &RenderContext) {
     // TODO: Read from configs
     let title_labels = TitleLabels {
         preamble: String::from("Preamble"),
