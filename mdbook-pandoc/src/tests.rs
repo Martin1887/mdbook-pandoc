@@ -1,8 +1,8 @@
 use std::{fs::File, io::Read, path::PathBuf};
 
-use mdbook::{renderer::RenderContext, Config, MDBook};
+use mdbook::MDBook;
 
-use crate::{config::TitleLabels, parse::parse_book};
+use crate::PandocRenderer;
 
 #[test]
 fn test_parse_book() {
@@ -10,30 +10,20 @@ fn test_parse_book() {
         env!("CARGO_MANIFEST_DIR"),
         "/assets/tests/parse_test/book.md"
     ));
-    let title_labels = TitleLabels {
-        preamble: String::from("Preamble"),
-        chapters: String::from("Chapters"),
-        annexes: String::from("Annexes"),
-    };
 
     let root_path = PathBuf::from(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/assets/tests/parse_test"
     ));
 
-    let ctx = RenderContext::new(
-        root_path.clone(),
-        MDBook::load(root_path)
-            .expect("Error loading the book")
-            .book,
-        // config is also not used
-        Config::default(),
-        PathBuf::from(concat!(
-            env!("CARGO_MANIFEST_DIR"),
-            "/assets/tests/parse_test/book/pandoc"
-        )),
-    );
-    let result_path = parse_book(&ctx, &title_labels);
+    let mut result_path = root_path.clone();
+    result_path.push("book/pandoc/md/book.md");
+
+    MDBook::load(root_path.clone())
+        .expect("Error loading the book")
+        .execute_build_process(&PandocRenderer)
+        .expect("Error building the book");
+
     let mut result_bytes = Vec::new();
     File::open(result_path)
         .expect("Error opening the parsed file")

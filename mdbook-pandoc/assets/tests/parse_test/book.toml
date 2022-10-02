@@ -5,6 +5,9 @@ multilingual = false
 src = "src"
 title = "Test book"
 
+[preprocessor.plantuml]
+use-data-uris = true
+
 [output.html]
 mathjax-support = true
 
