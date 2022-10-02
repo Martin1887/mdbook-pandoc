@@ -30,20 +30,28 @@ mod tests;
 extern crate lazy_static;
 
 use config::TitleLabels;
-use mdbook::renderer::RenderContext;
+use mdbook::{renderer::RenderContext, Renderer};
 use parse::parse_book;
 
-/// Main function that:
-/// - reads configuration
-/// - parse book
-/// - convert book in the specified formats using pandoc.
-pub fn run(ctx: &RenderContext) {
-    // TODO: Read from configs
-    let title_labels = TitleLabels {
-        preamble: String::from("Preamble"),
-        chapters: String::from("Chapters"),
-        annexes: String::from("Annexes"),
-    };
+pub struct PandocRenderer;
+impl Renderer for PandocRenderer {
+    fn name(&self) -> &str {
+        "pandoc"
+    }
 
-    parse_book(&ctx, &title_labels);
+    /// Main function that:
+    /// - reads configuration
+    /// - parse book
+    /// - convert book in the specified formats using pandoc.
+    fn render(&self, ctx: &RenderContext) -> mdbook::errors::Result<()> {
+        // TODO: Read from configs
+        let title_labels = TitleLabels {
+            preamble: String::from("Preamble"),
+            chapters: String::from("Chapters"),
+            annexes: String::from("Annexes"),
+        };
+
+        parse_book(&ctx, &title_labels);
+        Ok(())
+    }
 }

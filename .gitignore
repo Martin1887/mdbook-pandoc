@@ -14,3 +14,6 @@
 
 # compiled tests
 mdbook-pandoc/assets/tests/**/book
+
+# plantuml cache
+**/.mdbook-plantuml-cache/**
