@@ -17,7 +17,7 @@ fn test_parse_book() {
     ));
 
     let mut result_path = root_path.clone();
-    result_path.push("book/pandoc/md/book.md");
+    result_path.push("book/pandoc/book.md");
 
     MDBook::load(root_path.clone())
         .expect("Error loading the book")

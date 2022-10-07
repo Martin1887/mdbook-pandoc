@@ -21,7 +21,6 @@ use mdbook::{
 };
 use regex::Regex;
 use std::{
-    fs,
     fs::File,
     io::{Read, Write},
     path::Path,
@@ -357,12 +356,8 @@ fn parse_book_contents(
 /// (`./book/pandoc/md/book.md`)
 fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
     let mut md_path = dest_path.to_owned().clone();
-    md_path.push("md");
-    // Create the output directory
-    fs::create_dir_all(&md_path).expect("Error creating the output directory");
-
-    // Write the file
     md_path.push("book.md");
+
     let mut md_out = File::create(&md_path).expect("Error writing the parsed MD file");
     md_out
         .write_all(parsed_content.as_bytes())
