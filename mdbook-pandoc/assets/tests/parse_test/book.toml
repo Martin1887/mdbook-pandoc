@@ -12,3 +12,13 @@ use-data-uris = true
 mathjax-support = true
 
 [output.pandoc]
+
+[output.pandoc.metadata]
+title = "Test ebook"
+creator = [{role = "author", text = "Test author"}, {role = "illustrator", text = "Test"}]
+date = "2022-01-01"
+publisher = "Test publisher"
+lang = "en-US"
+description = "This description is a test"
+group-position = 0
+ibooks = {version = "1.0", iphone-orientation-lock = "portrait-only"}

@@ -22,12 +22,19 @@
 //! ignored.
 
 mod config;
+mod metadata;
 mod parse;
 #[cfg(test)]
 mod tests;
 
 #[macro_use]
 extern crate lazy_static;
+
+use std::{
+    fs::File,
+    io::Write,
+    path::{Path, PathBuf},
+};
 
 use config::TitleLabels;
 use mdbook::{renderer::RenderContext, Renderer};
@@ -51,7 +58,30 @@ impl Renderer for PandocRenderer {
             annexes: String::from("Annexes"),
         };
 
-        parse_book(&ctx, &title_labels);
+        let metadata = match ctx.config.get("output.pandoc.metadata") {
+            Some(config_text) => {
+                format!("---\n{}---\n", serde_yaml::to_string(config_text).unwrap())
+            }
+            None => String::new(),
+        };
+
+        let parsed = format!("{}{}", metadata, parse_book(&ctx, &title_labels));
+
+        let _parsed_path = write_pandoc_md_file(&ctx.destination, &parsed);
         Ok(())
     }
+}
+
+/// Write the parsed contents into the Pandoc MD file and return that path
+/// (`./book/pandoc/md/book.md`)
+fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
+    let mut md_path = dest_path.to_owned().clone();
+    md_path.push("book.md");
+
+    let mut md_out = File::create(&md_path).expect("Error writing the parsed MD file");
+    md_out
+        .write_all(parsed_content.as_bytes())
+        .expect("Error writing the parsed MD File");
+
+    md_path
 }

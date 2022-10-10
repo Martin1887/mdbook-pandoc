@@ -20,12 +20,7 @@ use mdbook::{
     BookItem,
 };
 use regex::Regex;
-use std::{
-    fs::File,
-    io::{Read, Write},
-    path::Path,
-    path::PathBuf,
-};
+use std::{fs::File, io::Read, path::Path};
 
 use crate::config::TitleLabels;
 
@@ -352,24 +347,10 @@ fn parse_book_contents(
     parsed_content
 }
 
-/// Write the parsed contents into the Pandoc MD file and return that path
-/// (`./book/pandoc/md/book.md`)
-fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
-    let mut md_path = dest_path.to_owned().clone();
-    md_path.push("book.md");
-
-    let mut md_out = File::create(&md_path).expect("Error writing the parsed MD file");
-    md_out
-        .write_all(parsed_content.as_bytes())
-        .expect("Error writing the parsed MD File");
-
-    md_path
-}
-
 /// Parse a full mdBook getting (and adding) parts and concatenating prefixes,
-/// numbered chapters and suffixes, writing the contents in the file
+/// numbered chapters and suffixes, returning the result as String. writing the contents in the file
 /// `book/pandoc/md/book.md` and returning that path.
-pub(crate) fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> PathBuf {
+pub(crate) fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> String {
     // `BookItems` inner reference is problematic and `.sections` return all sections
     // instead of only the first-depth ones, so this is convenient
     let book_items: Vec<BookItem> = ctx.book.iter().map(|i| i.clone()).collect();
@@ -378,14 +359,12 @@ pub(crate) fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> Pat
     let (initial_level, prefix_chapters, content_chapters, suffix_chapters) =
         analyze_summary(&summary, &book_items, chapters_have_parts);
 
-    let parsed_contents = parse_book_contents(
+    parse_book_contents(
         &prefix_chapters,
         &content_chapters,
         &suffix_chapters,
         chapters_have_parts,
         initial_level,
         title_labels,
-    );
-
-    write_pandoc_md_file(&ctx.destination, &parsed_contents)
+    )
 }
