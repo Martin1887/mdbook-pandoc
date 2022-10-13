@@ -1,8 +1,8 @@
 //! Generate YAML metadata block.
 
-mod fields;
-mod keys;
-mod subfields;
+pub(crate) mod fields;
+pub(crate) mod keys;
+pub(crate) mod subfields;
 #[cfg(test)]
 mod tests;
 
@@ -14,44 +14,44 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "kebab-case")]
 pub struct Metadata {
     #[serde(skip_serializing_if = "Option::is_none")]
-    identifier: Option<MetadataIdentifier>,
+    pub(crate) identifier: Option<MetadataIdentifier>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    title: Option<MetadataTitle>,
+    pub(crate) title: Option<MetadataTitle>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    creator: Option<MetadataCreator>,
+    pub(crate) creator: Option<MetadataCreator>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    contributor: Option<MetadataCreator>,
+    pub(crate) contributor: Option<MetadataCreator>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    date: Option<String>,
+    pub(crate) date: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    lang: Option<String>,
+    pub(crate) lang: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    subject: Option<MetadataSubject>,
+    pub(crate) subject: Option<MetadataSubject>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    description: Option<String>,
+    pub(crate) description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "type")]
-    type_value: Option<String>,
+    pub(crate) type_value: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    format: Option<String>,
+    pub(crate) format: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    relation: Option<String>,
+    pub(crate) relation: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    coverage: Option<String>,
+    pub(crate) coverage: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    publisher: Option<String>,
+    pub(crate) publisher: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    rights: Option<String>,
+    pub(crate) rights: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    belongs_to_collection: Option<String>,
+    pub(crate) belongs_to_collection: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    group_position: Option<i64>,
+    pub(crate) group_position: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    cover_image: Option<String>,
+    pub(crate) cover_image: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    css: Option<String>,
+    pub(crate) css: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    page_progression_direction: Option<MetadataProgressionDirection>,
+    pub(crate) page_progression_direction: Option<MetadataProgressionDirection>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    ibooks: Option<MetadataIbooks>,
+    pub(crate) ibooks: Option<MetadataIbooks>,
 }

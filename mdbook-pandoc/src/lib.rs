@@ -31,11 +31,12 @@ mod tests;
 extern crate lazy_static;
 
 use std::{
-    fs::File,
+    fs::{self, File},
     io::Write,
     path::{Path, PathBuf},
 };
 
+use config::metadata::MetadataConfig;
 use config::TitleLabels;
 use mdbook::{renderer::RenderContext, Renderer};
 use parse::parse_book;
@@ -58,10 +59,21 @@ impl Renderer for PandocRenderer {
             annexes: String::from("Annexes"),
         };
 
-        let metadata = match ctx.config.get("output.pandoc.metadata") {
-            Some(config_text) => {
-                format!("---\n{}---\n", serde_yaml::to_string(config_text).unwrap())
-            }
+        let metadata = match ctx
+            .config
+            .get_deserialized_opt::<MetadataConfig, &str>("output.pandoc.metadata")
+            .expect("Error reading the configuration file")
+        {
+            Some(config_text) => format!(
+                "---\n{}---\n",
+                match config_text {
+                    MetadataConfig::Path(path) =>
+                        fs::read_to_string(path).expect("Error reading the YAML path"),
+                    MetadataConfig::Metadata(metadata) => {
+                        serde_yaml::to_string(&metadata).unwrap()
+                    }
+                }
+            ),
             None => String::new(),
         };
 
