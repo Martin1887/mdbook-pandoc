@@ -39,6 +39,8 @@ pub struct Metadata {
     #[serde(skip_serializing_if = "Option::is_none")]
     coverage: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    publisher: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     rights: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     belongs_to_collection: Option<String>,

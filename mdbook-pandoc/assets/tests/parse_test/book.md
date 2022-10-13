@@ -1,18 +1,18 @@
 ---
-date: 2022-01-01
-description: This description is a test
-group-position: 0
-lang: en-US
-publisher: Test publisher
 title: Test ebook
 creator:
 - role: author
   text: Test author
 - role: illustrator
   text: Test
+date: 2022-01-01
+lang: en-US
+description: This description is a test
+publisher: Test publisher
+group-position: 0
 ibooks:
-  iphone-orientation-lock: portrait-only
   version: '1.0'
+  iphone-orientation-lock: portrait-only
 ---
 
 

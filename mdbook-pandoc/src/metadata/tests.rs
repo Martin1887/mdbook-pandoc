@@ -54,13 +54,13 @@ lang: en-US
 description: This description is a test
 type: Free
 coverage: Full
+publisher: Test publisher
 rights: © My and my friends
 group-position: 0
 ibooks:
   version: '1.0'
   specified-fonts: false
   ipad-orientation-lock: portrait-only
-  iphone-orientation-lock: null
   binding: true
   scroll-axis: horizontal
 "#;

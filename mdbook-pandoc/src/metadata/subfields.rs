@@ -36,14 +36,6 @@ pub(crate) enum MetadataOrientationLock {
     LandscapeOnly,
 }
 
-#[derive(Serialize, Deserialize)]
-pub(crate) struct MetadataIbooksBinding(pub(crate) bool);
-impl Default for MetadataIbooksBinding {
-    fn default() -> Self {
-        MetadataIbooksBinding(true)
-    }
-}
-
 #[derive(Serialize, Deserialize, Default)]
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum MetadataIbooksScrollAxis {

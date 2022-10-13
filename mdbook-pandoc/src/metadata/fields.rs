@@ -47,13 +47,15 @@ pub(crate) enum MetadataProgressionDirection {
 #[serde(rename_all = "kebab-case")]
 pub(crate) struct MetadataIbooks {
     version: String,
-    #[serde(default)]
-    specified_fonts: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    specified_fonts: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     ipad_orientation_lock: Option<MetadataOrientationLock>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     iphone_orientation_lock: Option<MetadataOrientationLock>,
-    #[serde(default)]
     // The additional tuple struct is needed because the default value is true
-    pub(crate) binding: MetadataIbooksBinding,
-    #[serde(default)]
-    scroll_axis: MetadataIbooksScrollAxis,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(crate) binding: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    scroll_axis: Option<MetadataIbooksScrollAxis>,
 }
