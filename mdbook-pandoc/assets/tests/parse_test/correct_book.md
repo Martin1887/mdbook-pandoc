@@ -41,12 +41,12 @@ fn my_rust_fun(name: &str) -> String {
 my_rust_fun("world");
 ```
 
-```rust,noplayground,ignore
+```rust
 fn no_playable_fun() {
     println!("Hello");
 }
 ```
-```rust,editable
+```rust
 fn editable_fun() {
     println!("Edit this string if you want");
 }

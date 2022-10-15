@@ -19,7 +19,7 @@ use mdbook::{
     renderer::RenderContext,
     BookItem,
 };
-use regex::Regex;
+use regex::{Regex, RegexBuilder};
 use std::{fs::File, io::Read, path::Path};
 
 use crate::config::TitleLabels;
@@ -152,10 +152,24 @@ fn replace_math_delimiters(text: &str) -> String {
             r"(\\{2}\[\s*|\s*\\{2}\])").unwrap();
     }
     let mut formatted = INLINE_MATH_RE.replace_all(text, "$").to_string();
-    // `Replacer` uses 4 `$` to put only 2 `$`
+    // `Replacer` uses 4 `$` to put only 2 `$` because `$` is used for capture groups
     formatted = DISPLAY_MATH_RE.replace_all(&formatted, "$$$$").to_string();
 
     formatted
+}
+
+/// Replace the code annotations starting with comma, because they are mdBook
+/// exclusive and they don't work on Pandoc breaking the language
+fn replace_custom_mdbook_code_block_annotations(formatted: &str) -> String {
+    lazy_static! {
+        // capture the block specification until the first comma
+        static ref CUSTOM_CODE_BLOCK_ANNOTATIONS_RE: Regex = RegexBuilder::new(
+            r"(^\s*[`]{3}\w*),.*\s*$"
+        ).multi_line(true).dot_matches_new_line(false).build().unwrap();
+    }
+    CUSTOM_CODE_BLOCK_ANNOTATIONS_RE
+        .replace_all(&formatted, "$1")
+        .to_string()
 }
 
 /// Transform the full Markdown file iterating over pairs of lines (to handle
@@ -189,7 +203,7 @@ fn transform_md(md: &str, level: usize) -> String {
         }
     }
 
-    replace_math_delimiters(&formatted)
+    replace_custom_mdbook_code_block_annotations(&replace_math_delimiters(&formatted))
 }
 
 /// Concatenate recursively a list of `BookItem` (with their children).
