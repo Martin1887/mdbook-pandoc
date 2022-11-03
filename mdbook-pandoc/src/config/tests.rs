@@ -24,7 +24,7 @@ fn test_metadata_from_path() {
             let metadata_path = format!(
                 "{}/{}/{}",
                 env!("CARGO_MANIFEST_DIR"),
-                "assets/tests/parse_test",
+                "assets/tests/test_book",
                 path
             );
             let metadata: Metadata = serde_yaml::from_str(

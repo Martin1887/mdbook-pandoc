@@ -11,8 +11,7 @@ pub(crate) static INIT: Once = Once::new();
 /// the book and their summary.
 fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
     INIT.call_once(|| {
-        set_current_dir("assets/tests/parse_test/src")
-            .expect("Error setting the current directory");
+        set_current_dir("assets/tests/test_book/src").expect("Error setting the current directory");
     });
 
     let mut map = HashMap::new();

@@ -8,12 +8,12 @@ use crate::PandocRenderer;
 fn test_parse_book() {
     let correct_parse = include_bytes!(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/assets/tests/parse_test/correct_book.md"
+        "/assets/tests/test_book/correct_book.md"
     ));
 
     let root_path = PathBuf::from(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/assets/tests/parse_test"
+        "/assets/tests/test_book"
     ));
 
     let result_path = root_path.join("book/pandoc/book.md");

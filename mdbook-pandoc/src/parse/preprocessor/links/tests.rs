@@ -12,7 +12,7 @@ use crate::parse::transform_md;
 /// Set the current directory to the `src` directory of the test book.
 fn set_src_current_dir() {
     INIT.call_once(|| {
-        set_current_dir("assets/tests/parse_test/src")
+        set_current_dir("assets/tests/test_book/src")
             .expect("Error setting the current directory");
     });
 }
