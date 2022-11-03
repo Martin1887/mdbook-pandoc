@@ -14,168 +14,38 @@
 //! of the file and that header is used as its header, the name of the file is
 //! ignored.
 
+/// Preprocessing functions for headers, delimiters and paths.
+mod preprocessor;
+#[cfg(test)]
+mod tests;
+
 use mdbook::{
     book::{parse_summary, Summary, SummaryItem},
     renderer::RenderContext,
     BookItem,
 };
-use regex::{Regex, RegexBuilder};
-use std::{fs::File, io::Read, path::Path};
+use std::{
+    collections::HashSet,
+    env::set_current_dir,
+    fs::File,
+    io::Read,
+    path::{Path, PathBuf},
+};
 
 use crate::config::TitleLabels;
-
-/// Test private functions to easily find the bugs.
-#[cfg(test)]
-mod tests;
-
-/// Label appended to headers to add the classes `.unnumbered` and `.unlisted`
-const UNNUMBERED_UNLISTED: &'static str = " {.unnumbered .unlisted}";
-
-/// Type of MD header: Atx (#), Setext1 (====) or Setext2(----).
-enum HeaderType {
-    Atx,
-    Setext1,
-    Setext2,
-}
-
-/// Return the header type of the line or `None` if it is not a header.
-fn header_type(line: &str, next_line: &str) -> Option<HeaderType> {
-    lazy_static! {
-        // 0-3 spaces before the first '#', at most 6 '#' and whitespace or end
-        // of line after the last '#'
-        static ref ATX_RE: Regex = Regex::new(
-            r"^[ ]{0,3}#{1,6}(\s|$).*$?"
-        ).unwrap();
-    }
-    if ATX_RE.is_match(&line) {
-        Some(HeaderType::Atx)
-    } else {
-        match next_line.chars().next() {
-            Some('=') => Some(HeaderType::Setext1),
-            Some('-') => Some(HeaderType::Setext2),
-            _ => None,
-        }
-    }
-}
-
-/// Return the new level for the header adding the current level
-/// and the hierarchy level.
-fn new_header_level(line: &str, hierarchy_level: usize, header_type: HeaderType) -> usize {
-    let current_level: usize = match header_type {
-        // Atx header has priority over Setext headers, ignoring Setext headers
-        // as a normal line if Atx
-        HeaderType::Atx => {
-            let mut level = 0;
-            for current in line.chars() {
-                if current == '#' {
-                    level += 1;
-                } else {
-                    break;
-                }
-            }
-            level
-        }
-        HeaderType::Setext1 => 1,
-        HeaderType::Setext2 => 2,
-    };
-
-    current_level + hierarchy_level
-}
-
-/// Return the transformed `line` and `next_line` analyzing header patterns.
-/// The `new_line` is the same than original unless it defines a setext header
-/// and the `line` header is returned changing its level and appending
-/// '.unnumbered' and '.unlisted' classes to remove numbers and entries from TOC.
-///
-/// # Parameters
-///
-/// - `line`: The line of the header.
-/// - `next_line`: The next line to check Setext headers.
-/// - `hierarchy_level`: The hierarchy level to be added to the current level header.
-/// - `first_transform`: `bool` to not remove from the table of contents the first header.
-///
-/// # Returns
-///
-/// The modified line, if the next line must be skipped and if the line has been
-/// transformed.
-fn transform_header<'a>(
-    line: &str,
-    next_line: &'a str,
-    hierarchy_level: usize,
-    first_transform: bool,
-) -> (String, bool, bool) {
-    match header_type(&line, &next_line) {
-        None => {
-            // Unmodified lines
-            (String::from(line), false, false)
-        }
-        Some(header_type) => {
-            let skip_next_line = match header_type {
-                HeaderType::Atx => false,
-                _ => true,
-            };
-            let new_header_level = new_header_level(&line, hierarchy_level, header_type);
-            let clean_line = String::from(line.replace("#", "").trim());
-            let transformed_line = if new_header_level > 6 {
-                // Markdown only supports 6 levels, so following levels are coded as
-                // simply bold text
-                format!("**{}**\n", clean_line.trim())
-            } else {
-                // The first transformation does not remove the numeration because
-                // it is the section title
-                format!(
-                    "{} {}{}",
-                    "#".repeat(new_header_level),
-                    clean_line.trim(),
-                    if first_transform {
-                        ""
-                    } else {
-                        UNNUMBERED_UNLISTED
-                    }
-                )
-            };
-
-            (transformed_line, skip_next_line, true)
-        }
-    }
-}
-
-/// Replace the math delimiters of mdBook by the pandoc ones
-fn replace_math_delimiters(text: &str) -> String {
-    lazy_static! {
-        // \\( and \\) with any number of spaces
-        static ref INLINE_MATH_RE: Regex = Regex::new(
-            r"(\\{2}\(\s*|\s*\\{2}\))"
-        ).unwrap();
-        // \\[ and \\] with any number of spaces
-        static ref DISPLAY_MATH_RE: Regex = Regex::new(
-            r"(\\{2}\[\s*|\s*\\{2}\])").unwrap();
-    }
-    let mut formatted = INLINE_MATH_RE.replace_all(text, "$").to_string();
-    // `Replacer` uses 4 `$` to put only 2 `$` because `$` is used for capture groups
-    formatted = DISPLAY_MATH_RE.replace_all(&formatted, "$$$$").to_string();
-
-    formatted
-}
-
-/// Replace the code annotations starting with comma, because they are mdBook
-/// exclusive and they don't work on Pandoc breaking the language
-fn replace_custom_mdbook_code_block_annotations(formatted: &str) -> String {
-    lazy_static! {
-        // capture the block specification until the first comma
-        static ref CUSTOM_CODE_BLOCK_ANNOTATIONS_RE: Regex = RegexBuilder::new(
-            r"(^\s*[`]{3}\w*),.*\s*$"
-        ).multi_line(true).dot_matches_new_line(false).build().unwrap();
-    }
-    CUSTOM_CODE_BLOCK_ANNOTATIONS_RE
-        .replace_all(&formatted, "$1")
-        .to_string()
-}
+use preprocessor::*;
 
 /// Transform the full Markdown file iterating over pairs of lines (to handle
 /// setext headers) and transforming them setting classes and level.
-fn transform_md(md: &str, level: usize) -> String {
-    let mut formatted = String::from("\n");
+fn transform_md(
+    md: &str,
+    level: usize,
+    source_path: &Option<PathBuf>,
+    book_paths: &Box<HashSet<PathBuf>>,
+    mut section_number: &mut Vec<u32>,
+) -> String {
+    let source_path_str = source_path.clone().unwrap().to_str().unwrap().to_string();
+    let mut formatted = format!("\n<!-- {} begins -->\n\n", source_path_str);
     // Iterate over lines saving the previous line to find headers
     // (Setext headers are defined using '=' or '-' in the next line)
     // and writing the transformed `prev_line` in `formatted`.
@@ -189,8 +59,13 @@ fn transform_md(md: &str, level: usize) -> String {
             prev_line = &line;
             continue;
         }
-        let (transformed_line, skip_next_line, is_transformed) =
-            transform_header(&prev_line, &line, level, first_transform);
+        let (transformed_line, skip_next_line, is_transformed) = transform_header(
+            &prev_line,
+            &line,
+            level,
+            first_transform,
+            &mut section_number,
+        );
         formatted.push_str(&format!("{}\n", transformed_line));
         if skip_next_line {
             // `prev_line` is filled in the next step in which no transformation is done
@@ -203,23 +78,47 @@ fn transform_md(md: &str, level: usize) -> String {
         }
     }
 
-    replace_custom_mdbook_code_block_annotations(&replace_math_delimiters(&formatted))
+    formatted.push_str(&format!("\n<!-- {} ends -->\n", source_path_str));
+
+    formatted = replace_math_delimiters(&formatted);
+    formatted = replace_custom_mdbook_code_block_annotations(&formatted);
+    formatted = translate_relative_paths(&formatted, source_path, book_paths);
+    formatted = fix_internal_links(&formatted);
+
+    formatted
 }
 
-/// Concatenate recursively a list of `BookItem` (with their children).
-fn recursively_concatenate_book(items: &[BookItem], level: usize) -> String {
+/// Concatenate recursively a list of `BookItem` (with their children) and
+/// parse headers, delimiters and paths.
+fn recursively_concatenate_book(
+    items: &[BookItem],
+    level: usize,
+    book_paths: &Box<HashSet<PathBuf>>,
+    section_number: &mut Vec<u32>,
+) -> String {
     let mut parsed_contents = String::new();
     for item in items {
         parsed_contents.push_str("\n");
         match item {
             BookItem::Chapter(ref c) => {
-                parsed_contents.push_str(&transform_md(&c.content, level));
-                parsed_contents.push_str(&recursively_concatenate_book(&c.sub_items, level + 1));
+                parsed_contents.push_str(&transform_md(
+                    &c.content,
+                    level,
+                    &c.source_path,
+                    book_paths,
+                    section_number,
+                ));
+                parsed_contents.push_str(&recursively_concatenate_book(
+                    &c.sub_items,
+                    level + 1,
+                    book_paths,
+                    section_number,
+                ));
             }
             // Separators are ignored, they make no sense in documents
             BookItem::Separator => (),
             BookItem::PartTitle(title) => {
-                parsed_contents.push_str(&format!("\n# {}", title));
+                parsed_contents.push_str(&format_part_header(title, section_number));
             }
         }
     }
@@ -227,12 +126,10 @@ fn recursively_concatenate_book(items: &[BookItem], level: usize) -> String {
     parsed_contents
 }
 
-/// Return the `Summary` object searching the file from the root path and
+/// Return the `Summary` object searching the file from the root src and
 /// parsing it.
-fn get_summary(root_path: &Path) -> Summary {
-    let mut summary_path = root_path.to_owned().clone();
-    summary_path.push("src");
-    summary_path.push("SUMMARY.md");
+fn get_summary(src_path: &Path) -> Summary {
+    let summary_path = src_path.join("SUMMARY.md");
     let mut summary_text = String::new();
     File::open(&summary_path)
         .expect("Failed to open SUMMARY.md file")
@@ -304,7 +201,13 @@ fn analyze_summary(
     summary: &Summary,
     book_items: &[BookItem],
     chapters_have_parts: bool,
-) -> (usize, Vec<BookItem>, Vec<BookItem>, Vec<BookItem>) {
+) -> (
+    usize,
+    Vec<BookItem>,
+    Vec<BookItem>,
+    Vec<BookItem>,
+    HashSet<PathBuf>,
+) {
     let initial_hierarchy = if !summary.prefix_chapters.is_empty()
         || !summary.suffix_chapters.is_empty()
         || chapters_have_parts
@@ -318,11 +221,42 @@ fn analyze_summary(
     let content_chapters = filter_per_chapter_type(book_items, &summary.numbered_chapters);
     let suffix_chapters = filter_per_chapter_type(book_items, &summary.suffix_chapters);
 
+    let book_paths = book_items
+        .iter()
+        .filter(|c| match c {
+            BookItem::Chapter(_) => true,
+            _ => false,
+        })
+        .map(|c| match c {
+            BookItem::Chapter(ref chapter) => {
+                if let Some(path) = &chapter.source_path {
+                    path.to_path_buf()
+                        .canonicalize()
+                        .expect("Error canonicalizing a book path")
+                } else {
+                    PathBuf::new()
+                }
+            }
+            _ => PathBuf::new(),
+        })
+        .collect();
+
     (
         initial_hierarchy,
         prefix_chapters,
         content_chapters,
         suffix_chapters,
+        book_paths,
+    )
+}
+
+/// Format a part header.
+fn format_part_header(text: &str, section_number: &mut Vec<u32>) -> String {
+    update_section_number(section_number, 1);
+    format!(
+        "\n# {} {{#{}}}",
+        text,
+        header_identifier(text, section_number)
     )
 }
 
@@ -331,32 +265,53 @@ fn parse_book_contents(
     prefix_chapters: &[BookItem],
     content_chapters: &[BookItem],
     suffix_chapters: &[BookItem],
+    book_paths: &Box<HashSet<PathBuf>>,
     chapters_have_parts: bool,
     initial_level: usize,
     title_labels: &TitleLabels,
 ) -> String {
+    // The whole document section number is initialized to 0 in order the first
+    // header is 1
+    let mut section_number = vec![0];
     let mut parsed_content = String::new();
     if !prefix_chapters.is_empty() {
-        parsed_content.push_str(&format!("\n# {}", title_labels.preamble));
+        parsed_content.push_str(&format_part_header(
+            &title_labels.preamble,
+            &mut section_number,
+        ));
         parsed_content.push_str(&recursively_concatenate_book(
             prefix_chapters,
             initial_level,
+            book_paths,
+            &mut section_number,
         ));
     }
     if !chapters_have_parts {
-        parsed_content.push_str(&format!("\n# {}", title_labels.chapters));
+        parsed_content.push_str(&format_part_header(
+            &title_labels.chapters,
+            &mut section_number,
+        ));
     }
     parsed_content.push_str(&recursively_concatenate_book(
         content_chapters,
         initial_level,
+        &book_paths,
+        &mut section_number,
     ));
     if !suffix_chapters.is_empty() {
-        parsed_content.push_str(&format!("\n# {}", title_labels.annexes));
+        parsed_content.push_str(&format_part_header(
+            &title_labels.annexes,
+            &mut section_number,
+        ));
         parsed_content.push_str(&recursively_concatenate_book(
             suffix_chapters,
             initial_level,
+            &book_paths,
+            &mut section_number,
         ));
     }
+
+    parsed_content = fix_external_links(&parsed_content);
 
     parsed_content
 }
@@ -365,18 +320,23 @@ fn parse_book_contents(
 /// numbered chapters and suffixes, returning the result as String. writing the contents in the file
 /// `book/pandoc/md/book.md` and returning that path.
 pub(crate) fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> String {
+    // Set the current working directory to the `src` path (everything is relative to the summary)
+    let src_path = ctx.root.join("src");
+    set_current_dir(&src_path).expect("Error setting the current dir to root path");
+
     // `BookItems` inner reference is problematic and `.sections` return all sections
     // instead of only the first-depth ones, so this is convenient
     let book_items: Vec<BookItem> = ctx.book.iter().map(|i| i.clone()).collect();
     let chapters_have_parts = chapters_have_parts(&book_items);
-    let summary = get_summary(&ctx.root);
-    let (initial_level, prefix_chapters, content_chapters, suffix_chapters) =
+    let summary = get_summary(&src_path);
+    let (initial_level, prefix_chapters, content_chapters, suffix_chapters, book_paths) =
         analyze_summary(&summary, &book_items, chapters_have_parts);
 
     parse_book_contents(
         &prefix_chapters,
         &content_chapters,
         &suffix_chapters,
+        &Box::new(book_paths),
         chapters_have_parts,
         initial_level,
         title_labels,

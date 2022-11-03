@@ -16,14 +16,32 @@ ibooks:
 ---
 
 
-# Part 1
+# Part 1 {#h1__part-1}
 
-## Chapter 1
+<!-- Introduction/README.md begins -->
 
-This is a example chapter.
+## Chapter 1 {#h1__1__chapter-1}
+
+This is an example chapter. It has many subchapters like [Subsection](#h1__1__2__subsection), [Level 10 section](Introduction/Level10Section.md#) and
+[Level 9 section](<Introduction/./Level9Section.md#> 'Level9section'). The book has also [conclusion](#h2__1__conclusion 'Conclusion').
+The annexes can be found in [Annexes][suffix].
+
+[suffix]: #h3__1__suffix-chapter "Annexes"
+
+More features can be found in [things](#h1__1__1__things) chapter. Links to sections in other files also work:
+[Subsection of the subsection](#h1__1__2__1__subsection-of-the-subsection).
+
+### Things {#h1__1__1__things .unnumbered .unlisted}
 
 And here a LaTeX math formula: $\int x dx = \frac{x^2}{2} + C$ and also a block LaTeX math formula:
 $$\mu = \frac{1}{N} \sum_{i=0} x_i$$
+
+And also an image with a bit of HTML:
+<div class="image_env">HTML <b>content</b></div>
+
+![My image alt](Introduction/../test_image.png "My image title")
+
+<span class="custom_caption">My custom image caption</span>
 
 And this is a PlantUML diagram:
 
@@ -72,67 +90,113 @@ ibooks:
   version: 4.0
 ```
 
+<!-- Introduction/README.md ends -->
 
-### Subsection
+
+<!-- Introduction/Subsection.md begins -->
+
+### Subsection {#h1__1__2__subsection}
 In this subsection we write text.
 
-#### Subsection of the subsection {.unnumbered .unlisted}
+#### Subsection  of the subsection {#h1__1__2__1__subsection-of-the-subsection .unnumbered .unlisted}
 
 This is a example subsection.
 
-###### 4th level header {.unnumbered .unlisted}
+###### 4th level header {#h1__1__2__1__1__1__4th-level-header .unnumbered .unlisted}
 
 **6th level header**
 
 
+<!-- Introduction/Subsection.md ends -->
 
-#### Subsubsection
 
-##### Another header {.unnumbered .unlisted}
+<!-- Introduction/Subsubsection.md begins -->
+
+#### Subsubsection {#h1__1__2__2__subsubsection}
+
+##### Another header {#h1__1__2__2__1__another-header .unnumbered .unlisted}
 Deeper level!
 
+<!-- Introduction/Subsubsection.md ends -->
 
-##### Level4 Section
+
+<!-- Introduction/Level4Section.md begins -->
+
+##### Level4 Section {#h1__1__2__2__2__level4-section}
 Level4 Section contents.
 
+<!-- Introduction/Level4Section.md ends -->
 
-###### Level5 Section
+
+<!-- Introduction/Level5Section.md begins -->
+
+###### Level5 Section {#h1__1__2__2__2__1__level5-section}
 Level5 Section contents.
 
+<!-- Introduction/Level5Section.md ends -->
+
+
+<!-- Introduction/Level6Section.md begins -->
 
 **Level6 Section**
 
 Level6 Section contents.
 
+<!-- Introduction/Level6Section.md ends -->
+
+
+<!-- Introduction/Level7Section.md begins -->
 
 **Level7 Section**
 
 Level7 Section contents.
 
+<!-- Introduction/Level7Section.md ends -->
+
+
+<!-- Introduction/Level8Section.md begins -->
 
 **Level8 Section**
 
 Level8 Section contents.
 
+<!-- Introduction/Level8Section.md ends -->
+
+
+<!-- Introduction/Level9Section.md begins -->
 
 **Level9 Section**
 
 Level9 Section contents.
 
+<!-- Introduction/Level9Section.md ends -->
+
+
+<!-- Introduction/Level10Section.md begins -->
 
 **Level10 Section**
 
 Level10 Section contents.
 
+<!-- Introduction/Level10Section.md ends -->
 
-# Part 3
 
-## Conclusion
+# Part 3 {#h2__part-3}
+
+<!-- Conclusion.md begins -->
+
+## Conclusion {#h2__1__conclusion}
 
 This works like a charm!
 
-# Annexes
+<!-- Conclusion.md ends -->
 
-## Suffix chapter
+# Annexes {#h3__annexes}
+
+<!-- suffix.md begins -->
+
+## Suffix chapter {#h3__1__suffix-chapter}
 
 This is a suffix!
+
+<!-- suffix.md ends -->

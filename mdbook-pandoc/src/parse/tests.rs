@@ -1,28 +1,37 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Once};
 
 use super::*;
 use mdbook::book::{Chapter, Link, Summary};
 
+/// Unique `Once` to set the current test dir by relative path only once in all
+/// tests.
+pub(crate) static INIT: Once = Once::new();
+
 /// Return a HashMap of test vec of `BookItem` representing the first level of
 /// the book and their summary.
 fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
+    INIT.call_once(|| {
+        set_current_dir("assets/tests/parse_test/src")
+            .expect("Error setting the current directory");
+    });
+
     let mut map = HashMap::new();
     let dummy_chapter = BookItem::Chapter(Chapter::new(
         "Link",
         String::from("Link"),
-        "None",
+        "Introduction/README.md",
         Vec::new(),
     ));
     let dummy_prefix = BookItem::Chapter(Chapter::new(
         "Prefix Link",
         String::from("Prefix Link"),
-        "None",
+        "Introduction/README.md",
         Vec::new(),
     ));
     let dummy_suffix = BookItem::Chapter(Chapter::new(
         "Suffix Link",
         String::from("Suffix Link"),
-        "None",
+        "Introduction/README.md",
         Vec::new(),
     ));
     let dummy_part = BookItem::PartTitle(String::from("Part 1"));
@@ -175,119 +184,6 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
     );
 
     map
-}
-
-#[test]
-fn test_header_type() {
-    assert!(
-        matches!(header_type("# Title", ""), Some(HeaderType::Atx)),
-        "Fail detecting Atx header"
-    );
-    assert!(
-        matches!(
-            header_type("## Subtitle ##", "Other things"),
-            Some(HeaderType::Atx)
-        ),
-        "Fail detecting Atx header"
-    );
-    assert!(
-        matches!(header_type("#Title", ""), None),
-        "Fail detecting no header starting with '#'"
-    );
-    assert!(
-        matches!(header_type(" ## Subtitle", ""), Some(HeaderType::Atx)),
-        "Fail detecting header starting with space"
-    );
-    assert!(
-        matches!(header_type("   #### Section", ""), Some(HeaderType::Atx)),
-        "Fail detecting header starting with three spaces"
-    );
-    assert!(
-        matches!(header_type("    # False title", ""), None),
-        "Fail detecting no header starting with four spaces"
-    );
-    assert!(
-        matches!(header_type(" ####### Seventh level", ""), None),
-        "Fail detecting no title with 7 '#"
-    );
-    assert!(
-        matches!(header_type("Title", "===="), Some(HeaderType::Setext1)),
-        "Fail detecting Setext header of level 1"
-    );
-    assert!(
-        matches!(
-            header_type("Subtitle", "-------------"),
-            Some(HeaderType::Setext2)
-        ),
-        "Fail detecting Setext header of level 2"
-    );
-    assert!(
-        matches!(header_type("Thing", "Other things"), None),
-        "Fail detecting the line is not header"
-    );
-}
-#[test]
-fn test_new_header_level() {
-    assert_eq!(new_header_level("# Title", 0, HeaderType::Atx), 1);
-    assert_eq!(new_header_level("# Title", 2, HeaderType::Atx), 3);
-    assert_eq!(new_header_level("## Title", 0, HeaderType::Atx), 2);
-    assert_eq!(new_header_level("## Title", 1, HeaderType::Atx), 3);
-    assert_eq!(new_header_level("Title", 0, HeaderType::Setext1), 1);
-    assert_eq!(new_header_level("Title", 1, HeaderType::Setext1), 2);
-    assert_eq!(new_header_level("Title", 0, HeaderType::Setext2), 2);
-    assert_eq!(new_header_level("Title", 4, HeaderType::Setext2), 6);
-    assert_eq!(new_header_level("##### Title", 2, HeaderType::Atx), 7);
-}
-
-#[test]
-fn test_transform_header() {
-    assert_eq!(
-        transform_header("# Title", "Other things", 1, false),
-        (format!("## Title{}", UNNUMBERED_UNLISTED), false, true)
-    );
-    assert_eq!(
-        transform_header("# Title", "Other things", 1, true),
-        (String::from("## Title"), false, true)
-    );
-    assert_eq!(
-        transform_header("Title", "======", 1, true),
-        (String::from("## Title"), true, true)
-    );
-    assert_eq!(
-        transform_header("Things", "Other things", 1, true),
-        (String::from("Things"), false, false)
-    );
-}
-
-#[test]
-fn test_replace_math_delimiters() {
-    assert_eq!("Without math", replace_math_delimiters("Without math"));
-    // inline math
-    assert_eq!(
-        r"Inline math $x + 1$",
-        replace_math_delimiters(r"Inline math \\( x + 1 \\)")
-    );
-    assert_eq!(
-        r"Inline math $x + 1$",
-        replace_math_delimiters(r"Inline math \\(   x + 1   \\)")
-    );
-    assert_eq!(
-        r"Inline math $x + 1$",
-        replace_math_delimiters(r"Inline math \\(x + 1\\)")
-    );
-    // display math
-    assert_eq!(
-        r"Inline math $$x + 1$$",
-        replace_math_delimiters(r"Inline math \\[ x + 1 \\]")
-    );
-    assert_eq!(
-        r"Inline math $$x + 1$$",
-        replace_math_delimiters(r"Inline math \\[   x + 1   \\]")
-    );
-    assert_eq!(
-        r"Inline math $$x + 1$$",
-        replace_math_delimiters(r"Inline math \\[x + 1\\]")
-    );
 }
 
 #[test]

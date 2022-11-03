@@ -38,6 +38,7 @@ use std::{
 
 use config::metadata::MetadataConfig;
 use config::TitleLabels;
+use env_logger::Env;
 use mdbook::{renderer::RenderContext, Renderer};
 use parse::parse_book;
 
@@ -52,6 +53,8 @@ impl Renderer for PandocRenderer {
     /// - parse book
     /// - convert book in the specified formats using pandoc.
     fn render(&self, ctx: &RenderContext) -> mdbook::errors::Result<()> {
+        env_logger::Builder::from_env(Env::default().default_filter_or("warn")).init();
+
         // TODO: Read from configs
         let title_labels = TitleLabels {
             preamble: String::from("Preamble"),
@@ -87,8 +90,7 @@ impl Renderer for PandocRenderer {
 /// Write the parsed contents into the Pandoc MD file and return that path
 /// (`./book/pandoc/md/book.md`)
 fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
-    let mut md_path = dest_path.to_owned().clone();
-    md_path.push("book.md");
+    let md_path = dest_path.join("book.md");
 
     let mut md_out = File::create(&md_path).expect("Error writing the parsed MD file");
     md_out
