@@ -260,6 +260,19 @@ fn format_part_header(text: &str, section_number: &mut Vec<u32>) -> String {
     )
 }
 
+fn write_chapters_header(
+    parsed_content: &mut String,
+    mut section_number: &mut Vec<u32>,
+    chapters_label: &str,
+    chapters_have_parts: bool,
+    empty_prefixes: bool,
+    empty_suffixes: bool,
+) {
+    if (!empty_prefixes || !empty_suffixes) && !chapters_have_parts {
+        parsed_content.push_str(&format_part_header(&chapters_label, &mut section_number));
+    }
+}
+
 /// Parse the book contents and return the result of parse all chapters.
 fn parse_book_contents(
     prefix_chapters: &[BookItem],
@@ -286,12 +299,14 @@ fn parse_book_contents(
             &mut section_number,
         ));
     }
-    if !chapters_have_parts {
-        parsed_content.push_str(&format_part_header(
-            &title_labels.chapters,
-            &mut section_number,
-        ));
-    }
+    write_chapters_header(
+        &mut parsed_content,
+        &mut section_number,
+        &title_labels.chapters,
+        chapters_have_parts,
+        prefix_chapters.is_empty(),
+        suffix_chapters.is_empty(),
+    );
     parsed_content.push_str(&recursively_concatenate_book(
         content_chapters,
         initial_level,

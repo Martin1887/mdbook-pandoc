@@ -237,3 +237,53 @@ fn test_initial_hierarchy_level() {
         1
     );
 }
+
+#[test]
+fn test_write_chapters_header() {
+    let mut parsed_content = String::new();
+    let mut section_number = vec![0];
+    let chapters_label = "Chapters";
+
+    write_chapters_header(
+        &mut parsed_content,
+        &mut section_number,
+        &chapters_label,
+        true,
+        true,
+        true,
+    );
+    assert_eq!(parsed_content, String::new());
+
+    parsed_content = String::new();
+    write_chapters_header(
+        &mut parsed_content,
+        &mut section_number,
+        &chapters_label,
+        false,
+        true,
+        true,
+    );
+    assert_eq!(parsed_content, String::new());
+
+    parsed_content = String::new();
+    write_chapters_header(
+        &mut parsed_content,
+        &mut section_number,
+        &chapters_label,
+        false,
+        false,
+        true,
+    );
+    assert!(parsed_content.contains("Chapters"));
+
+    parsed_content = String::new();
+    write_chapters_header(
+        &mut parsed_content,
+        &mut section_number,
+        &chapters_label,
+        true,
+        true,
+        false,
+    );
+    assert_eq!(parsed_content, String::new());
+}
