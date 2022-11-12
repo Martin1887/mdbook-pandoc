@@ -47,6 +47,10 @@ fn test_header_type() {
         "Fail detecting Setext header of level 2"
     );
     assert!(
+        matches!(header_type("Paragraph", "- List item"), None),
+        "List item detected as SETEXT header"
+    );
+    assert!(
         matches!(header_type("Thing", "Other things"), None),
         "Fail detecting the line is not header"
     );

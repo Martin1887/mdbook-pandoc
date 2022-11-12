@@ -18,15 +18,19 @@ pub(crate) fn header_type(line: &str, next_line: &str) -> Option<HeaderType> {
         static ref ATX_RE: Regex = Regex::new(
             r"^[ ]{0,3}#{1,6}(\s|$).*$?"
         ).unwrap();
+
+        static ref SETEXT_RE_STR: &'static str = r"^[ ]{0,3}<CHAR>+\s*$";
+        static ref SETEXT1_RE: Regex = Regex::new(&SETEXT_RE_STR.replace("<CHAR>", "=")).unwrap();
+        static ref SETEXT2_RE: Regex = Regex::new(&SETEXT_RE_STR.replace("<CHAR>", "-")).unwrap();
     }
     if ATX_RE.is_match(&line) {
         Some(HeaderType::Atx)
+    } else if SETEXT1_RE.is_match(&next_line) {
+        Some(HeaderType::Setext1)
+    } else if SETEXT2_RE.is_match(&next_line) {
+        Some(HeaderType::Setext2)
     } else {
-        match next_line.chars().next() {
-            Some('=') => Some(HeaderType::Setext1),
-            Some('-') => Some(HeaderType::Setext2),
-            _ => None,
-        }
+        None
     }
 }
 
