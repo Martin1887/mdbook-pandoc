@@ -12,6 +12,9 @@ use regex::{Regex, RegexBuilder};
 
 lazy_static! {
     static ref PATH_PUNCTUATION: String = r#" :./\\ \-_?!;,{}\[\]+* '"@\$~%= "#.to_string();
+    static ref SPACES_WITHOUT_LINE_BREAKS: String = r"[ \  \t ]*".to_string();
+    static ref SPACES_WITH_OPTIONAL_AT_MOST_LINE_BREAK: String =
+        format!(r"{blanks} (\n)? {blanks}", blanks=*SPACES_WITHOUT_LINE_BREAKS);
     // Catch links references and links. Matching `<`, `>`, quotes and parenthesis
     // are not checked (that requires a stack) for performance reasons, as
     // the purpose is only to translate paths but not correct Markdown parsing.
@@ -24,16 +27,20 @@ lazy_static! {
     // Links: square brackets (preceded by exclamation mark if images) and
     // the link inside parenthesis, that can contain spaces only if is
     // between angle brackets
-    static ref LINK_DESTINATION_STR: String =
-        format!(r"<? (?P<path> [\w \# {punct} ] [\w\ \t \# {punct} ]* [\#\w] ) >?", punct=*PATH_PUNCTUATION);
-    static ref LINK_DESTINATION_REF_STR: String = LINK_DESTINATION_STR.replace("path", "ref_path");
-    static ref LINK_TEXT_STR: String = r#"( [\w\ \t [^\]] ]+ $?)*"#.to_string();
-    static ref LINK_TITLE_STR: String = r#"["'(] ( [\w\ \t [^)'"] ]+ $?)* ["')]"#.to_string();
-    static ref SPACES_WITH_OPTIONAL_AT_MOST_LINE_BREAK: String = r#"\s*$?\s*"#.to_string();
+    static ref LINK_DESTINATION_STR: String = format!(
+        r"{blanks} <? (?P<path> ( [\w\ \t \# {punct} ] )* [\#\w] ) >? {blanks}",
+        punct=*PATH_PUNCTUATION, blanks=*SPACES_WITHOUT_LINE_BREAKS
+    );
+    static ref LINK_DESTINATION_REF_STR: String =
+        LINK_DESTINATION_STR.replace("path", "ref_path");
+    static ref LINK_TEXT_STR: String = r#"( [^ \] \n ]+ )*"#.to_string();
+    static ref LINK_TITLE_STR: String =
+        r#"["'(] ( [^)'" \n ]+ (\n)? )* ["')]"#.to_string();
 
-    static ref PATH_RE_STR: String = format!(r#"(
+    static ref PATH_RE_STR: String = format!(
+        r#"(
             # reference link (https://spec.commonmark.org/0.30/#link-reference-definitions)
-            ^[\ ]{{0,3}} \[ {text} \] : {sep} {ref_dest} ( {sep} {title} )? $
+            ^ [\ ]{{0,3}} \[ {text} \] : {sep} {ref_dest} ( {sep} {title} )? $
             |
             # link (https://spec.commonmark.org/0.30/#links)
             !? \[ {text} \] \( {dest} ( {sep} {title} )? \) 
@@ -43,7 +50,9 @@ lazy_static! {
         sep=*SPACES_WITH_OPTIONAL_AT_MOST_LINE_BREAK);
 
     static ref PATH_RE: Regex = RegexBuilder::new(&PATH_RE_STR)
-        .multi_line(true).dot_matches_new_line(false).ignore_whitespace(true)
-        .build().unwrap();
-
+        .multi_line(true)
+        .dot_matches_new_line(false)
+        .ignore_whitespace(true)
+        .build()
+        .unwrap();
 }

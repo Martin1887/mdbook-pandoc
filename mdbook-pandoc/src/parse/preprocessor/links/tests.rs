@@ -12,8 +12,7 @@ use crate::parse::transform_md;
 /// Set the current directory to the `src` directory of the test book.
 fn set_src_current_dir() {
     INIT.call_once(|| {
-        set_current_dir("assets/tests/test_book/src")
-            .expect("Error setting the current directory");
+        set_current_dir("assets/tests/test_book/src").expect("Error setting the current directory");
     });
 }
 
@@ -84,19 +83,37 @@ fn test_translate_relative_paths() {
         "[My link](Introduction/Subsection.md#)",
         translate_relative_paths(relative_link, &source_path, &get_book_paths())
     );
-    relative_link = "[My link](./Subsection.md)";
+    relative_link = "[My link]( ./Subsection.md)";
     assert_eq!(
-        "[My link](Introduction/./Subsection.md#)",
+        "[My link]( Introduction/./Subsection.md#)",
         translate_relative_paths(relative_link, &source_path, &get_book_paths())
     );
-    relative_link = "[My link](../Introduction/Subsection.md)";
+    relative_link = "[My link](< ./Subsection.md>)";
     assert_eq!(
-        "[My link](Introduction/../Introduction/Subsection.md#)",
+        relative_link,
+        translate_relative_paths(relative_link, &source_path, &get_book_paths()),
+        "Spaces inside destinations between `<` and `>` belong to the path"
+    );
+    relative_link = "[My link](\n./Subsection.md)";
+    assert_eq!(
+        relative_link,
+        translate_relative_paths(relative_link, &source_path, &get_book_paths()),
+        "Link destinations cannot contain line breaks"
+    );
+    relative_link = "[My link](../Introduction/Subsection.md \n  'My link')";
+    assert_eq!(
+        "[My link](Introduction/../Introduction/Subsection.md# \n  'My link')",
         translate_relative_paths(relative_link, &source_path, &get_book_paths())
     );
-    relative_link = "[My link](../../src/Introduction/Level4Section.md)";
+    relative_link = "[My\nlink](../Introduction/Subsection.md \n 'My link')";
     assert_eq!(
-        "[My link](Introduction/../../src/Introduction/Level4Section.md)",
+        relative_link,
+        translate_relative_paths(relative_link, &source_path, &get_book_paths()),
+        "Link texts cannot contain line breaks"
+    );
+    relative_link = "[My link](<../../src/Introduction/Level4Section.md>)";
+    assert_eq!(
+        "[My link](<Introduction/../../src/Introduction/Level4Section.md>)",
         translate_relative_paths(relative_link, &source_path, &get_book_paths())
     );
     let mut reference = "[My link]: Subsection.md";
@@ -125,7 +142,7 @@ fn test_translate_reference_another_file() {
     set_src_current_dir();
     let fixed = fix_external_links(&get_transformed_book());
     // assert that the fixed link is in the fixed text
-    let pos = fixed.find("(#h1__2__1__subsection-of-the-subsection)");
+    let pos = fixed.find("#h1__2__1__subsection-of-the-subsection");
     assert!(pos.unwrap_or(0) > 0);
     let pos = fixed.find("(#h1__2__subsection)");
     assert!(pos.unwrap_or(0) > 0);

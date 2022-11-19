@@ -1,13 +1,14 @@
 # Chapter 1
 
-This is an example chapter. It has many subchapters like [Subsection](Subsection.md), [Level 10 section](Level10Section.md) and
-[Level 9 section](<./Level9Section.md> 'Level9section'). The book has also [conclusion](../Conclusion.md 'Conclusion').
+This is an example chapter. It has many subchapters like [Subsection](Subsection.md), [Level 10 section](Level10Section.md   ) and
+[Level 9 section]( <./Level9Section.md>
+'Level9section'). The book has also [conclusion](../Conclusion.md 'Conclusion').
 The annexes can be found in [Annexes][suffix].
 
 [suffix]: ../suffix.md "Annexes"
 
 More features can be found in [things](#things) chapter. Links to sections in other files also work:
-[Subsection of the subsection](Subsection.md#subsection-of-the-subsection).
+[Subsection of the subsection](   Subsection.md#subsection-of-the-subsection   ).
 
 ## Things
 

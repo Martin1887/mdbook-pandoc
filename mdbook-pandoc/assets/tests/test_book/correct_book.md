@@ -22,14 +22,15 @@ ibooks:
 
 ## Chapter 1 {#h1__1__chapter-1}
 
-This is an example chapter. It has many subchapters like [Subsection](#h1__1__2__subsection), [Level 10 section](Introduction/Level10Section.md#) and
-[Level 9 section](<Introduction/./Level9Section.md#> 'Level9section'). The book has also [conclusion](#h2__1__conclusion 'Conclusion').
+This is an example chapter. It has many subchapters like [Subsection](#h1__1__2__subsection), [Level 10 section](Introduction/Level10Section.md#   ) and
+[Level 9 section]( <Introduction/./Level9Section.md#>
+'Level9section'). The book has also [conclusion](#h2__1__conclusion 'Conclusion').
 The annexes can be found in [Annexes][suffix].
 
 [suffix]: #h3__1__suffix-chapter "Annexes"
 
 More features can be found in [things](#h1__1__1__things) chapter. Links to sections in other files also work:
-[Subsection of the subsection](#h1__1__2__1__subsection-of-the-subsection).
+[Subsection of the subsection](   #h1__1__2__1__subsection-of-the-subsection   ).
 
 ### Things {#h1__1__1__things .unnumbered .unlisted}
 
@@ -90,21 +91,25 @@ ibooks:
   version: 4.0
 ```
 
+
 <!-- Introduction/README.md ends -->
 
 
 <!-- Introduction/Subsection.md begins -->
 
 ### Subsection {#h1__1__2__subsection}
+
 In this subsection we write text.
 
 #### Subsection  of the subsection {#h1__1__2__1__subsection-of-the-subsection .unnumbered .unlisted}
+
 
 This is a example subsection.
 
 ###### 4th level header {#h1__1__2__1__1__1__4th-level-header .unnumbered .unlisted}
 
 **6th level header**
+
 
 
 <!-- Introduction/Subsection.md ends -->
@@ -117,6 +122,7 @@ This is a example subsection.
 ##### Another header {#h1__1__2__2__1__another-header .unnumbered .unlisted}
 Deeper level!
 
+
 <!-- Introduction/Subsubsection.md ends -->
 
 
@@ -125,6 +131,7 @@ Deeper level!
 ##### Level4 Section {#h1__1__2__2__2__level4-section}
 Level4 Section contents.
 
+
 <!-- Introduction/Level4Section.md ends -->
 
 
@@ -132,6 +139,7 @@ Level4 Section contents.
 
 ###### Level5 Section {#h1__1__2__2__2__1__level5-section}
 Level5 Section contents.
+
 
 <!-- Introduction/Level5Section.md ends -->
 
@@ -142,6 +150,7 @@ Level5 Section contents.
 
 Level6 Section contents.
 
+
 <!-- Introduction/Level6Section.md ends -->
 
 
@@ -150,6 +159,7 @@ Level6 Section contents.
 **Level7 Section**
 
 Level7 Section contents.
+
 
 <!-- Introduction/Level7Section.md ends -->
 
@@ -160,6 +170,7 @@ Level7 Section contents.
 
 Level8 Section contents.
 
+
 <!-- Introduction/Level8Section.md ends -->
 
 
@@ -169,6 +180,7 @@ Level8 Section contents.
 
 Level9 Section contents.
 
+
 <!-- Introduction/Level9Section.md ends -->
 
 
@@ -177,6 +189,7 @@ Level9 Section contents.
 **Level10 Section**
 
 Level10 Section contents.
+
 
 <!-- Introduction/Level10Section.md ends -->
 
@@ -189,6 +202,7 @@ Level10 Section contents.
 
 This works like a charm!
 
+
 <!-- Conclusion.md ends -->
 
 # Annexes {#h3__annexes}
@@ -198,5 +212,6 @@ This works like a charm!
 ## Suffix chapter {#h3__1__suffix-chapter}
 
 This is a suffix!
+
 
 <!-- suffix.md ends -->
