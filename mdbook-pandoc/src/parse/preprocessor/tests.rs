@@ -3,58 +3,68 @@ use super::*;
 use mdbook::book::Chapter;
 
 #[test]
-fn test_header_type() {
+fn test_atx_header() {
     assert!(
-        matches!(header_type("# Title", ""), Some(HeaderType::Atx)),
+        matches!(is_atx_header("# Title"), true),
         "Fail detecting Atx header"
     );
     assert!(
-        matches!(
-            header_type("## Subtitle ##", "Other things"),
-            Some(HeaderType::Atx)
-        ),
+        matches!(is_atx_header("## Subtitle ##"), true),
         "Fail detecting Atx header"
     );
     assert!(
-        matches!(header_type("#Title", ""), None),
+        matches!(is_atx_header("#Title"), false),
         "Fail detecting no header starting with '#'"
     );
     assert!(
-        matches!(header_type(" ## Subtitle", ""), Some(HeaderType::Atx)),
+        matches!(is_atx_header(" ## Subtitle"), true),
         "Fail detecting header starting with space"
     );
     assert!(
-        matches!(header_type("   #### Section", ""), Some(HeaderType::Atx)),
+        matches!(is_atx_header("   #### Section"), true),
         "Fail detecting header starting with three spaces"
     );
     assert!(
-        matches!(header_type("    # False title", ""), None),
+        matches!(is_atx_header("    # False title"), false),
         "Fail detecting no header starting with four spaces"
     );
     assert!(
-        matches!(header_type(" ####### Seventh level", ""), None),
+        matches!(is_atx_header(" ####### Seventh level"), false),
         "Fail detecting no title with 7 '#"
     );
-    assert!(
-        matches!(header_type("Title", "===="), Some(HeaderType::Setext1)),
+}
+
+#[test]
+fn test_setext_header() {
+    assert_eq!(
+        setext2atx("Title\n===="),
+        String::from("# Title\n"),
         "Fail detecting Setext header of level 1"
     );
-    assert!(
-        matches!(
-            header_type("Subtitle", "-------------"),
-            Some(HeaderType::Setext2)
-        ),
-        "Fail detecting Setext header of level 2"
+    assert_eq!(
+        setext2atx("Paragraph\n\n   Subtitle with\nnewline\n-------------   "),
+        String::from("Paragraph\n\n## Subtitle with newline\n"),
+        "Fail detecting Setext header of level 2 in several lines"
     );
-    assert!(
-        matches!(header_type("Paragraph", "- List item"), None),
+    assert_eq!(
+        setext2atx(">Quote\n Title with\nnewline\n   ===="),
+        String::from(">Quote\n# Title with newline\n"),
+        "Fail detecting Setext header of level 1 in several lines after quote"
+    );
+    let paragraph_and_list = String::from("Paragraph\n- List item");
+    assert_eq!(
+        setext2atx(&paragraph_and_list),
+        paragraph_and_list,
         "List item detected as SETEXT header"
     );
-    assert!(
-        matches!(header_type("Thing", "Other things"), None),
+    let things = String::from("Thing\nOther things");
+    assert_eq!(
+        setext2atx(&things),
+        things,
         "Fail detecting the line is not header"
     );
 }
+
 #[test]
 fn test_new_header_level() {
     assert_eq!(new_header_level("# Title", 0, HeaderType::Atx), 1);
@@ -72,42 +82,29 @@ fn test_new_header_level() {
 fn test_transform_header() {
     let mut section_number = vec![1];
     assert_eq!(
-        transform_header("# Title", "Other things", 1, false, &mut section_number),
+        transform_header("# Title", 1, false, &mut section_number),
         (
             format!(
                 "## Title {{#{}{}}}",
                 header_identifier("Title", &section_number),
                 UNNUMBERED_UNLISTED
             ),
-            false,
             true
         )
     );
     assert_eq!(
-        transform_header("# Title", "Other things", 1, true, &mut section_number),
+        transform_header("# Title", 1, true, &mut section_number),
         (
             format!(
                 "## Title {{#{}}}",
                 header_identifier("Title", &section_number),
             ),
-            false,
             true
         )
     );
     assert_eq!(
-        transform_header("Title", "======", 1, true, &mut section_number),
-        (
-            format!(
-                "## Title {{#{}}}",
-                header_identifier("Title", &section_number),
-            ),
-            true,
-            true
-        )
-    );
-    assert_eq!(
-        transform_header("Things", "Other things", 1, true, &mut section_number),
-        (String::from("Things"), false, false)
+        transform_header("Things", 1, true, &mut section_number),
+        (String::from("Things"), false)
     );
 }
 

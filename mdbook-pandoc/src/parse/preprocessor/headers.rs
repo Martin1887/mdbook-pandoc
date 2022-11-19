@@ -1,37 +1,105 @@
-use regex::Regex;
+use regex::{Captures, Regex, RegexBuilder};
 
 /// Label appended to headers to add the classes `.unnumbered` and `.unlisted`
 pub(crate) const UNNUMBERED_UNLISTED: &'static str = " .unnumbered .unlisted";
 
 /// Type of MD header: Atx (#), Setext1 (====) or Setext2(----).
+#[allow(dead_code)]
 pub(crate) enum HeaderType {
     Atx,
     Setext1,
     Setext2,
 }
 
-/// Return the header type of the line or `None` if it is not a header.
-pub(crate) fn header_type(line: &str, next_line: &str) -> Option<HeaderType> {
+/// Return `true` if the line is a ATX header and `false` otherwise.
+pub(crate) fn is_atx_header(line: &str) -> bool {
     lazy_static! {
         // 0-3 spaces before the first '#', at most 6 '#' and whitespace or end
         // of line after the last '#'
         static ref ATX_RE: Regex = Regex::new(
             r"^[ ]{0,3}#{1,6}(\s|$).*$?"
         ).unwrap();
+    }
+    ATX_RE.is_match(&line)
+}
 
-        static ref SETEXT_RE_STR: &'static str = r"^[ ]{0,3}<CHAR>+\s*$";
-        static ref SETEXT1_RE: Regex = Regex::new(&SETEXT_RE_STR.replace("<CHAR>", "=")).unwrap();
-        static ref SETEXT2_RE: Regex = Regex::new(&SETEXT_RE_STR.replace("<CHAR>", "-")).unwrap();
+/// Custom replacer needed to write one or two `#` in function of the SETEXT
+/// header (`=` or `-`) and to check that the prelude is not a paragraph.
+fn setext_replacer(caps: &Captures) -> String {
+    lazy_static! {
+        // A paragraph cannot have more than 3 initial spaces nor starting by
+        // `>` and must have at least one letter or number.
+        static ref PARAGRAPH_RE: Regex = RegexBuilder::new(r#"^[ ]{0,3}[^>]+.*[\w\d].*$"#)
+            .multi_line(true)
+            .dot_matches_new_line(false)
+            .build()
+            .unwrap();
     }
-    if ATX_RE.is_match(&line) {
-        Some(HeaderType::Atx)
-    } else if SETEXT1_RE.is_match(&next_line) {
-        Some(HeaderType::Setext1)
-    } else if SETEXT2_RE.is_match(&next_line) {
-        Some(HeaderType::Setext2)
+
+    let prelude = match caps.name("prelude") {
+        Some(s) => s.as_str(),
+        None => "",
+    };
+
+    // replace nothing if the prelude is a paragraph
+    let new_header: String = if PARAGRAPH_RE.is_match(&prelude) {
+        format!("{}{}", &caps["header"], &caps["underline"])
     } else {
-        None
+        let formatted_header = caps["header"]
+            .trim()
+            .replace("\r\n", " ")
+            .replace("\r", " ")
+            .replace("\n", " ");
+        match &caps["underline"]
+            .chars()
+            .filter(|c| *c == '=' || *c == '-')
+            .next()
+        {
+            Some('=') => format!("# {}\n", &formatted_header),
+            Some('-') => format!("## {}\n", &formatted_header),
+            _ => panic!("Wrong underline in SETEXT replacer"),
+        }
+    };
+
+    format!("{}{}", prelude, new_header)
+}
+
+/// Replace SETEXT headers by the equivalent ATX ones in the whole text.
+pub(crate) fn setext2atx(md: &str) -> String {
+    lazy_static! {
+        // A SETEXT can have several lines and prelude must by anything except a
+        // paragraph. As negative lookaheads are not supported, the paragraph
+        // exception is checked in the replacer.
+        // Prelude is optional because the header can be at the first line.
+        // Line breaks are necessary in the middle of regex and all line endings
+        // may happen here because the MD text is not transformed yet.
+        static ref LINE_BREAK_RE_STR: &'static str = r"( \n | \r | \r\n )";
+        static ref ANY_LINE_RE_STR: &'static str = r".*";
+        static ref SETEXT_HEADER_RE_STR: String = format!(
+            r"[\ ]{{0,3}} (. {}?)+", *LINE_BREAK_RE_STR
+        );
+        static ref SETEXT_UNDERLINE_RE_STR: &'static str =
+            r"[\ ]{0,3} ( (=)+ | (-)+ ) [\ \t]*";
+        static ref SETEXT_RE_STR: String = format!(
+            r"^
+            (?P<prelude> {line} {br})?
+            (?P<header> {header} {br})
+            (?P<underline> {underline})
+            $",
+            line=*ANY_LINE_RE_STR,
+            br=*LINE_BREAK_RE_STR,
+            header=*SETEXT_HEADER_RE_STR,
+            underline=*SETEXT_UNDERLINE_RE_STR
+        );
+        static ref SETEXT_RE: Regex = RegexBuilder::new(&SETEXT_RE_STR)
+            .multi_line(true)
+            .dot_matches_new_line(false)
+            .ignore_whitespace(true)
+            .build()
+            .unwrap();
     }
+
+    SETEXT_RE.replace_all(md, setext_replacer).to_string()
 }
 
 /// Return the new level for the header adding the current level
@@ -62,15 +130,14 @@ pub(crate) fn new_header_level(
     current_level + hierarchy_level
 }
 
-/// Return the transformed `line` and `next_line` analyzing header patterns.
-/// The `new_line` is the same than original unless it defines a setext header
-/// and the `line` header is returned changing its level and appending
-/// '.unnumbered' and '.unlisted' classes to remove numbers and entries from TOC.
+/// Return the transformed `line` analyzing header patterns.
+/// If the `line` is a header, it is returned changing its level and appending
+/// id and '.unnumbered' and '.unlisted' classes to remove numbers and entries
+/// from TOC. Otherwise the same `String` is returned.
 ///
 /// # Parameters
 ///
 /// - `line`: The line of the header.
-/// - `next_line`: The next line to check Setext headers.
 /// - `hierarchy_level`: The hierarchy level to be added to the current level header.
 /// - `first_transform`: `bool` to not remove from the table of contents the first header.
 /// - `section_number`: All the section numbers. Unnumbered headers are also counted and
@@ -78,50 +145,41 @@ pub(crate) fn new_header_level(
 ///
 /// # Returns
 ///
-/// The modified line, if the next line must be skipped and if the line has been
-/// transformed.
+/// The modified line and if the line has been transformed.
 pub(crate) fn transform_header<'a>(
     line: &str,
-    next_line: &'a str,
     hierarchy_level: usize,
     first_transform: bool,
     mut section_number: &mut Vec<u32>,
-) -> (String, bool, bool) {
-    match header_type(&line, &next_line) {
-        None => {
-            // Unmodified lines
-            (String::from(line), false, false)
-        }
-        Some(header_type) => {
-            let skip_next_line = match header_type {
-                HeaderType::Atx => false,
-                _ => true,
-            };
-            let new_header_level = new_header_level(&line, hierarchy_level, header_type);
-            update_section_number(&mut section_number, new_header_level);
-            let clean_line = String::from(line.replace("#", "").trim());
-            let transformed_line = if new_header_level > 6 {
-                // Markdown only supports 6 levels, so following levels are coded as
-                // simply bold text
-                format!("**{}**\n", clean_line)
-            } else {
-                // The first transformation does not remove the numeration because
-                // it is the section title
-                format!(
-                    "{} {} {{#{}{}}}",
-                    "#".repeat(new_header_level),
-                    clean_line,
-                    header_identifier(&clean_line, section_number),
-                    if first_transform {
-                        ""
-                    } else {
-                        UNNUMBERED_UNLISTED
-                    }
-                )
-            };
+) -> (String, bool) {
+    if is_atx_header(&line) {
+        let new_header_level = new_header_level(&line, hierarchy_level, HeaderType::Atx);
+        update_section_number(&mut section_number, new_header_level);
+        let clean_line = String::from(line.replace("#", "").trim());
+        let transformed_line = if new_header_level > 6 {
+            // Markdown only supports 6 levels, so following levels are coded as
+            // simply bold text
+            format!("**{}**\n", clean_line)
+        } else {
+            // The first transformation does not remove the numeration because
+            // it is the section title
+            format!(
+                "{} {} {{#{}{}}}",
+                "#".repeat(new_header_level),
+                clean_line,
+                header_identifier(&clean_line, section_number),
+                if first_transform {
+                    ""
+                } else {
+                    UNNUMBERED_UNLISTED
+                }
+            )
+        };
 
-            (transformed_line, skip_next_line, true)
-        }
+        (transformed_line, true)
+    } else {
+        // Unmodified lines
+        (String::from(line), false)
     }
 }
 

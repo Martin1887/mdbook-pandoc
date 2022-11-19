@@ -35,8 +35,18 @@ use std::{
 use crate::config::TitleLabels;
 use preprocessor::*;
 
-/// Transform the full Markdown file iterating over pairs of lines (to handle
-/// setext headers) and transforming them setting classes and level.
+/// Transform the full Markdown file following these steps:
+/// 1. Replace all the SETEXT headings by the equivalent ATX headers via regex.
+/// 2. Write the mark indicating the beginning of the MD file.
+/// 3. Iterate over lines to transform the header into the correct level and
+/// adding identifiers and classes.
+/// 4. Write the mark indicating the end of the MD file.
+/// 5. Replace the mdBook math delimiters by the Pandoc ones.
+/// 6. Replace the mdBook custom code block annotations by nothing
+/// (not supported by Pandoc) .
+/// 7. Translate relative paths to start in the `src` folder.
+/// 8. Fix the internal links using the unique identifiers and removing the
+/// wrong ones with a warning.
 fn transform_md(
     md: &str,
     level: usize,
@@ -46,33 +56,14 @@ fn transform_md(
 ) -> String {
     let source_path_str = source_path.clone().unwrap().to_str().unwrap().to_string();
     let mut formatted = format!("\n<!-- {} begins -->\n\n", source_path_str);
-    // Iterate over lines saving the previous line to find headers
-    // (Setext headers are defined using '=' or '-' in the next line)
-    // and writing the transformed `prev_line` in `formatted`.
-    let mut lines = md.lines().chain("\n".lines());
-    let mut prev_line: &str = lines.next().unwrap_or("");
+    let md_atx_only = setext2atx(md);
+    let lines = md_atx_only.lines().chain("\n".lines());
     let mut first_transform = true;
-    let mut skip_line = false;
     for line in lines {
-        if skip_line {
-            skip_line = false;
-            prev_line = &line;
-            continue;
-        }
-        let (transformed_line, skip_next_line, is_transformed) = transform_header(
-            &prev_line,
-            &line,
-            level,
-            first_transform,
-            &mut section_number,
-        );
+        let (transformed_line, is_transformed) =
+            transform_header(&line, level, first_transform, &mut section_number);
         formatted.push_str(&format!("{}\n", transformed_line));
-        if skip_next_line {
-            // `prev_line` is filled in the next step in which no transformation is done
-            skip_line = true;
-        } else {
-            prev_line = &line;
-        }
+
         if is_transformed {
             first_transform = false;
         }
