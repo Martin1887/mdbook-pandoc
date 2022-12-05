@@ -75,6 +75,7 @@ fn transform_md(
     formatted = replace_custom_mdbook_code_block_annotations(&formatted);
     formatted = translate_relative_paths(&formatted, source_path, book_paths);
     formatted = fix_internal_links(&formatted);
+    check_ref_links(&formatted);
 
     formatted
 }

@@ -39,6 +39,7 @@ use std::{
 use config::metadata::MetadataConfig;
 use config::TitleLabels;
 use env_logger::Env;
+use log::warn;
 use mdbook::{renderer::RenderContext, Renderer};
 use parse::parse_book;
 
@@ -53,7 +54,11 @@ impl Renderer for PandocRenderer {
     /// - parse book
     /// - convert book in the specified formats using pandoc.
     fn render(&self, ctx: &RenderContext) -> mdbook::errors::Result<()> {
-        env_logger::Builder::from_env(Env::default().default_filter_or("warn")).init();
+        let log_result =
+            env_logger::Builder::from_env(Env::default().default_filter_or("warn")).try_init();
+        if log_result.is_err() {
+            warn!("Error initializing the log.");
+        }
 
         // TODO: Read from configs
         let title_labels = TitleLabels {

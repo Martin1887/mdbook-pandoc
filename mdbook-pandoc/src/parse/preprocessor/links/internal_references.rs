@@ -75,8 +75,8 @@ impl Replacer for HeaderLinkReplacer {
                 // The link is not modified, it is dead and a warning is printed
                 None => {
                     warn!(
-                        "Missing internal link: {}.\n\
-                            It may not be a header after merging documents or a wrong reference",
+                        "Missing internal link: `{}`. \
+                        It may not be a header after merging documents or a wrong reference",
                         path_str
                     );
                 }

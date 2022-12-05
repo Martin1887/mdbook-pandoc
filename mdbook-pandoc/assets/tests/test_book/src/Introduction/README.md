@@ -10,6 +10,8 @@ The annexes can be found in [Annexes][suffix].
 More features can be found in [things](#things) chapter. Links to sections in other files also work:
 [Subsection of the subsection](   Subsection.md#subsection-of-the-subsection   ).
 
+Shortcuts links also work ([suffix]) and links to missing references report a warning: [suffix1], [suffix1][], [my link][suffix1].
+
 ## Things
 
 And here a LaTeX math formula: \\(\int x dx = \frac{x^2}{2} + C\\) and also a block LaTeX math formula:

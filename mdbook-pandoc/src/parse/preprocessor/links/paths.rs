@@ -3,7 +3,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use super::PATH_RE;
+use super::{PATH_RE, URI_PROTOCOL_RE};
+use log::warn;
 use regex::{Captures, Replacer};
 
 /// Struct with the source path implementing the `Replacer` trait to be able to
@@ -26,39 +27,55 @@ impl Replacer for SourcePathReplacer {
             caps.name("path")
                 .expect("No capture with name `ref_path` nor `path` in the regex")
         });
-        let path_str = path_match.as_str();
-        let path = Path::new(&path_str);
-        if path.is_relative() {
-            let new_path = self.source_dir_path.join(path);
-            let mut new_path_str = new_path.to_str().unwrap().to_string();
-            // only replace paths that exist, assuming wrong paths are labels or other things
-            if new_path.is_file() {
-                replace = true;
-                // if the path is MD file of the book, append a `#` to link
-                // in a posterior step to the first header of the file
-                if self.book_paths.contains(&new_path.canonicalize().unwrap()) {
-                    new_path_str.push_str("#");
-                }
-            } else if new_path_str.contains('#') {
-                // the path can contain a link at the end, try to remove it and check again
-                match new_path_str.rfind('#') {
-                    Some(fragment_pos) => {
-                        let clean_path_str = &new_path_str[0..fragment_pos];
-                        let clean_path = PathBuf::from(clean_path_str);
-                        if clean_path.is_file() {
-                            replace = true;
-                        }
+        let mut path_str = path_match.as_str().to_string();
+        let orig_path_str = path_str.clone();
+        let mut path = Path::new(&path_str);
+        let path_buf;
+        // if the path is relative, make it relative to the `src` directory
+        if path.is_relative() && !path_str.starts_with('#') && !URI_PROTOCOL_RE.is_match(&path_str)
+        {
+            path_buf = self.source_dir_path.join(path);
+            path = path_buf.as_path();
+            path_str = path.to_str().unwrap().to_string();
+        }
+        // only replace paths that exist, assuming wrong paths are labels or other things
+        if path.is_file() {
+            replace = true;
+            // if the path is MD file of the book, append a `#` to link
+            // in a posterior step to the first header of the file
+            if self.book_paths.contains(&path.canonicalize().unwrap()) {
+                path_str.push_str("#");
+            }
+        } else {
+            // the path can contain a link at the end, try to remove it and check again
+            match path_str.rfind('#') {
+                Some(fragment_pos) => {
+                    let clean_path_str = &path_str[0..fragment_pos];
+                    let clean_path = PathBuf::from(clean_path_str);
+                    if clean_path.is_file() {
+                        replace = true;
+                    } else {
+                        warn_if_not_uri_nor_internal_link(&path_str);
                     }
-                    None => {}
-                };
-            }
+                }
+                None => {
+                    warn_if_not_uri_nor_internal_link(&path_str);
+                }
+            };
+        }
 
-            if replace {
-                replacement = replacement.replace(path_str, &new_path_str);
-            }
+        if replace {
+            replacement = replacement.replace(&orig_path_str, &path_str);
         }
 
         dst.push_str(&replacement);
+    }
+}
+
+/// Print a warning if the path is not a URI nor an internal link.
+fn warn_if_not_uri_nor_internal_link(path_str: &str) {
+    if !path_str.starts_with('#') && !URI_PROTOCOL_RE.is_match(path_str) {
+        warn!("Missing path: `{}`.", path_str);
     }
 }
 

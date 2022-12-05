@@ -5,14 +5,24 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use env_logger::Env;
+use log::warn;
+use unicase::UniCase;
+
 use super::*;
 use crate::parse::tests::INIT;
 use crate::parse::transform_md;
 
-/// Set the current directory to the `src` directory of the test book.
-fn set_src_current_dir() {
+/// Initialize the log in test mode and the current path.
+fn setup() {
     INIT.call_once(|| {
         set_current_dir("assets/tests/test_book/src").expect("Error setting the current directory");
+        let log_result = env_logger::Builder::from_env(Env::default().default_filter_or("warn"))
+            .is_test(true)
+            .try_init();
+        if log_result.is_err() {
+            warn!("Error initializing the log");
+        }
     });
 }
 
@@ -76,61 +86,97 @@ fn get_transformed_book() -> String {
 
 #[test]
 fn test_translate_relative_paths() {
-    set_src_current_dir();
+    setup();
     let source_path = get_readme_source_path();
+    let book_paths = get_book_paths();
     let mut relative_link = "[My link](Subsection.md)";
     assert_eq!(
         "[My link](Introduction/Subsection.md#)",
-        translate_relative_paths(relative_link, &source_path, &get_book_paths())
+        translate_relative_paths(relative_link, &source_path, &book_paths)
+    );
+    // a backslash avoids the link
+    relative_link = r"\[My link](Subsection.md)";
+    assert_eq!(
+        relative_link,
+        translate_relative_paths(relative_link, &source_path, &book_paths)
     );
     relative_link = "[My link]( ./Subsection.md)";
     assert_eq!(
         "[My link]( Introduction/./Subsection.md#)",
-        translate_relative_paths(relative_link, &source_path, &get_book_paths())
+        translate_relative_paths(relative_link, &source_path, &book_paths)
     );
     relative_link = "[My link](< ./Subsection.md>)";
     assert_eq!(
         relative_link,
-        translate_relative_paths(relative_link, &source_path, &get_book_paths()),
+        translate_relative_paths(relative_link, &source_path, &book_paths),
         "Spaces inside destinations between `<` and `>` belong to the path"
     );
     relative_link = "[My link](\n./Subsection.md)";
     assert_eq!(
         relative_link,
-        translate_relative_paths(relative_link, &source_path, &get_book_paths()),
+        translate_relative_paths(relative_link, &source_path, &book_paths),
         "Link destinations cannot contain line breaks"
     );
     relative_link = "[My link](../Introduction/Subsection.md \n  'My link')";
     assert_eq!(
         "[My link](Introduction/../Introduction/Subsection.md# \n  'My link')",
-        translate_relative_paths(relative_link, &source_path, &get_book_paths())
+        translate_relative_paths(relative_link, &source_path, &book_paths)
     );
     relative_link = "[My\nlink](../Introduction/Subsection.md \n 'My link')";
     assert_eq!(
         relative_link,
-        translate_relative_paths(relative_link, &source_path, &get_book_paths()),
+        translate_relative_paths(relative_link, &source_path, &book_paths),
         "Link texts cannot contain line breaks"
     );
     relative_link = "[My link](<../../src/Introduction/Level4Section.md>)";
     assert_eq!(
         "[My link](<Introduction/../../src/Introduction/Level4Section.md>)",
-        translate_relative_paths(relative_link, &source_path, &get_book_paths())
+        translate_relative_paths(relative_link, &source_path, &book_paths)
     );
     let mut reference = "[My link]: Subsection.md";
     assert_eq!(
         "[My link]: Introduction/Subsection.md#",
-        translate_relative_paths(reference, &source_path, &get_book_paths())
+        translate_relative_paths(reference, &source_path, &book_paths)
     );
     reference = "[My link]: ../Introduction/Subsection.md";
     assert_eq!(
         "[My link]: Introduction/../Introduction/Subsection.md#",
-        translate_relative_paths(reference, &source_path, &get_book_paths())
+        translate_relative_paths(reference, &source_path, &book_paths)
+    );
+    // absolute path
+    let mut absolute_path = source_path.clone().unwrap().canonicalize().unwrap();
+    let mut absolute_path_str = absolute_path.to_str().unwrap();
+    let mut reference = format!("[My link]: {}", absolute_path_str);
+    assert_eq!(
+        format!("{}#", reference),
+        translate_relative_paths(&reference, &source_path, &book_paths)
+    );
+    // incorrect absolute path, should not modify the link and show a warning
+    absolute_path = absolute_path.parent().unwrap().join("imaginary_file");
+    absolute_path_str = absolute_path.to_str().unwrap();
+    reference = format!("[My link]: {}", absolute_path_str);
+    assert_eq!(
+        reference,
+        translate_relative_paths(&reference, &source_path, &book_paths)
+    );
+
+    // URI
+    reference = String::from("[My link]: https://rust-lang.org");
+    assert_eq!(
+        reference,
+        translate_relative_paths(&reference, &source_path, &book_paths)
+    );
+    // URI with section
+    reference = String::from("[My link]: https://rust-lang.org#section");
+    assert_eq!(
+        reference,
+        translate_relative_paths(&reference, &source_path, &book_paths)
     );
 }
 
 #[test]
 fn test_translate_internal_reference() {
-    set_src_current_dir();
+    setup();
     let fixed = fix_internal_links(&get_transformed_readme());
     // assert that the fixed link is in the fixed text
     let pos = fixed.find("(#h1__1__things");
@@ -139,7 +185,7 @@ fn test_translate_internal_reference() {
 
 #[test]
 fn test_translate_reference_another_file() {
-    set_src_current_dir();
+    setup();
     let fixed = fix_external_links(&get_transformed_book());
     // assert that the fixed link is in the fixed text
     let pos = fixed.find("#h1__2__1__subsection-of-the-subsection");
@@ -150,7 +196,7 @@ fn test_translate_reference_another_file() {
 
 #[test]
 fn test_find_header_id_in_text() {
-    set_src_current_dir();
+    setup();
     let text = get_transformed_readme();
     assert_eq!(
         "#h1__chapter-1",
@@ -164,4 +210,33 @@ fn test_find_header_id_in_text() {
         "#h1__chapter-1",
         find_header_id_in_text("things", &text, true).unwrap()
     );
+}
+
+#[test]
+fn test_normalize_label() {
+    let mut label = "ẞ";
+    assert_eq!(UniCase::new("SS"), normalize_label(label));
+    label = "    Things with \n multiple  spaces and needed to trim\t.\n";
+    assert_eq!(
+        UniCase::new("Things with multiple spaces and needed to trim ."),
+        normalize_label(label)
+    );
+}
+
+#[test]
+fn test_label_matches() {
+    let test_text = r#"A link that [Matches] and a [missing][missing link].
+        
+Here a [working    link][].
+    
+[matches]: https://match.es
+
+[working link]: https://worki.ng"#;
+
+    assert_eq!(true, label_matches("Matches", &test_text));
+    assert_eq!(false, label_matches("Matches1", &test_text));
+    assert_eq!(false, label_matches("Matches 1", &test_text));
+    assert_eq!(false, label_matches("missing link", &test_text));
+    assert_eq!(true, label_matches("WORKING LINK", &test_text));
+    assert_eq!(true, label_matches("working   link", &test_text));
 }
