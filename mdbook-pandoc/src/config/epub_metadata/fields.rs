@@ -1,13 +1,13 @@
 //! Definition of the metadata fields and their conversions from a string for
 //! the fields that can be a string or a map.
 
-use crate::metadata::subfields::*;
+use super::subfields::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 #[serde(untagged)]
 #[serde(rename_all = "lowercase")]
-pub(crate) enum MetadataIdentifier {
+pub enum MetadataIdentifier {
     Text(String),
     Scheme(MetadataIdentifierScheme),
 }
@@ -15,7 +15,7 @@ pub(crate) enum MetadataIdentifier {
 #[derive(Serialize, Deserialize)]
 #[serde(untagged)]
 #[serde(rename_all = "lowercase")]
-pub(crate) enum MetadataTitle {
+pub enum MetadataTitle {
     Text(String),
     Types(Vec<MetadataTitleType>),
 }
@@ -23,7 +23,7 @@ pub(crate) enum MetadataTitle {
 #[derive(Serialize, Deserialize)]
 #[serde(untagged)]
 #[serde(rename_all = "lowercase")]
-pub(crate) enum MetadataCreator {
+pub enum MetadataCreator {
     Text(String),
     Roles(Vec<MetadataCreatorRole>),
 }
@@ -31,31 +31,31 @@ pub(crate) enum MetadataCreator {
 #[derive(Serialize, Deserialize)]
 #[serde(untagged)]
 #[serde(rename_all = "lowercase")]
-pub(crate) enum MetadataSubject {
+pub enum MetadataSubject {
     Text(String),
     Types(Vec<MetadataSubjectType>),
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-pub(crate) enum MetadataProgressionDirection {
+pub enum MetadataProgressionDirection {
     Ltr,
     Rtl,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub(crate) struct MetadataIbooks {
-    pub(crate) version: String,
+pub struct MetadataIbooks {
+    pub version: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) specified_fonts: Option<bool>,
+    pub specified_fonts: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) ipad_orientation_lock: Option<MetadataOrientationLock>,
+    pub ipad_orientation_lock: Option<MetadataOrientationLock>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) iphone_orientation_lock: Option<MetadataOrientationLock>,
+    pub iphone_orientation_lock: Option<MetadataOrientationLock>,
     // The additional tuple struct is needed because the default value is true
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) binding: Option<bool>,
+    pub binding: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) scroll_axis: Option<MetadataIbooksScrollAxis>,
+    pub scroll_axis: Option<MetadataIbooksScrollAxis>,
 }

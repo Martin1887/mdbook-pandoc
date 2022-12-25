@@ -13,7 +13,7 @@ mathjax-support = true
 
 [output.pandoc]
 
-[output.pandoc.metadata]
+[output.pandoc.general.epub_metadata_fields]
 title = "Test ebook"
 creator = [{role = "author", text = "Test author"}, {role = "illustrator", text = "Test"}]
 date = "2022-01-01"
@@ -22,3 +22,10 @@ lang = "en-US"
 description = "This description is a test"
 group-position = 0
 ibooks = {version = "1.0", iphone-orientation-lock = "portrait-only"}
+
+[output.pandoc.pdf]
+filename = "book.latex"
+format = "pdf"
+
+[output.pandoc.epub]
+format = "epub"

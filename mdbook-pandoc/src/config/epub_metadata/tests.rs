@@ -1,7 +1,7 @@
 use serde_yaml;
 use toml;
 
-use crate::metadata::Metadata;
+use super::EpubMetadata;
 
 fn get_basic_metadata_toml() -> String {
     r#"
@@ -32,7 +32,7 @@ fn get_complex_metadata_toml() -> String {
 #[test]
 fn test_basic_metadata() {
     let input_text = get_basic_metadata_toml();
-    let parsed: Metadata = toml::from_str(&input_text).unwrap();
+    let parsed: EpubMetadata = toml::from_str(&input_text).unwrap();
     assert_eq!(
         "title: Test ebook\ndescription: This description is a test\n".to_string(),
         format!("{}", serde_yaml::to_string(&parsed).unwrap())
@@ -64,7 +64,7 @@ ibooks:
   binding: true
   scroll-axis: horizontal
 "#;
-    let parsed: Metadata = toml::from_str(&input_text).unwrap();
+    let parsed: EpubMetadata = toml::from_str(&input_text).unwrap();
     assert_eq!(
         correct_output,
         format!("{}", serde_yaml::to_string(&parsed).unwrap())

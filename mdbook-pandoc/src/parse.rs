@@ -326,7 +326,7 @@ fn parse_book_contents(
 /// Parse a full mdBook getting (and adding) parts and concatenating prefixes,
 /// numbered chapters and suffixes, returning the result as String. writing the contents in the file
 /// `book/pandoc/md/book.md` and returning that path.
-pub(crate) fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> String {
+pub fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> String {
     // Set the current working directory to the `src` path (everything is relative to the summary)
     let src_path = ctx.root.join("src");
     set_current_dir(&src_path).expect("Error setting the current dir to root path");

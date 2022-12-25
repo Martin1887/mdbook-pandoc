@@ -1,4 +1,9 @@
-use std::{fs::File, io::Read, path::PathBuf, sync::Once};
+use std::{
+    fs::{remove_dir_all, File},
+    io::Read,
+    path::PathBuf,
+    sync::Once,
+};
 
 use env_logger::Env;
 use log::warn;
@@ -20,6 +25,9 @@ fn setup() {
     });
 }
 
+/// Test the full Pandoc transformation of the book checking that the output MD
+/// file is equal to the expected one and that the transformed files are
+/// generated.
 #[test]
 fn test_parse_book() {
     setup();
@@ -33,7 +41,13 @@ fn test_parse_book() {
         "/assets/tests/test_book"
     ));
 
-    let result_path = root_path.join("book/pandoc/book.md");
+    // Clean the output directory.
+    let output_dir_path = root_path.join("book/pandoc");
+    remove_dir_all(output_dir_path.clone()).expect("Error cleaning the output directory");
+
+    let result_path = output_dir_path.clone().join("book.md");
+    let pdf_path = output_dir_path.clone().join("book.latex.pdf");
+    let epub_path = output_dir_path.join("book.epub");
 
     MDBook::load(root_path.clone())
         .expect("Error loading the book")
@@ -46,4 +60,7 @@ fn test_parse_book() {
         .read_to_end(&mut result_bytes)
         .expect("Error reading the parsed file");
     assert_eq!(correct_parse.to_vec(), result_bytes);
+
+    assert!(pdf_path.is_file());
+    assert!(epub_path.is_file());
 }

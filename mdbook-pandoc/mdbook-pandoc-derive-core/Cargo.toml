@@ -1,0 +1,15 @@
+[package]
+name = "mdbook-pandoc-derive-core"
+keywords = ["macro", "derive", "mdbook-pandoc"]
+license = "MPL-2.0"
+repository = "https://github.com/Martin1887/mdbook-pandoc"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+colored-diff = "0.2"
+
+[dependencies]
+syn = {version = "1.0", features = ["full"]}
+quote = "1.0"
+proc-macro2 = "1.0"

@@ -1,46 +1,482 @@
 //! Tests for the configuration parameters
 
-use std::fs;
+use std::path::PathBuf;
 
-use mdbook::Config;
-
-use crate::metadata::{fields::MetadataTitle, Metadata};
-
-use super::metadata::MetadataConfig;
+use crate::{
+    actual_or_default,
+    config::{formats::PandocFormat, *},
+};
+use toml;
 
 #[test]
-fn test_metadata_from_path() {
-    let cfg_toml = r#"
-        [output.pandoc]
-        metadata = "metadata.yml"
+fn test_mixed_title_labels() {
+    let cfg = r#"
+    [general]
+    chapters_label = "My chapters"
     "#;
-    let toml: Config = toml::from_str(&cfg_toml).expect("Error loading test TOML");
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    assert_eq!(parsed.general.labels.preamble, String::from("Preamble"));
+    assert_eq!(parsed.general.labels.chapters, String::from("My chapters"));
+    assert_eq!(parsed.general.labels.annexes, String::from("Annexes"));
+}
 
-    match toml
-        .get_deserialized_opt("output.pandoc.metadata")
-        .expect("Error getting metadata value")
-    {
-        Some(MetadataConfig::Path(path)) => {
-            let metadata_path = format!(
-                "{}/{}/{}",
-                env!("CARGO_MANIFEST_DIR"),
-                "assets/tests/test_book",
-                path
-            );
-            let metadata: Metadata = serde_yaml::from_str(
-                &fs::read_to_string(&metadata_path).expect("Error reading the metadata file"),
-            )
-            .expect("Error parsing metadata from file");
-            match metadata.title.expect("No title in metadata") {
-                MetadataTitle::Text(title) => assert_eq!(title, String::from("My nice title")),
-                _ => panic!("No text title in metadata"),
-            };
-            let ibooks = metadata.ibooks.expect("No ibooks in metadata");
-            assert_eq!(ibooks.binding, None);
-            assert_eq!(ibooks.version, "4.0");
-            assert_eq!(metadata.publisher, None);
-        }
-        Some(_) => panic!("Metadata path not read as path"),
-        None => panic!("Error getting metadata value"),
-    }
+#[test]
+fn test_format_extensions() {
+    let added_cfg = r#"
+    [general]
+
+    [pdf]
+    format = "pdf"
+    added-extensions = ["one", "plus"]
+    "#;
+    let added: MdBookPandocConfig = toml::from_str(added_cfg).unwrap();
+    let added_command = added.commands.get("pdf").unwrap();
+    assert_eq!(
+        added_command.args(&PathBuf::new(), "pdf", &added.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=pdf",
+            "--output=book.pdf",
+            "--from=markdown+one+plus",
+            "--number-sections",
+            "--toc"
+        ]
+    );
+    let added_and_removed_cfg = format!(
+        "{}\n{}",
+        added_cfg,
+        r#"
+        removed-extensions = ["minus"]
+        "#
+    );
+    let added_and_removed: MdBookPandocConfig = toml::from_str(&added_and_removed_cfg).unwrap();
+    let added_and_removed_command = added_and_removed.commands.get("pdf").unwrap();
+    assert_eq!(
+        added_and_removed_command.args(&PathBuf::new(), "pdf", &added.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=pdf",
+            "--output=book.pdf",
+            "--from=markdown+one+plus-minus",
+            "--number-sections",
+            "--toc"
+        ]
+    );
+}
+
+#[test]
+fn test_custom_args() {
+    let cfg = r#"
+    [general]
+    filename = "epub"
+    from_format = "markua"
+    
+    [epub]
+    format = {"custom" = "epub4"}
+    number-sections = false
+    toc = true
+    extra-args = ["--extra=4", "--extra2"]
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("epub").unwrap();
+    assert_eq!(command.format, PandocFormat::Custom("epub4".to_string()));
+    assert_eq!(
+        parsed.general.formats_default.filename,
+        Some(Filename::Custom("epub".to_string()))
+    );
+    let combined_cfg = ActualAndDefaultCfg {
+        actual: Box::new(&command.generic_args),
+        default: Box::new(&parsed.general.formats_default),
+    };
+    assert_eq!(
+        actual_or_default!(combined_cfg, filename),
+        Filename::Custom(String::from("epub"))
+    );
+    assert_eq!(
+        command.args(&PathBuf::new(), "epub", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=epub4",
+            "--output=epub.epub",
+            "--extra=4",
+            "--extra2",
+            "--from=markua",
+            "--toc"
+        ]
+    );
+}
+
+#[test]
+fn test_repeated_args() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    metadata = ["title:Great"]
+    variable = ["boolean_var", "my_var:my_value"]
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--metadata=title:Great",
+            "--variable=boolean_var",
+            "--variable=my_var:my_value"
+        ]
+    );
+}
+
+#[test]
+fn test_dpi() {
+    let cfg = r#"
+    [general]
+    dpi = 300
+    
+    [docx]
+    format = "docx"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--dpi=300"
+        ]
+    );
+}
+
+#[test]
+fn test_highlight_style() {
+    let cfg = r#"
+    [general]
+    
+    [pdf]
+    format = "pdf"
+    highlight-style = "tango"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("pdf").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "pdf", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=pdf",
+            "--output=book.pdf",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--highlight-style=tango"
+        ]
+    );
+    let cfg = r#"
+    [general]
+    
+    [pdf]
+    format = "pdf"
+    highlight-style = {"custom" = "vulcan"}
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("pdf").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "pdf", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=pdf",
+            "--output=book.pdf",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--highlight-style=vulcan"
+        ]
+    );
+}
+
+#[test]
+fn test_toc_depth_default_display() {
+    assert_eq!(
+        "0",
+        TocDepth::default().to_string(),
+        "Error printing `TocDepth`"
+    );
+}
+
+#[test]
+fn test_toc_depth() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    toc-depth = 4
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--toc-depth=4"
+        ]
+    );
+}
+
+#[test]
+fn test_reference_location() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    reference-location = "block"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--reference-location=block"
+        ]
+    );
+}
+
+#[test]
+fn test_top_level_division() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    top-level-division = "section"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--top-level-division=section"
+        ]
+    );
+}
+
+#[test]
+fn test_slide_level() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    slide-level = 2
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--slide-level=2"
+        ]
+    );
+}
+
+#[test]
+fn test_email_obfuscation() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    email-obfuscation = "javascript"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--email-obfuscation=javascript"
+        ]
+    );
+}
+
+#[test]
+fn test_epub_chapter_level() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    epub-chapter-level = 4
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--epub-chapter-level=4"
+        ]
+    );
+}
+
+#[test]
+fn test_epub_subdirectory() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    epub-subdirectory = {"custom" = "other"}
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--epub-subdirectory=other"
+        ]
+    );
+}
+
+#[test]
+fn test_ipynb_output() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    ipynb-output = "all"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--ipynb-output=all"
+        ]
+    );
+}
+
+#[test]
+fn test_pdf_engine() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    pdf-engine = "tectonic"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--pdf-engine=tectonic"
+        ]
+    );
+}
+
+#[test]
+fn test_tex_url() {
+    let cfg = r#"
+    [general]
+    
+    [docx]
+    format = "docx"
+    katex = ""
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("docx").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "docx", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=docx",
+            "--output=book.docx",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--katex"
+        ]
+    );
 }

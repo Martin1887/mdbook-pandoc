@@ -21,9 +21,8 @@
 //! of the file and that header is used as its header, the name of the file is
 //! ignored.
 
-mod config;
-mod metadata;
-mod parse;
+pub mod config;
+pub mod parse;
 #[cfg(test)]
 mod tests;
 
@@ -31,17 +30,20 @@ mod tests;
 extern crate lazy_static;
 
 use std::{
-    fs::{self, File},
+    env::set_current_dir,
+    fs::{create_dir_all, File},
     io::Write,
     path::{Path, PathBuf},
 };
 
-use config::metadata::MetadataConfig;
-use config::TitleLabels;
+use config::MdBookPandocConfig;
 use env_logger::Env;
 use log::warn;
 use mdbook::{renderer::RenderContext, Renderer};
 use parse::parse_book;
+
+const COMMAND_ERROR_MSG: &str = r#"Error launching a Pandoc command, check that \
+Pandoc is installed in your system and available in your path as `pandoc`"#;
 
 pub struct PandocRenderer;
 impl Renderer for PandocRenderer {
@@ -60,34 +62,52 @@ impl Renderer for PandocRenderer {
             warn!("Error initializing the log.");
         }
 
-        // TODO: Read from configs
-        let title_labels = TitleLabels {
-            preamble: String::from("Preamble"),
-            chapters: String::from("Chapters"),
-            annexes: String::from("Annexes"),
-        };
-
-        let metadata = match ctx
+        let cfg = ctx
             .config
-            .get_deserialized_opt::<MetadataConfig, &str>("output.pandoc.metadata")
+            .get_deserialized_opt::<MdBookPandocConfig, &str>("output.pandoc")
             .expect("Error reading the configuration file")
-        {
-            Some(config_text) => format!(
-                "---\n{}---\n",
-                match config_text {
-                    MetadataConfig::Path(path) =>
-                        fs::read_to_string(path).expect("Error reading the YAML path"),
-                    MetadataConfig::Metadata(metadata) => {
-                        serde_yaml::to_string(&metadata).unwrap()
-                    }
-                }
-            ),
-            None => String::new(),
-        };
+            .unwrap();
+        let general_cfg = cfg.general;
+        let title_labels = &general_cfg.labels;
+        let metadata = format!(
+            "---\n{}---\n",
+            serde_yaml::to_string(&general_cfg.epub_metadata_fields).expect(
+                "Error reading the EPUB metadata fields, check the \
+            value of the `epub_metadata_fields`.",
+            )
+        );
 
         let parsed = format!("{}{}", metadata, parse_book(&ctx, &title_labels));
+        let parsed_path = write_pandoc_md_file(&ctx.destination, &parsed);
 
-        let _parsed_path = write_pandoc_md_file(&ctx.destination, &parsed);
+        // the path must be the book `src` folder because paths are relative to
+        // that directory
+        set_current_dir(&ctx.source_dir())?;
+        for (extension, pandoc_command) in cfg.commands {
+            let mut command =
+                pandoc_command.command(&ctx.destination, &parsed_path, &extension, &general_cfg);
+            let command_args_str = format!(
+                "{:#?}",
+                command
+                    .get_args()
+                    .collect::<Vec<&std::ffi::OsStr>>()
+                    .join(std::ffi::OsStr::new(" "))
+            );
+            log::info!(
+                "pandoc {}",
+                command_args_str
+                    .strip_prefix("\"")
+                    .unwrap()
+                    .strip_suffix("\"")
+                    .unwrap(),
+            );
+            let status = command.status().expect(COMMAND_ERROR_MSG);
+
+            if !status.success() {
+                log::error!("{}", status);
+            }
+        }
+
         Ok(())
     }
 }
@@ -95,6 +115,9 @@ impl Renderer for PandocRenderer {
 /// Write the parsed contents into the Pandoc MD file and return that path
 /// (`./book/pandoc/md/book.md`)
 fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
+    if !dest_path.is_dir() {
+        create_dir_all(&dest_path).expect("Error creating the destination directory");
+    }
     let md_path = dest_path.join("book.md");
 
     let mut md_out = File::create(&md_path).expect("Error writing the parsed MD file");
