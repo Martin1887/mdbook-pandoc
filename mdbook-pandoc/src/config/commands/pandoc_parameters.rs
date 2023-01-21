@@ -41,6 +41,8 @@ pub struct PandocCommandSharedParameters {
 #[derive(PandocRepeatedArgs, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct PandocRepeatedArguments {
+    /// Specify metadata YAML or JSON files with the metadata values.
+    pub metadata_file: Option<Vec<String>>,
     /// Specify metadata values that overwrite `epub_metadata` values in format
     /// `key` or `key:val`.
     pub metadata: Option<Vec<String>>,
