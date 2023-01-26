@@ -6,6 +6,8 @@ pub mod commands;
 pub mod epub_metadata;
 /// Documents formats.
 pub mod formats;
+/// Pandoc templates.
+pub mod templates;
 #[cfg(test)]
 mod tests;
 

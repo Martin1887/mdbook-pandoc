@@ -1,0 +1,55 @@
+
+\documentclass[a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{RJournal}
+\usepackage{amsmath,amssymb,array}
+\usepackage{booktabs}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+%% load any required packages here
+
+
+\begin{document}
+
+%% do not edit, for illustration only
+\sectionhead{Contributed research article}
+\volume{XX}
+\volnumber{YY}
+\year{20ZZ}
+\month{AAAA}
+
+\begin{article}
+
+% This is necessary to avoid compilation errors
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+\title{$title$}
+\author{by $for(author)$ $author.name$$sep$, $endfor$}
+
+\maketitle
+
+\abstract{
+$abstract$
+}
+
+$body$
+
+\bibliography{$bibliography$}
+
+$for(author)$
+
+\address{$author.name$\\
+  $author.affiliation$\\
+  $author.address$\\
+  USA\\}
+\email{$author.email$}
+$endfor$
+
+\end{article}
+
+\end{document}

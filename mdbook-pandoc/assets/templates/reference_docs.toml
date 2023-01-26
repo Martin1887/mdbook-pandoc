@@ -1,0 +1,14 @@
+[[templates]]
+description = "MLA-formatted docx."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/shushcat/mla_paper_template" }
+contents_file = "reference_docs/mla8.docx"
+
+[[templates]]
+description = "Simple book template."
+license = { name = "MIT", url = "https://github.com/wikiti/pandoc-book-template/blob/master/LICENSE.md", repository_url = "https://github.com/wikiti/pandoc-book-template" }
+contents_file = "reference_docs/simple_book.docx"
+
+[[templates]]
+description = "Numbered sections docx."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/krissen/pandoc-extra" }
+contents_file = "reference_docs/numbered_sections.docx"

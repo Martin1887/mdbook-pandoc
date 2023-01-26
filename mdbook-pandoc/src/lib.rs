@@ -84,6 +84,7 @@ impl Renderer for PandocRenderer {
         // that directory
         set_current_dir(&ctx.source_dir())?;
         for (extension, pandoc_command) in cfg.commands {
+            pandoc_command.write_template_and_assets_files(&general_cfg);
             let mut command =
                 pandoc_command.command(&ctx.destination, &parsed_path, &extension, &general_cfg);
             let command_args_str = format!(

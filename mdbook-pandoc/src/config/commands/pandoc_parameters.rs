@@ -1,4 +1,4 @@
-use crate::actual_or_default;
+use crate::{actual_or_default, config::templates::*};
 use mdbook_pandoc_derive::{PandocCommandArgs, PandocRepeatedArgs};
 use serde::{Deserialize, Serialize};
 
@@ -14,6 +14,10 @@ pub struct PandocCommandSharedParameters {
     /// set this parameter. For example, to generate a PDF output with the
     /// name `my_book.latex.pdf` in the entry `output.pandoc.pdf` set the field
     /// `filename` to `my_book.latex` and the `format` to `pdf`.
+    ///
+    /// Another manner of having sub-extensions is putting the key of the table
+    /// inside quotes, e.g. "pandoc.latex.pdf". This manner allows generating
+    /// several files with the same final extension.
     pub filename: Option<Filename>,
     /// The added extensions to the source format without the `+` character.
     pub added_extensions: Option<Vec<String>>,
@@ -27,6 +31,8 @@ pub struct PandocCommandSharedParameters {
     pub number_sections: Option<DefaultTrueBool>,
     /// If a table of contents is included, `true` by default.
     pub toc: Option<DefaultTrueBool>,
+    /// Additional assets files, written in the `src` folder of the book.
+    pub assets: Option<Vec<PandocTemplateAsset>>,
     /// Pandoc command arguments that can appear several times.
     #[serde(flatten)]
     pub repeated_args: PandocRepeatedArguments,
@@ -49,21 +55,25 @@ pub struct PandocRepeatedArguments {
     /// Template variables values in format `key` or `key:val`.
     pub variable: Option<Vec<String>>,
     /// Syntax definitions XML files.
-    pub syntax_definition: Option<Vec<String>>,
+    pub syntax_definition: Option<Vec<PandocSyntaxDefinition>>,
     /// Files whose contents are included in the header of HTML documents.
-    pub include_in_header: Option<Vec<String>>,
+    pub include_in_header: Option<Vec<PandocIncludeInHeader>>,
     /// Files whose contents are included just after the `body` tag in HTML and
     /// LaTeX.
-    pub include_before_body: Option<Vec<String>>,
+    pub include_before_body: Option<Vec<PandocIncludeBeforeBody>>,
     /// Files whose contents are included just before the closing `body` tag
     /// in HTML and LaTeX.
-    pub include_after_body: Option<Vec<String>>,
+    pub include_after_body: Option<Vec<PandocIncludeAfterBody>>,
     /// List of paths to search resources.
     pub resource_path: Option<Vec<String>>,
     /// List of CSS files.
-    pub css: Option<Vec<String>>,
+    pub css: Option<Vec<PandocCss>>,
     /// List of fonts to be embedded in the EPUB.
-    pub epub_embed_font: Option<Vec<String>>,
+    pub epub_embed_font: Option<Vec<PandocEpubEmbedFont>>,
+    /// Filter to transform the input after the Pandoc parsing.
+    pub filter: Option<Vec<String>>,
+    /// Filter to transform the input after the Pandoc parsing with a Lua filter.
+    pub lua_filter: Option<Vec<String>>,
 }
 
 /// Struct defining the Pandoc arguments that are literally written and have
@@ -87,10 +97,6 @@ pub struct PandocCommandArguments {
     /// Default extension for images without extensions. Useful to use different
     /// images in each output format.
     pub default_image_extension: Option<String>,
-    /// Filter to transform the input after the Pandoc parsing.
-    pub filter: Option<String>,
-    /// Filter to transform the input after the Pandoc parsing with a Lua filter.
-    pub lua_filter: Option<String>,
     /// Preserve tabs instead converting them to spaces.
     pub preserve_tabs: Option<bool>,
     /// Directory where extract images and other media.
@@ -106,7 +112,7 @@ pub struct PandocCommandArguments {
     /// Highlight style for source code, `pygments` by default.
     pub highlight_style: Option<HighlightStyle>,
     /// Custom template for the generated document.
-    pub template: Option<String>,
+    pub template: Option<PandocTemplate>,
     /// The TOC depth, a value between 1 and 6, `3` by default.
     pub toc_depth: Option<TocDepth>,
     /// Request headers in format `NAME:VAL`.
@@ -143,10 +149,10 @@ pub struct PandocCommandArguments {
     /// Prefix for HTML title headers (but not for titles in the body).
     pub title_prefix: Option<String>,
     /// File used as style reference for docx, pptx, potx and odt.
-    pub reference_doc: Option<String>,
+    pub reference_doc: Option<PandocReferenceDoc>,
     /// EPUB cover image, overwriting the specified in the metadata.
     pub epub_cover_image: Option<String>,
-    /// EPUB metadata file, whose values overwrite the specified ones in the
+    /// EPUB metadata XML file, whose values overwrite the specified ones in the
     /// general configuration, since they are written as YAML metadata block.
     pub epub_metadata: Option<String>,
     /// Number of heading level in which the EPUB is splitted in chapters.
@@ -167,7 +173,7 @@ pub struct PandocCommandArguments {
     pub bibliography: Option<String>,
     /// CSL metadata field as the specified file (equivalent to
     /// `--metadata csl=FILE`), overriding any value set in the metadata.
-    pub csl: Option<String>,
+    pub csl: Option<PandocCsl>,
     /// `citations-abbreviations` metadata field as the specified file
     /// (equivalent to `--metadata citation-abbreviations=FILE).
     pub citation_abbreviations: Option<String>,

@@ -139,6 +139,32 @@ fn test_repeated_args() {
 }
 
 #[test]
+fn test_template() {
+    let cfg = r#"
+    [general]
+    
+    [pdf]
+    format = "pdf"
+    template = "latex_eisvogel"
+    "#;
+    let parsed: MdBookPandocConfig = toml::from_str(cfg).unwrap();
+    let command = parsed.commands.get("pdf").unwrap();
+    assert_eq!(
+        command.args(&PathBuf::new(), "pdf", &parsed.general),
+        vec![
+            "--self-contained",
+            "--eol=lf",
+            "--to=pdf",
+            "--output=book.pdf",
+            "--from=markdown",
+            "--number-sections",
+            "--toc",
+            "--template=eisvogel.latex"
+        ]
+    );
+}
+
+#[test]
 fn test_dpi() {
     let cfg = r#"
     [general]

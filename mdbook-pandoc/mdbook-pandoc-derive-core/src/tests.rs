@@ -1,9 +1,11 @@
+use std::path::PathBuf;
+
 use colored_diff;
 use proc_macro2::TokenStream;
 use quote::quote;
 
 use crate::{
-    pandoc_command_args_derive_core, pandoc_repeated_args_derive_core,
+    pandoc_command_args_derive_core, pandoc_repeated_args_derive_core, pandoc_template_gen_core,
     serde_enum_display_derive_core,
 };
 
@@ -166,7 +168,7 @@ fn test_repeated_wrong_struct() {
     let wrong_struct = quote! {
         pub struct WrongStruct {
             pub field1: Option<Vec<String>>,
-            pub field2: Option<Vec<bool>>,
+            pub field2: Option<Vec<Vec<bool>>>,
         }
     };
     pandoc_repeated_args_derive_core(wrong_struct);
@@ -194,6 +196,95 @@ fn test_serde_enum_display_derive() {
         }
     };
     assert_tokens_eq(&expected, &serde_enum_display_derive_core(test_enum));
+}
+
+#[test]
+fn test_templates_enum() {
+    let project_root = PathBuf::from(env!["CARGO_MANIFEST_DIR"]).join("..");
+    let templates_toml_path = "assets/tests/templates/templates.toml";
+    let templates_toml_absolute_path = project_root.join(templates_toml_path);
+    let test_template_path = templates_toml_absolute_path
+        .parent()
+        .unwrap()
+        .join("tex/test.tex")
+        .into_os_string()
+        .into_string()
+        .unwrap();
+    let test_enum = quote! {
+        #[derive(Clone, Default, Serialize, Deserialize, Debug, PartialEq, SerdeEnumDisplay)]
+        #[serde(rename_all = "snake_case")]
+        pub enum PandocTemplate {}
+    };
+    let expected = quote! {
+        #[derive(Clone, Default, Serialize, Deserialize, Debug, PartialEq, SerdeEnumDisplay)]
+        #[serde(rename_all = "snake_case")]
+        pub enum PandocTemplate {
+            /// Use the Pandoc default (not writing the argument).
+            #[serde(rename = "")]
+            #[default]
+            Default,
+            /// In TOML write a custom value with the syntax `{"custom" = "value"}`.
+            Custom(String),
+            #[doc = "Test template"]
+            TexTest
+        }
+
+        impl PandocResource for PandocTemplate {
+            /// Return a String with the license information of the template.
+            fn license(&self) -> Option<&str> {
+                match self {
+                    PandocTemplate::TexTest => Some("License: MIT ().\nRepository URL: "),
+                    // Default and custom templates have not a known license
+                    _ => None,
+                }
+            }
+
+            /// Return the description of the template.
+            fn description(&self) -> Option<&str> {
+                match self {
+                    PandocTemplate::TexTest => Some("Test template"),
+                    // Default and custom templates have not description
+                    _ => None,
+                }
+            }
+
+            /// Return the contents of the template as a vector of bytes.
+            fn contents(&self) -> Option<Vec<u8>> {
+                match self {
+                    PandocTemplate::TexTest => Some(include_bytes!(#test_template_path).to_vec()),
+                    // Default and custom templates have not contents
+                    // (custom templates files must already exist in the
+                    // Pandoc templates directory)
+                    _ => None,
+                }
+            }
+
+            /// Return the filename that must have the template in the Pandoc
+            /// templates directory.
+            fn filename(&self) -> Option<&str> {
+                match self {
+                    PandocTemplate::TexTest => Some("test.tex"),
+                    // For custom templates the filename is the specified one
+                    PandocTemplate::Custom(s) => Some(s),
+                    // Default templates have not a filename
+                    _ => None,
+                }
+            }
+        }
+
+        impl Display for PandocTemplate {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                match self.filename() {
+                    Some(filename) => write!(f, "{}", filename),
+                    None => write!(f, "")
+                }
+            }
+        }
+    };
+    assert_tokens_eq(
+        &expected,
+        &pandoc_template_gen_core(quote!(#templates_toml_path), test_enum),
+    );
 }
 
 // Function really inspired by (`anyinput` crate)

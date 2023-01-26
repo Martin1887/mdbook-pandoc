@@ -1,6 +1,7 @@
 //! Core implementation of the arguments derive.
 
 mod command_args;
+mod pandoc_template_gen;
 mod repeated_args;
 mod serde_enum_derive;
 
@@ -8,6 +9,7 @@ mod serde_enum_derive;
 mod tests;
 
 pub use command_args::*;
+pub use pandoc_template_gen::*;
 pub use repeated_args::*;
 pub use serde_enum_derive::*;
 use syn::{Path, Type};

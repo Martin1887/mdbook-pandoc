@@ -1,0 +1,14 @@
+[[templates]]
+description = "Simple book template CSS taken from https://gist.github.com/killercup/5917178."
+license = { name = "UNLICENSE", url = "", repository_url = "https://gist.github.com/killercup/5917178" }
+contents_file = "css/simple_book.css"
+
+[[templates]]
+description = "Bootstrap HTML template."
+license = { name = "Apache 2.0", url = "https://github.com/tonyblundell/pandoc-bootstrap-template/blob/master/LICENSE", repository_url = "https://github.com/tonyblundell/pandoc-bootstrap-template" }
+contents_file = "css/bootstrap.css"
+
+[[templates]]
+description = "Bootstrap HTML with a sticky accordion menu template."
+license = { name = "Apache 2.0", url = "https://github.com/diversen/pandoc-bootstrap-adaptive-template/blob/master/LICENSE", repository_url = "https://github.com/diversen/pandoc-bootstrap-adaptive-template" }
+contents_file = "css/bootstrap_sticky_menu.css"

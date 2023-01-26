@@ -5,7 +5,7 @@
 
 use proc_macro2::TokenStream;
 use quote::quote;
-use syn::{parse2, ItemStruct};
+use syn::{parse2, ItemStruct, PathArguments};
 
 use crate::{extract_type_from_path, extract_type_path};
 
@@ -20,7 +20,7 @@ pub fn pandoc_repeated_args_derive_core(input: TokenStream) -> TokenStream {
 fn impl_pandoc_format_repeated_args(ast: ItemStruct) -> TokenStream {
     let struct_name = &ast.ident;
     let mut args_fill = quote!(let mut args = Vec::new(););
-    let type_error_msg = "Fields of the struct must be an `Option<Vec<String>>`";
+    let type_error_msg = "Fields of the struct must be an `Option<Vec<impl Display>>`";
     match ast.fields {
         syn::Fields::Named(named_fields) => {
             for field in named_fields.named.iter() {
@@ -30,15 +30,14 @@ fn impl_pandoc_format_repeated_args(ast: ItemStruct) -> TokenStream {
                 let vec_path = extract_type_path(field_type_vec).expect("{type_error_msg}");
                 let final_type = extract_type_from_path(vec_path, "Vec", type_error_msg);
                 let final_path = extract_type_path(final_type).expect("{type_error_msg}");
-                if !final_path
+                match final_path
                     .segments
                     .first()
                     .expect("{type_error_msg}")
-                    .ident
-                    .to_string()
-                    .contains("String")
+                    .arguments
                 {
-                    panic!("{type_error_msg}")
+                    PathArguments::None => {}
+                    _ => panic!("{type_error_msg}"),
                 }
                 args_fill.extend(quote![
                     let actual_val = actual_or_default!(actual_and_default_cfg, #field_name);

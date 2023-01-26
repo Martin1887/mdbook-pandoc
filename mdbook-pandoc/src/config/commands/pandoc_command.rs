@@ -1,8 +1,16 @@
-use std::{path::PathBuf, process::Command};
+use std::{
+    fs::{self, create_dir},
+    path::{Path, PathBuf},
+    process::Command,
+};
 
-use crate::config::{formats::*, GeneralConfig};
+use crate::{
+    config::{formats::*, templates::*, GeneralConfig},
+    write_arg_to_src_folder, write_vec_to_src_folder,
+};
 
 use super::*;
+use anyhow::Error;
 use serde::{Deserialize, Serialize};
 
 use crate::actual_or_default;
@@ -95,5 +103,129 @@ impl PandocCommand {
         command.arg(parsed_md_path);
 
         command
+    }
+
+    /// Write templates and assets files.
+    pub fn write_template_and_assets_files(&self, general_cfg: &GeneralConfig) {
+        self.write_template_file(general_cfg);
+        self.write_assets_files(general_cfg);
+        self.write_repeated_fields_files(general_cfg);
+        self.write_pandoc_fields_files(general_cfg);
+    }
+
+    /// Write the files of Pandoc single-time fields to the `src` folder.
+    fn write_pandoc_fields_files(&self, general_cfg: &GeneralConfig) {
+        let combined_cfg = ActualAndDefaultCfg {
+            actual: Box::new(&self.generic_args.args),
+            default: Box::new(&general_cfg.formats_default.args),
+        };
+        write_arg_to_src_folder!(combined_cfg, csl);
+        write_arg_to_src_folder!(combined_cfg, reference_doc);
+    }
+
+    /// Write the files of repeated fields in the `src` folder.
+    fn write_repeated_fields_files(&self, general_cfg: &GeneralConfig) {
+        let combined_cfg = ActualAndDefaultCfg {
+            actual: Box::new(&self.generic_args.repeated_args),
+            default: Box::new(&general_cfg.formats_default.repeated_args),
+        };
+        write_vec_to_src_folder!(combined_cfg, syntax_definition);
+        write_vec_to_src_folder!(combined_cfg, include_in_header);
+        write_vec_to_src_folder!(combined_cfg, include_before_body);
+        write_vec_to_src_folder!(combined_cfg, include_after_body);
+        write_vec_to_src_folder!(combined_cfg, css);
+        write_vec_to_src_folder!(combined_cfg, epub_embed_font);
+    }
+
+    /// Write the assets files in the `src` folder.
+    fn write_assets_files(&self, general_cfg: &GeneralConfig) {
+        let combined_cfg = ActualAndDefaultCfg {
+            actual: Box::new(&self.generic_args),
+            default: Box::new(&general_cfg.formats_default),
+        };
+        write_vec_to_src_folder!(combined_cfg, assets);
+    }
+
+    /// Write the template file if the template is not default nor custom.
+    fn write_template_file(&self, general_cfg: &GeneralConfig) {
+        let combined_cfg = ActualAndDefaultCfg {
+            actual: Box::new(&self.generic_args.args),
+            default: Box::new(&general_cfg.formats_default.args),
+        };
+        let template = actual_or_default!(combined_cfg, template);
+        match template {
+            PandocTemplate::Default | PandocTemplate::Custom(_) => {}
+            _ => {
+                let template_filename = template
+                    .filename()
+                    .expect("All templates must have filename except default.");
+                let default_data_dir;
+                let data_dir;
+                let custom_data_dir = actual_or_default!(combined_cfg, data_dir);
+                if custom_data_dir.is_empty() {
+                    // Determine the default data dir filtering the
+                    // `pandoc --version` command output
+                    default_data_dir = Self::get_pandoc_default_data_dir().unwrap();
+                    data_dir = Path::new(&default_data_dir);
+                } else {
+                    data_dir = Path::new(&custom_data_dir);
+                }
+                let templates_dir = data_dir.join("templates");
+                if !templates_dir.is_dir() {
+                    create_dir(&templates_dir)
+                        .expect("Error creating the templates directory in the data-dir");
+                }
+                fs::write(
+                    &templates_dir.join(template_filename),
+                    template
+                        .contents()
+                        .expect("All templates must return contents except default and custom"),
+                )
+                .expect("Error writing the contents of the template");
+            }
+        }
+    }
+
+    /// Determine the Pandoc default data directory checking the possible default
+    /// directories specified in its documentation.
+    pub fn get_pandoc_default_data_dir() -> Result<String, Error> {
+        if cfg!(windows) {
+            let username_var = std::env::var("USERNAME");
+            if let Ok(username) = username_var {
+                let data_dir = Path::new(r"C:\Users")
+                    .join(username)
+                    .join(r"AppData\Roaming\pandoc");
+                if data_dir.is_dir() {
+                    Ok(data_dir.to_str().unwrap().to_string())
+                } else {
+                    Err(Error::msg(
+                        r"C:\Users\USERNAME\AppData\Roaming\pandoc does not exist.",
+                    ))
+                }
+            } else {
+                Err(Error::msg(
+                    "Error getting the default data directory, USERNAME is not defined.",
+                ))
+            }
+        } else {
+            let home_var = std::env::var("HOME");
+            if let Ok(home) = home_var {
+                let data_dir = Path::new(&home).join(".local/share/pandoc");
+                let legacy_data_dir = Path::new(&home).join(".pandoc");
+                if data_dir.is_dir() {
+                    Ok(data_dir.to_str().unwrap().to_string())
+                } else if legacy_data_dir.is_dir() {
+                    Ok(data_dir.to_str().unwrap().to_string())
+                } else {
+                    Err(Error::msg(
+                        "Nor $HOME/.local/share/pandoc nor $HOME/.pandoc exist.",
+                    ))
+                }
+            } else {
+                Err(Error::msg(
+                    "Error getting the Pandoc default data directory, $HOME is not defined.",
+                ))
+            }
+        }
     }
 }

@@ -1,0 +1,30 @@
+################
+# Professional/Academic
+################
+[[templates]]
+description = "A template for creating a PhD thesis in Pandoc, `nature` CSL."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/chiakaivalya/thesis-markdown-pandoc" }
+contents_file = "csl/nature.csl"
+[[templates]]
+description = "A template for creating a PhD thesis in Pandoc, `cell` CSL."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/chiakaivalya/thesis-markdown-pandoc" }
+contents_file = "csl/cell.csl"
+[[templates]]
+description = "A template for creating a PhD thesis in Pandoc, `science` CSL."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/chiakaivalya/thesis-markdown-pandoc" }
+contents_file = "csl/science.csl"
+
+[[templates]]
+description = "Harvard Style ARU (being deprecated in 2023 in favour of Cite Them Right Harvard)."
+license = { name = "Creative Commons 3.0 NC ND", url = "http://creativecommons.org/licenses/by-nc-nd/3.0/", repository_url = "https://library.aru.ac.uk/referencing/harvard.htm" }
+contents_file = "csl/harvard_aru.csl"
+
+[[templates]]
+description = "APA without DOI nor issue."
+license = { name = "Creative Commons 3.0 BY SA", url = "http://creativecommons.org/licenses/by-sa/3.0/", repository_url = "http://www.zotero.org/styles/apa-no-doi-no-issue" }
+contents_file = "csl/apa_no_doi_no_issue.csl"
+
+[[templates]]
+description = "Modern Language Association (MLA) 8th edition."
+license = { name = "Creative Commons 3.0 BY SA", url = "http://creativecommons.org/licenses/by-sa/3.0/", repository_url = "http://www.zotero.org/styles/modern-language-association" }
+contents_file = "csl/mla8.csl"

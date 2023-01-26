@@ -1,0 +1,55 @@
+\documentclass[$date$,floatsintext]{apa6}
+
+\usepackage{hyperref}
+% This is necessary to avoid compilation errors
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+\usepackage[american]{babel}
+\usepackage{multirow}
+\usepackage{mathtools}
+\usepackage{color}
+\input{rgb}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+
+\usepackage{csquotes}
+\usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+
+% Goes in /usr/local/share/pandoc-1.11/data/templates/apa6template.tex
+
+%run biber thisdoctitle.bcf on the document from terminal in the dir.
+
+%Un/comment the following lines to remove the Running head on the title page
+
+
+\fancypagestyle{titlepage}{%
+  \lhead{}%
+   \rhead{\thepage}%
+}
+
+
+% This material needs to be reviewed and changed.
+\addbibresource{bibliography.bib}
+
+\title{$title$}
+
+\author{$author$}
+
+$affiliations$
+			
+
+\leftheader{$shorttitle$} %This is set to the shorttitle text but could easily be substituted.
+
+\shorttitle{$shorttitle$}
+
+\abstract{$abstract$}
+
+\keywords{$keywords$}
+
+\begin{document}
+\maketitle
+$body$
+\printbibliography
+\end{document}

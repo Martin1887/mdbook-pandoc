@@ -1,0 +1,4 @@
+[[templates]]
+description = "Test template"
+license = { name = "MIT", url = "", repository_url = "" }
+contents_file = "tex/test.tex"

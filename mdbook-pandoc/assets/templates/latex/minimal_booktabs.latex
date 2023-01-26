@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+
+% This is necessary to avoid compilation errors
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% Typeface settings
+\usepackage{microtype}
+\usepackage[T1]{fontenc}
+\usepackage{paratype}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{amsmath}
+
+% Footnote kerning
+\usepackage{fnpct}
+
+% Longtabe and friends
+\usepackage{rotating,multirow,longtable,booktabs}
+
+% Footnote symbols
+\usepackage[bottom,para,symbol*]{footmisc}
+
+% Page size and margins
+\usepackage[paperwidth=8.5in,paperheight=8.5in,top=1in,bottom=1in,left=1in,right=1in]{geometry}
+
+% Make links invisible, change metadata
+\usepackage[pdftex,hidelinks,pdfproducer={pandoc}]{hyperref}
+
+% Remove page numbers
+\pagenumbering{gobble}
+
+% Booktabs styling
+\setlength\heavyrulewidth{1.5pt}% Thick top and bottom lines
+\setlength{\defaultaddspace}{0.65ex}% Adjusted line spacing
+\let\originaltoprule\toprule
+\renewcommand{\toprule}{\originaltoprule[0pt]}% No top rule
+
+% Dotted lines, load after longtable
+\usepackage{arydshln}
+\renewcommand*\cmidrule{\hdashline[.4pt/1pt]}% Dashed middle lines
+
+% Adjust caption of floats (tables)
+\usepackage{floatrow}
+\floatsetup[longtable]{style=plaintop}% Does not work!
+
+\begin{document}
+
+$body$
+
+\end{document}

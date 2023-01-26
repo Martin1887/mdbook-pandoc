@@ -1,0 +1,24 @@
+
+%------------------------------------- Packages ----------------
+%\usepackage{xcolor}  %% already included by beamer
+\usepackage{listings} %% see https://github.com/cagix/pandoc-lecture/issues/6
+%------------------------------------- Packages ----------------
+
+%------------------------------------- Beamer Settings ----------------
+% Default: 128mm x 96mm => 120mm text width
+\setbeamersize{text margin left=4mm}
+\setbeamersize{text margin right=4mm}
+
+%% Chance color theme (cf. metropolis theme manual)
+%\useoutertheme{metropolis}
+%\useinnertheme{metropolis}
+%\usefonttheme{metropolis}
+%\usecolortheme{seahorse}
+%------------------------------------- Beamer Settings ---------------------
+
+%------------------------------------- CMDs ---------------------
+\newcommand{\bsp}[1]{\vfill\hfill\beamerbutton{#1}}
+%------------------------------------- CMDs ---------------------
+
+
+

@@ -1,0 +1,785 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+$if(colorlinks)$
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+$endif$
+$if(CJKmainfont)$
+\PassOptionsToPackage{space}{xeCJK}
+$endif$
+%
+\documentclass[
+$if(fontsize)$
+  $fontsize$,
+$endif$
+$if(papersize)$
+  $papersize$paper,
+$endif$
+$if(beamer)$
+  ignorenonframetext,
+$if(handout)$
+  handout,
+$endif$
+$if(aspectratio)$
+  aspectratio=$aspectratio$,
+$endif$
+$endif$
+$for(classoption)$
+  $classoption$$sep$,
+$endfor$
+]{$documentclass$}
+$if(beamer)$
+$if(background-image)$
+\usebackgroundtemplate{%
+  \includegraphics[width=\paperwidth]{$background-image$}%
+}
+$endif$
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+$for(beameroption)$
+\setbeameroption{$beameroption$}
+$endfor$
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+$if(section-titles)$
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+$endif$
+$endif$
+$if(beamerarticle)$
+\usepackage{beamerarticle} % needs to be loaded first
+$endif$
+\usepackage{amsmath,amssymb}
+$if(linestretch)$
+\usepackage{setspace}
+$endif$
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+$if(mathspec)$
+  \ifXeTeX
+    \usepackage{mathspec} % this also loads fontspec
+  \else
+    \usepackage{unicode-math} % this also loads fontspec
+  \fi
+$else$
+  \usepackage{unicode-math} % this also loads fontspec
+$endif$
+  \defaultfontfeatures{Scale=MatchLowercase}$-- must come before Beamer theme
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+$if(fontfamily)$
+$else$
+$-- Set default font before Beamer theme so the theme can override it
+\usepackage{lmodern}
+$endif$
+$-- Set Beamer theme before user font settings so they can override theme
+$if(beamer)$
+$if(theme)$
+\usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+$endif$
+$if(colortheme)$
+\usecolortheme{$colortheme$}
+$endif$
+$if(fonttheme)$
+\usefonttheme{$fonttheme$}
+$endif$
+$if(mainfont)$
+\usefonttheme{serif} % use mainfont rather than sansfont for slide text
+$endif$
+$if(innertheme)$
+\useinnertheme{$innertheme$}
+$endif$
+$if(outertheme)$
+\useoutertheme{$outertheme$}
+$endif$
+$endif$
+$-- User font settings (must come after default font and Beamer theme)
+$if(fontfamily)$
+\usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+$endif$
+\ifPDFTeX\else
+  % xetex/luatex font selection
+$if(mainfont)$
+  \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+$endif$
+$if(sansfont)$
+  \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
+$endif$
+$if(monofont)$
+  \setmonofont[$for(monofontoptions)$$monofontoptions$$sep$,$endfor$]{$monofont$}
+$endif$
+$for(fontfamilies)$
+  \newfontfamily{$fontfamilies.name$}[$for(fontfamilies.options)$$fontfamilies.options$$sep$,$endfor$]{$fontfamilies.font$}
+$endfor$
+$if(mathfont)$
+$if(mathspec)$
+  \ifXeTeX
+    \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  \else
+    \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  \fi
+$else$
+  \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+$endif$
+$endif$
+$if(CJKmainfont)$
+  \ifXeTeX
+    \usepackage{xeCJK}
+    \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  \fi
+$endif$
+$if(luatexjapresetoptions)$
+  \ifLuaTeX
+    \usepackage[$for(luatexjapresetoptions)$$luatexjapresetoptions$$sep$,$endfor$]{luatexja-preset}
+  \fi
+$endif$
+$if(CJKmainfont)$
+  \ifLuaTeX
+    \usepackage[$for(luatexjafontspecoptions)$$luatexjafontspecoptions$$sep$,$endfor$]{luatexja-fontspec}
+    \setmainjfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  \fi
+$endif$
+\fi
+$if(zero-width-non-joiner)$
+%% Support for zero-width non-joiner characters.
+\makeatletter
+\def\zerowidthnonjoiner{%
+  % Prevent ligatures and adjust kerning, but still support hyphenating.
+  \texorpdfstring{%
+    \TextOrMath{\nobreak\discretionary{-}{}{\kern.03em}%
+      \ifvmode\else\nobreak\hskip\z@skip\fi}{}%
+  }{}%
+}
+\makeatother
+\ifPDFTeX
+  \DeclareUnicodeCharacter{200C}{\zerowidthnonjoiner}
+\else
+  \catcode`^^^^200c=\active
+  \protected\def ^^^^200c{\zerowidthnonjoiner}
+\fi
+%% End of ZWNJ support
+$endif$
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+$if(indent)$
+$else$
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+$endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+$endif$
+\usepackage{xcolor}
+$if(geometry)$
+$if(beamer)$
+\geometry{$for(geometry)$$geometry$$sep$,$endfor$}
+$else$
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$endif$
+$endif$
+$if(beamer)$
+\newif\ifbibliography
+$endif$
+$if(listings)$
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+\lstset{defaultdialect=[5.3]Lua}
+\lstset{defaultdialect=[x86masm]Assembler}
+$endif$
+$if(lhs)$
+\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+$endif$
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+$if(tables)$
+\usepackage{longtable,booktabs,array}
+$if(multirow)$
+\usepackage{multirow}
+$endif$
+\usepackage{calc} % for calculating minipage widths
+$if(beamer)$
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+$else$
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+$endif$
+$endif$
+$if(graphics)$
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+$endif$
+$if(svg)$
+\usepackage{svg}
+$endif$
+$if(strikeout)$
+$-- also used for underline
+\usepackage{soul}
+$endif$
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+$if(numbersections)$
+\setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
+$else$
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+$endif$
+$if(subfigure)$
+\usepackage{subcaption}
+$endif$
+$if(beamer)$
+$else$
+$if(block-headings)$
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+$endif$
+$endif$
+$if(pagestyle)$
+\pagestyle{$pagestyle$}
+$endif$
+$if(csl-refs)$
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+$endif$
+$if(lang)$
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+$if(babel-lang)$
+\babelprovide[main,import]{$babel-lang$}
+$if(mainfont)$
+\ifPDFTeX
+\else
+\babelfont[$babel-lang$]{rm}{$mainfont$}
+\fi
+$endif$
+$endif$
+$for(babel-otherlangs)$
+\babelprovide[import]{$babel-otherlangs$}
+$endfor$
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+$endif$
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+% exam.tex header
+
+
+%------------------------------------- Packages ----------------
+\usepackage[absolute]{textpos}
+\usepackage{colortbl}
+\usepackage{wasysym}    % \Square
+\usepackage{ifoddpage}
+%------------------------------------- Packages ----------------
+
+%------------------------------------- Settings ---------------------
+\extrawidth{.5in}
+%------------------------------------- Settings ---------------------
+
+%------------------------------------- CMDs ---------------------
+\newcommand{\hsfont}    {\fontfamily{phv}\fontseries{m}\fontshape{n}\selectfont}
+\newcommand{\hsheadfont}{\fontfamily{phv}\fontseries{b}\fontshape{n}\selectfont}
+
+%% `[...]{.answer}` will be translated by the lua filter into `\x{...}`
+\newcommand{\x}[1]{\ifprintanswers{\color{red}\bfseries#1\xspace}\fi}
+
+\newcommand{\Fortsetzung}{\begin{textblock*}{54mm}(80mm,276mm)\textsl{\textbf{Fortsetzung nächste Seite}}\end{textblock*}}
+\newcommand{\Leerseite}{\newpage\centerline{\textsl{\textbf{Leerseite}}}\newpage}
+%------------------------------------- CMDs ---------------------
+
+%------------------------------------- Listings ---------------------
+%% settings for pandoc option `--listings`
+\usepackage{listings}  
+\lstset{basicstyle=\footnotesize\ttfamily\mdseries, xleftmargin=\bigskipamount, keywordstyle=\bfseries\color{dkblue}, identifierstyle=\ttfamily, commentstyle=\bfseries\color{gray}\textsl, stringstyle=\color{magenta}\upshape, emphstyle=\color{red}, emphstyle={[2]\color{blue}}, texcl=false, showspaces=false, showstringspaces=false, numbers=left, numberstyle=\footnotesize, breaklines=true, tabsize=4, backgroundcolor=\color{listinggray}, frame=shadowbox}
+%------------------------------------- Listings ---------------------
+
+%------------------------------------- Tables (left column gray background) --------------------------------
+\newenvironment{streifenenv}
+{
+    \smallskip
+    \begin{tabular}{>{\columncolor{headcolor}}p{1pt}p{0.94\textwidth}}
+        &
+        \begin{minipage}{0.94\textwidth}
+}
+{
+        \end{minipage}
+    \end{tabular}
+    \smallskip
+}
+
+% use more space for table rows in exams to allow students to fill out blank cells
+% use less space in solutions: tables often fills a page, but we need to add grading information to the table
+\newcommand{\rowstretch}{\ifprintanswers \renewcommand{\arraystretch}{0.6} \else \renewcommand{\arraystretch}{2.0} \fi}
+% use a little more space for table rows in multiple choice questions
+\newcommand{\mcstretch}{\renewcommand{\arraystretch}{1.2}}
+% reset the table row settings
+\newcommand{\rowrelax}{\renewcommand{\arraystretch}{1.0}}
+% definitions for multiple choice questions
+\newcommand{\antwort}{\ifprintanswers \ensuremath{\blacksquare} \else \ensuremath{\Box} \fi}
+\newcommand{\wahr}{\antwort & \ensuremath{\Box} & }
+\newcommand{\falsch}{\ensuremath{\Box} & \antwort & }
+%------------------------------------- Tables (left column gray background) --------------------------------
+
+%------------------------------------- Answers --------------------------------
+\CorrectChoiceEmphasis{\color{red}\bfseries}
+\checkboxchar{\ensuremath{\Box}}
+\checkedchar{\ensuremath{\blacksquare}}
+\shadedsolutions
+\definecolor{SolutionColor}{rgb}{0.9,0.8,0.8}
+%------------------------------------- Answers --------------------------------
+
+%------------------------------------- Grading Table --------------------------------
+\hqword{\textbf{Aufgabe}}
+\hpword{\textbf{Punkte}}
+\hsword{\raisebox{-1mm}[6mm][4mm]{\textbf{Erreicht}}}
+\htword{\raisebox{-1mm}[6mm][4mm]{\textcolor{headcolor}{\LARGE\ensuremath{\;\;\;\pmb{\Sigma}\;\;\;}}}}
+%------------------------------------- Grading Table --------------------------------
+
+%------------------------------------- Custom Title Page ----------------
+\renewcommand{\maketitle}{} % we use "coverpage" from the exam package instead
+\renewcommand{\tableofcontents}{} % we have to use --toc to compile the exam twice, but we do not want really a toc
+%------------------------------------- Custom Title Page ----------------
+
+%------------------------------------- Custom Header ----------------
+\pagestyle{headandfoot}     %% from exam.cls
+\headrule
+\ifprintanswers
+\header{}{\textcolor{dkred}{\textbf{\Huge MUSTER}}}{}
+\else
+\header{Name:}{Matrikelnummer:}{}
+\fi
+\footrule
+%% footer-definition for single-sided printing (empty backside)
+%\footer{$LVKURZ$}{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}{Seite \thepage\ von \numpages}
+%% footer-definition for double-sided printing
+\lfoot{\oddeven{Seite \thepage\ von \numpages}{$LVKURZ$}}
+\rfoot{\oddeven{$LVKURZ$}{Seite \thepage\ von \numpages}}
+\cfoot{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}
+%------------------------------------- Custom Header ---------------------
+
+%------------------------------------- Questions --------------------------------
+\providecommand{\theMyQuestionTitle}{}
+\providecommand{\myQuestion}[2][0]{\vskip11pt\renewcommand{\theMyQuestionTitle}{#2}\question[#1]{\ }\vskip5pt}
+\qformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyQuestionTitle\hfill \fbox{\thepoints}}}}  % add only question points
+\boxedpoints    % no effect w/ qformat
+\pointpoints{Punkt}{Punkte}
+%------------------------------------- Questions --------------------------------
+
+
+
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+$if(dir)$
+\ifPDFTeX
+  \TeXXeTstate=1
+  \newcommand{\RL}[1]{\beginR #1\endR}
+  \newcommand{\LR}[1]{\beginL #1\endL}
+  \newenvironment{RTL}{\beginR}{\endR}
+  \newenvironment{LTR}{\beginL}{\endL}
+\fi
+$endif$
+$if(natbib)$
+\usepackage[$natbiboptions$]{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+$endif$
+$if(nocite-ids)$
+\nocite{$for(nocite-ids)$$it$$sep$, $endfor$}
+$endif$
+$if(csquotes)$
+\usepackage{csquotes}
+$endif$
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{$if(urlstyle)$$urlstyle$$else$same$endif$}
+$if(links-as-notes)$
+% Make links footnotes instead of hotlinks:
+\DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allow verbatim text in footnotes
+$endif$
+\hypersetup{
+$if(title-meta)$
+  pdftitle={$title-meta$},
+$endif$
+$if(author-meta)$
+  pdfauthor={$author-meta$},
+$endif$
+$if(lang)$
+  pdflang={$lang$},
+$endif$
+$if(subject)$
+  pdfsubject={$subject$},
+$endif$
+$if(keywords)$
+  pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
+$endif$
+$if(colorlinks)$
+  colorlinks=true,
+  linkcolor={$if(linkcolor)$$linkcolor$$else$Maroon$endif$},
+  filecolor={$if(filecolor)$$filecolor$$else$Maroon$endif$},
+  citecolor={$if(citecolor)$$citecolor$$else$Blue$endif$},
+  urlcolor={$if(urlcolor)$$urlcolor$$else$Blue$endif$},
+$else$
+$if(boxlinks)$
+$else$
+  hidelinks,
+$endif$
+$endif$
+  pdfcreator={LaTeX via pandoc}}
+
+$if(title)$
+\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+$endif$
+$if(subtitle)$
+$if(beamer)$
+$else$
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+$endif$
+\subtitle{$subtitle$}
+$endif$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+\date{$date$}
+$if(beamer)$
+$if(institute)$
+\institute{$for(institute)$$institute$$sep$ \and $endfor$}
+$endif$
+$if(titlegraphic)$
+\titlegraphic{\includegraphics{$titlegraphic$}}
+$endif$
+$if(logo)$
+\logo{\includegraphics{$logo$}}
+$endif$
+$endif$
+
+\begin{document}
+$if(has-frontmatter)$
+\frontmatter
+$endif$
+$if(title)$
+$if(beamer)$
+\frame{\titlepage}
+$else$
+\maketitle
+$endif$
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+$endif$
+
+$for(include-before)$
+$include-before$
+
+$endfor$
+
+% exam_begin.tex before-body
+
+%------------------------------------- Custom Title Page ----------------
+\begin{coverpages}
+    \begin{minipage}[c]{0.75\textwidth}
+        \parindent0pt
+        \textcolor{headcolor}{\large\scshape{$subtitle$}}\\[1ex]
+        \textcolor{headcolor}{\Large\textbf{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}}\\[2ex]
+        $if(TAG)$
+        \textbf{$TAG$}\\[2ex]
+        $endif$
+        \parindent0pt
+        $author$
+    \end{minipage}
+    \begin{minipage}[c]{0.25\textwidth}
+        \ifprintanswers
+        \hfill\textcolor{dkred}{\textbf{\Huge MUSTER}}\hfill\hfill
+        \fi
+    \end{minipage}
+    \vspace{10mm}
+    \par\hrulefill\par
+    %
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{minipage}[c]{0.96\textwidth}
+            \vspace{2mm}
+            {\textbf{Bearbeitungszeit}: {\ }90 Minuten}\par
+            \bigskip
+            \begin{itemize}
+                \item Bitte kontrollieren Sie die Vollständigkeit des an Sie
+                ausgegebenen Klausurexemplars.
+                \medskip
+                \item Tragen Sie auf dem Deckblatt Ihren Namen und die
+                Matrikelnummer ein und unterschreiben Sie die Klausur.
+                \medskip
+                \item Achten Sie auf Lesbarkeit und Nachvollziehbarkeit Ihrer
+                Antworten und Lösungswege.
+                \medskip
+                \item \textbf{Erlaubte Hilfsmittel}: Ein handschriftlich
+                angefertigter DIN-A4-Zettel mit Notizen.
+
+                \smallskip
+                Andere/Weitere Hilfsmittel sind \textbf{nicht} zugelassen. Die
+                Nutzung nicht zugelassener Hilfsmittel führt zur Bewertung
+                \enquote{nicht bestanden}.
+            \end{itemize}
+            \bigskip
+            \medskip
+            \textbf{Gutes Gelingen!}
+            \smallskip
+            \vspace{2mm}
+        \end{minipage}
+    \end{minipage}
+    \vrule
+    \begin{minipage}[c]{0.5\textwidth}
+        \bigskip
+        \begin{center}
+            \textcolor{headcolor}
+            {\textbf{--- vom Studierenden auszufüllen ---}} \\[6mm]
+        \end{center}
+        \begin{center}
+            \renewcommand{\arraystretch}{1.5}
+            \begin{tabular}{@{\bfseries}lp{5cm}}
+                Name:     & \dotfill \\[1mm]
+                Vorname:  & \dotfill \\[1mm]
+                Matr.-Nr.:& \dotfill \\[6mm]
+
+                \multicolumn{2}{l}{\begin{minipage}[c]{76mm}
+                                       Ich erkläre, daß ich mich zur Prüfung ordnungsgemäß angemeldet habe,
+                                       zur Prüfung zugelassen bin und mich prüfungsfähig fühle.
+                                       Ich werde die Klausur eigenständig bearbeiten und aus\-schließlich die
+                                       zugelassenen Hilfsmittel nutzen.
+                \end{minipage}
+                }\\[22mm]
+
+                Unterschrift:& \dotfill
+            \end{tabular}
+        \end{center}
+        \smallskip
+    \end{minipage}
+    \par\hrulefill\par
+    \vspace{10mm}
+
+    \begin{center}
+        \textcolor{headcolor}
+        {\textbf{--- vom Prüfer auszufüllen ---}}
+    \end{center}
+    \begin{center}
+        \begin{small}
+            \gradetable[h][questions]
+        \end{small}
+    \end{center}
+    \vspace{12mm}
+    \begin{center}
+        \ifprintanswers
+        \textcolor{dkred}{\textbf{\Huge MUSTER}}
+        \else
+        \begin{tabular}{lp{1cm}lp{3cm}lp{3cm}}
+            Note:     & \dotfill & Minden, den & \dotfill & Unterschrift Erstprüfer: &
+            \dotfill
+        \end{tabular}
+        \fi
+    \end{center}
+    \vfill
+    \clearpage
+    \pagebreak
+\end{coverpages}
+%------------------------------------- Custom Title Page ----------------
+
+%------------------------------------- Blank page after title page -----------------------------
+\Leerseite
+%------------------------------------- Blank page after title page -----------------------------
+
+%------------------------------------- Begin of Questions --------------------------------------
+\begin{questions}
+%------------------------------------- Begin of Questions --------------------------------------
+
+
+
+
+
+
+$if(toc)$
+$if(toc-title)$
+\renewcommand*\contentsname{$toc-title$}
+$endif$
+$if(beamer)$
+\begin{frame}[allowframebreaks]
+$if(toc-title)$
+  \frametitle{$toc-title$}
+$endif$
+  \tableofcontents[hideallsubsections]
+\end{frame}
+$else$
+{
+$if(colorlinks)$
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+$endif$
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+}
+$endif$
+$endif$
+$if(lof)$
+\listoffigures
+$endif$
+$if(lot)$
+\listoftables
+$endif$
+$if(linestretch)$
+\setstretch{$linestretch$}
+$endif$
+$if(has-frontmatter)$
+\mainmatter
+$endif$
+$body$
+
+$if(has-frontmatter)$
+\backmatter
+$endif$
+$if(natbib)$
+$if(bibliography)$
+$if(biblio-title)$
+$if(has-chapters)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+  \bibliographytrue
+$endif$
+  \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$if(beamer)$
+\end{frame}
+$endif$
+
+$endif$
+$endif$
+$if(biblatex)$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+  \bibliographytrue
+  \printbibliography[heading=none]
+\end{frame}
+$else$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
+
+$endif$
+$for(include-after)$
+$include-after$
+
+$endfor$
+\end{document}

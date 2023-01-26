@@ -920,7 +920,9 @@ dependencies = [
  "colored-diff",
  "proc-macro2",
  "quote",
+ "serde",
  "syn",
+ "toml",
 ]
 
 [[package]]

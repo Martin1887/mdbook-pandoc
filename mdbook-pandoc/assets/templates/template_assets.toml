@@ -1,0 +1,114 @@
+[[templates]]
+description = "List of RGB colors from X11, used by APA6."
+license = { name = "UNLICENSE", url = "", repository_url = "" } 
+contents_file = "misc/rgb.tex"
+
+#############
+# Biometrical
+#############
+[[templates]]
+description = "Biometrical bibliography style."
+license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/biometrical.bst" } 
+contents_file = "misc/biometrical.bst"
+[[templates]]
+description = "w-art.cls generated using docstrip utility."
+license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-art.cls" } 
+contents_file = "misc/w-art.cls"
+[[templates]]
+description = "w-bimj.clo generated using docstrip utility."
+license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-bimj.clo" } 
+contents_file = "misc/w-bimj.clo"
+[[templates]]
+description = "w-thm.sty generated using docstrip utility."
+license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-thm.sty" } 
+contents_file = "misc/w-thm.sty"
+
+
+#############
+# Biometrics
+#############
+[[templates]]
+description = "Biometrics bibliography style."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrics/biom.bst" } 
+contents_file = "misc/biom.bst"
+[[templates]]
+description = "Biometrics cls."
+license = { name = "Copyright (C) The International Biometric Society 2006", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrics/biom.cls" } 
+contents_file = "misc/biom.cls"
+[[templates]]
+description = "Put sideways figures and tables at end (used by Biometrics template)."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrics/endrotfloat.sty" } 
+contents_file = "misc/endrotfloat.sty"
+
+
+#############
+# Biometrika
+#############
+[[templates]]
+description = "Biometrika lineno sty."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/Biomet-lineno.sty" } 
+contents_file = "misc/Biomet-lineno.sty"
+[[templates]]
+description = "Biometrika bibliography style."
+license = { name = "Copyright (C) 1994-98 Patrick W. Daly, for non-profit purposes", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/biometrika.bst" } 
+contents_file = "misc/biometrika.bst"
+[[templates]]
+description = "Biometrika cls."
+license = { name = "Copyright (2007) The Oxford University Press, it may only be used in the preparation of papers to be published by The Oxford University Press.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/biometrika.cls" } 
+contents_file = "misc/biometrika.cls"
+
+
+#############
+# Biostatistics
+#############
+[[templates]]
+description = "Biostatistics cls."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biostatistics/bio.cls" } 
+contents_file = "misc/bio.cls"
+[[templates]]
+description = "Biostatistics bibliography style."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biostatistics/biorefs.bst" } 
+contents_file = "misc/biorefs.bst"
+
+
+#############
+# ims
+#############
+[[templates]]
+description = "ims bibliography style."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/ims/acmtrans-ims.bst" } 
+contents_file = "misc/acmtrans-ims.bst"
+[[templates]]
+description = "imsart-number bibliography style."
+license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/ims/imsart-number.bst" } 
+contents_file = "misc/imsart-number.bst"
+[[templates]]
+description = "imsart cls."
+license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/ims/imsart.cls" } 
+contents_file = "misc/imsart.cls"
+[[templates]]
+description = "imsart sty."
+license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/ims/imsart.sty" } 
+contents_file = "misc/imsart.sty"
+
+
+#############
+# rjournal
+#############
+[[templates]]
+description = "RJournal sty."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/rjournal/RJournal.sty" } 
+contents_file = "misc/RJournal.sty"
+
+
+#############
+# stats-in-med
+#############
+[[templates]]
+description = "statmed bibliography style."
+license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/stats-in-med/statmed.bst" } 
+contents_file = "misc/statmed.bst"
+[[templates]]
+description = "stats-in-med simauth.cls."
+license = { name = "Copyright (c) 2008 John Wiley & Sons, Ltd, The Atrium, Southern Gate, Chichester, West Sussex, PO19 8SQ UK.   All rights reserved. You are NOT ALLOWED to change this file. The user may not exploit any part of the class file commercially.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/stats-in-med/simauth.cls" } 
+contents_file = "misc/simauth.cls"
