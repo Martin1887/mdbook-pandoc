@@ -13,6 +13,7 @@ pub enum PandocFormat {
     Beamer,
     Bibtex,
     Biblatex,
+    Chunkedhtml,
     Commonmark,
     CommonMarkX,
     Context,
