@@ -181,6 +181,7 @@ description = "Bootstrap HTML template."
 license = { name = "Apache 2.0", url = "https://github.com/tonyblundell/pandoc-bootstrap-template/blob/master/LICENSE", repository_url = "https://github.com/tonyblundell/pandoc-bootstrap-template" }
 contents_file = "html/bootstrap.html"
 
+# TODO: many CSS and JS files are loaded from the HTML with error
 [[templates]]
 description = "Bootstrap HTML with a sticky accordion menu template."
 license = { name = "Apache 2.0", url = "https://github.com/diversen/pandoc-bootstrap-adaptive-template/blob/master/LICENSE", repository_url = "https://github.com/diversen/pandoc-bootstrap-adaptive-template" }
