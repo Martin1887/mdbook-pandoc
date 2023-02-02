@@ -22,7 +22,7 @@ contents_file = "latex/minimal_booktabs.latex"
 ################
 [[templates]]
 description = "A clean pandoc LaTeX template for lecture notes and exercises with a focus on computer science."
-license = { name = "BSD 3-Clause", url = "https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/LICENSE", repository_url = "https://github.com/Wandmalfarbe/pandoc-latex-template" }
+license = { name = "BSD-3-Clause", url = "https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/LICENSE", repository_url = "https://github.com/Wandmalfarbe/pandoc-latex-template" }
 contents_file = "latex/eisvogel.latex"
 
 # https://github.com/aaronwolen/pandoc-letter cannot be included because it is GPL-3.0 licensed
@@ -47,7 +47,6 @@ contents_file = "latex/lmullen_slides_handouts.latex"
 # Professional/Academic
 ################
 # https://github.com/chiakaivalya/thesis-markdown-pandoc is not a template but uses preamble and csl
-# https://github.com/tompollard/phd_thesis_markdown has a template but also CSL and preamble
 
 # TODO: UC logo as variable
 [[templates]]
@@ -62,18 +61,15 @@ contents_file = "html/ucl_phd_thesis.html"
 # https://github.com/mabl/pandoc-thesis is not a template but just an example with custom stys and footers
 # https://github.com/davecap/markdown-latex-boilerplate has GPL 3.0 license
 
-# https://github.com/periodicpoint/robusta uses complex build including filters
 [[templates]]
 description = "Sound and versatile LaTeX template for academic articles."
 license = { name = "MIT", url = "https://github.com/periodicpoint/robusta/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/robusta" }
 contents_file = "latex/robusta.latex"
-# https://github.com/periodicpoint/arabica uses complex build including filters
 [[templates]]
 description = "Sound and versatile LaTeX template for academic books."
 license = { name = "MIT", url = "https://github.com/periodicpoint/arabica/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/arabica"}
 contents_file = "latex/arabica.latex"
 
-# https://bitbucket.org/zuline/md2latex/src/master/ uses some variables
 [[templates]]
 description = "Simple APA 6 template. Requires APA 6 cls."
 license = { name = "UNLICENSE", url = "", repository_url = "https://bitbucket.org/zuline/md2latex/src/master/" } 

@@ -5,7 +5,7 @@ use std::{
 };
 
 use crate::{
-    config::{formats::*, templates::*, GeneralConfig},
+    config::{formats::*, resources::*, GeneralConfig},
     write_arg_to_src_folder, write_vec_to_src_folder,
 };
 
@@ -135,6 +135,41 @@ impl PandocCommand {
         write_vec_to_src_folder!(combined_cfg, include_after_body);
         write_vec_to_src_folder!(combined_cfg, css);
         write_vec_to_src_folder!(combined_cfg, epub_embed_font);
+
+        for filter in actual_or_default!(combined_cfg, filter) {
+            match filter {
+                PandocFilter::Default | PandocFilter::Custom(_) => {}
+                _ => {
+                    self.write_data_dir_file(
+                        general_cfg,
+                        "filters",
+                        filter
+                            .filename()
+                            .expect("All filters must have filename except default."),
+                        &filter
+                            .contents()
+                            .expect("All filters must return contents except default and custom"),
+                    );
+                }
+            }
+        }
+        for filter in actual_or_default!(combined_cfg, lua_filter) {
+            match filter {
+                PandocLuaFilter::Default | PandocLuaFilter::Custom(_) => {}
+                _ => {
+                    self.write_data_dir_file(
+                        general_cfg,
+                        "filters",
+                        filter
+                            .filename()
+                            .expect("All filters must have filename except default."),
+                        &filter
+                            .contents()
+                            .expect("All filters must return contents except default and custom"),
+                    );
+                }
+            }
+        }
     }
 
     /// Write the assets files in the `src` folder.
@@ -146,7 +181,7 @@ impl PandocCommand {
         write_vec_to_src_folder!(combined_cfg, assets);
     }
 
-    /// Write the template file if the template is not default nor custom.
+    /// Write the template file.
     fn write_template_file(&self, general_cfg: &GeneralConfig) {
         let combined_cfg = ActualAndDefaultCfg {
             actual: Box::new(&self.generic_args.args),
@@ -156,33 +191,50 @@ impl PandocCommand {
         match template {
             PandocTemplate::Default | PandocTemplate::Custom(_) => {}
             _ => {
-                let template_filename = template
-                    .filename()
-                    .expect("All templates must have filename except default.");
-                let default_data_dir;
-                let data_dir;
-                let custom_data_dir = actual_or_default!(combined_cfg, data_dir);
-                if custom_data_dir.is_empty() {
-                    // Determine the default data dir filtering the
-                    // `pandoc --version` command output
-                    default_data_dir = Self::get_pandoc_default_data_dir().unwrap();
-                    data_dir = Path::new(&default_data_dir);
-                } else {
-                    data_dir = Path::new(&custom_data_dir);
-                }
-                let templates_dir = data_dir.join("templates");
-                if !templates_dir.is_dir() {
-                    create_dir(&templates_dir)
-                        .expect("Error creating the templates directory in the data-dir");
-                }
-                fs::write(
-                    &templates_dir.join(template_filename),
+                self.write_data_dir_file(
+                    general_cfg,
+                    "templates",
                     template
+                        .filename()
+                        .expect("All templates must have filename except default."),
+                    &template
                         .contents()
                         .expect("All templates must return contents except default and custom"),
-                )
-                .expect("Error writing the contents of the template");
+                );
             }
+        }
+    }
+
+    /// Write the template file if the template is not default nor custom.
+    fn write_data_dir_file(
+        &self,
+        general_cfg: &GeneralConfig,
+        subfolder: &str,
+        filename: &str,
+        contents: &[u8],
+    ) {
+        let templates_dir = self.get_pandoc_actual_data_dir(general_cfg).join(subfolder);
+        if !templates_dir.is_dir() {
+            create_dir(&templates_dir)
+                .expect("Error creating the templates directory in the data-dir");
+        }
+        fs::write(&templates_dir.join(filename), contents)
+            .expect("Error writing the contents of the template");
+    }
+
+    /// Determines the actual data directory reading the value of the custom
+    /// one and the default one.
+    fn get_pandoc_actual_data_dir(&self, general_cfg: &GeneralConfig) -> PathBuf {
+        let combined_cfg = ActualAndDefaultCfg {
+            actual: Box::new(&self.generic_args.args),
+            default: Box::new(&general_cfg.formats_default.args),
+        };
+        let custom_data_dir = actual_or_default!(combined_cfg, data_dir);
+        if custom_data_dir.is_empty() {
+            let default_data_dir = Self::get_pandoc_default_data_dir().unwrap();
+            Path::new(&default_data_dir).to_path_buf()
+        } else {
+            Path::new(&custom_data_dir).to_path_buf()
         }
     }
 

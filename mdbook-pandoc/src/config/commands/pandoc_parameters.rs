@@ -1,4 +1,4 @@
-use crate::{actual_or_default, config::templates::*};
+use crate::{actual_or_default, config::resources::*};
 use mdbook_pandoc_derive::{PandocCommandArgs, PandocRepeatedArgs};
 use serde::{Deserialize, Serialize};
 
@@ -71,9 +71,9 @@ pub struct PandocRepeatedArguments {
     /// List of fonts to be embedded in the EPUB.
     pub epub_embed_font: Option<Vec<PandocEpubEmbedFont>>,
     /// Filter to transform the input after the Pandoc parsing.
-    pub filter: Option<Vec<String>>,
+    pub filter: Option<Vec<PandocFilter>>,
     /// Filter to transform the input after the Pandoc parsing with a Lua filter.
-    pub lua_filter: Option<Vec<String>>,
+    pub lua_filter: Option<Vec<PandocLuaFilter>>,
 }
 
 /// Struct defining the Pandoc arguments that are literally written and have

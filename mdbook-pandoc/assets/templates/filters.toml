@@ -1,0 +1,227 @@
+# xnos and crossref are GPL, pandoc-numbering is a good alternative
+[[templates]]
+description = "A pandoc filter for numbering all kinds of things. It requires panflute>=2.0 is installed."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-numbering/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-numbering" }
+contents_file = "filters/pandoc_numbering.py"
+
+
+# https://github.com/jgm/pandoc/wiki/Pandoc-Filters
+
+##########
+# docx/odt
+##########
+
+# https://github.com/iandol/dotpandoc/blob/master/filters/prependAll.rb is
+# written in Ruby and it requires paru. It adds paragraphs reading metadata to
+# odt and docx files, so it does not seem very useful for final documents.
+
+# https://github.com/jzeneto/pandoc-odt-filters is also for odt, not guaranteed
+# to work and GPL 3.0 licensed.
+
+# https://github.com/hdb/commentary/blob/master/commentary/commentary_filter.py
+# is also only for docx and not very interesting for final documents.
+
+
+##########
+# images
+##########
+[[templates]]
+description = "A pandoc filter to convert SVG images to PDF or PNG (for docx or html). It requires pandocfilters and Inkscape. It does conversions only on files, inline base64 images are not modified."
+license = { name = "UNLICENSE", url = "", repository_url = "https://gist.github.com/jeromerobert/3996eca3acd12e4c3d40" }
+contents_file = "filters/pandoc-svg.py"
+
+# http://hackage.haskell.org/package/diagrams-pandoc must be installed using
+# cabal and translates Haskell diagrams DSL, very niche.
+
+# https://github.com/raghur/mermaid-filter seems good but must be installed
+# using npm
+
+# https://github.com/cdupont/r-pandoc seems good but must be installed using
+# stack
+
+# https://github.com/LaurentRDC/pandoc-plot is really good but GPL 2.0 licensed
+
+# https://gist.github.com/jkr/bcfacbfdcf4cc4bafcf6 is written in Haskell
+# without instructions of how running it
+
+# pandoc-fignos, pandoc-eqnos, pandoc-tablenos and pandoc-crossref are GPL
+
+[[templates]]
+description = "A pandoc filter to use amsthm environments in Pandoc for LaTeX and HTML output. It requires panflute >= 2.1.3 and Python >= 3.8."
+license = { name = "BSD-3-Clause", url = "https://github.com/ickc/pandoc-amsthm/blob/master/LICENSE", repository_url = "https://github.com/ickc/pandoc-amsthm" }
+contents_file = "filters/pandoc-amsthm.py"
+
+##########
+# math related
+##########
+
+# https://github.com/lierdakil/mathjax-pandoc-filter must be installed using npm
+# https://github.com/yuwash/asciimathml-pandocfilter must be installed using npm
+# https://github.com/marhop/pandoc-unicode-math has a different binary for each
+# Pandoc version, so it is better than the user installs the proper one
+# https://github.com/kiwi0fruit/sugartex has several hacks and better to install
+# manually
+
+
+##########
+# LaTeX related
+##########
+
+# https://gist.github.com/mpickering/f1718fcdc4c56273ed52 is a Gist in Haskell
+
+[[templates]]
+description = "A pandoc filter for adding LaTeX environment on specific divs. It requires pandocfilters>=1.4."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-environment/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-environment" }
+contents_file = "filters/pandoc_latex_environment.py"
+
+[[templates]]
+description = "A pandoc filter to transform `latex=true` divs in LaTeX environments. It requires pandocfilters."
+license = { name = "BSD-3-Clause", url = "https://github.com/jgm/pandocfilters/blob/master/LICENSE", repository_url = "https://github.com/jgm/pandocfilters" }
+contents_file = "filters/latexdivs.py"
+
+[[templates]]
+description = "A pandoc filter for adding icons to specific elements in LaTeX. It requires panflute>=2.0 and other libraries (check https://github.com/chdemko/pandoc-latex-tip/blob/develop/setup.py)."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-tip/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-tip" }
+contents_file = "filters/pandoc_latex_tip.py"
+
+[[templates]]
+description = "A pandoc filter for setting admonition on scpecific div or codeblock elements. It requires panflute >=2.0."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-admonition/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-admonition" }
+contents_file = "filters/pandoc_latex_admonition.py"
+
+[[templates]]
+description = "A pandoc filter to insert barcodes and QR codes in LaTeX. It requires panflute>=1.9.7."
+license = { name = "BSD-3-Clause", url = "https://github.com/daamien/pandoc-latex-barcode/blob/master/LICENSE", repository_url = "https://github.com/daamien/pandoc-latex-barcode" }
+contents_file = "filters/pandoc_latex_barcode.py"
+
+[[templates]]
+description = "A pandoc filter to change the font size of specific elements in LaTeX. It requires panflute>=2.0."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-fontsize/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-fontsize" }
+contents_file = "filters/pandoc_latex_fontsize.py"
+
+[[templates]]
+description = "A pandoc filter to change the color of specific elements in LaTeX. It requires panflute>=2.0."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-color/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-color" }
+contents_file = "filters/pandoc_latex_color.py"
+
+[[templates]]
+description = "A pandoc filter to convert horizontal rule to new page in LaTeX. It requires panflute>=2.0."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-newpage/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-newpage" }
+contents_file = "filters/pandoc_latex_newpage.py"
+
+[[templates]]
+description = "A pandoc filter to handle french spacing rules in LaTeX. It requires panflute>=2.0."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-french-spaces/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-french-spaces" }
+contents_file = "filters/pandoc_latex_french_spaces.py"
+
+[[templates]]
+description = "A pandoc filter to change margins in LaTeX. It requires panflute>=2.0."
+license = { name = "BSD-3-Clause", url = "https://github.com/chdemko/pandoc-latex-margin/blob/develop/LICENSE", repository_url = "https://github.com/chdemko/pandoc-latex-margin" }
+contents_file = "filters/pandoc_latex_margin.py"
+
+# https://github.com/chdemko/pandoc-beamer-block is not needed becuase Pandoc
+# handles it
+
+
+##########
+# Include/transclude related
+##########
+
+# http://pandoc.org/scripting.html#include-files is only an example in Haskell
+# and a similar Lua filter exists
+
+# include_files Lua filter is better than https://github.com/sergiocorreia/panflute/blob/22b8c021e03f4469c5cb7ba68800e4c7348961af/docs/source/_static/include.py
+
+
+##########
+# RAW related
+##########
+[[templates]]
+description = "A pandoc filter to convert dot code in PGF/TikZ. It requires pandocfilters and dot2tex."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/kuba-orlik/pandoc-dot2tex-filter" }
+contents_file = "filters/dot2tex-filter.py"
+
+# https://github.com/jgm/pandoc/issues/1926#issuecomment-122308490 is only
+# comments in an issue and also convert HTML comments in LaTeX ones is
+# not important
+
+
+##########
+# Tables related
+##########
+
+# https://github.com/baig/pandoc-csv2table is written in Haskell
+# https://github.com/mb21/pandoc-placetable is also written in Haskell
+# https://github.com/ickc/pantable has many modules and numpy dependency
+# http://stackoverflow.com/questions/26406816/pandoc-is-there-a-way-to-include-an-appendix-of-links-in-a-pdf-from-markdown/26415375#26415375 is an eaxmple written in Haskell
+
+##########
+# Text related
+##########
+[[templates]]
+description = "A pandoc filter to replace abbreviations with their expansions. It requires pandocfilters."
+license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/scokobro/pandoc-abbreviations" }
+contents_file = "filters/abbrevs.py"
+
+# https://gitlab.com/mirkoboehm/pandoc-acronyms must be installed with pip
+# because it has many modules
+
+# https://github.com/davidar/pandoc-lang must be installed using npm
+
+[[templates]]
+description = "A pandoc filter to replace variables. It requires pyflute, pystache, pyyaml and future."
+license = { name = "CC0-1.0", url = "https://github.com/michaelstepner/pandoc-mustache/blob/master/LICENSE", repository_url = "https://github.com/michaelstepner/pandoc-mustache" }
+contents_file = "filters/pandoc_mustache.py"
+
+
+##########
+# Running code related
+##########
+
+# https://github.com/cdupont/R-pandoc is written in Haskell
+
+[[templates]]
+description = "A pandoc filter to execute Python code blocks from MD. It requires pandocfilters."
+license = { name = "BSD-2-Clause", url = "https://github.com/caiofcm/filter_pandoc_run_py/blob/master/LICENSE.txt", repository_url = "https://github.com/caiofcm/filter_pandoc_run_py" }
+contents_file = "filters/filter_pandoc_run_py.py"
+
+# https://github.com/LaurentRDC/pandoc-plot is really good but GPL 2.0 licensed
+
+# https://github.com/kiwi0fruit/knitty has many modules
+
+# https://github.com/alexpdp7/pandocsql is archived and the code seems removed
+
+# https://github.com/ickc/pannb/ version depends on the installed Pandoc version
+
+
+##########
+# Citation related
+##########
+
+# https://github.com/manubot/manubot#pandoc-filter requires manubot
+
+# https://github.com/phiresky/pandoc-url2cite must be installed using npm
+
+# https://github.com/odkr/pandoc-zotxt.lua has several dependencies
+
+
+##########
+# Others
+##########
+
+# https://gist.github.com/mpickering/8bc9bb34c4e9b076b107 is written in Haskell
+
+# https://gist.github.com/mpickering/fdc747b9c8306659cb43 is written in Haskell
+
+# https://github.com/klpn/lablinkfix is written in Haskell and it is very niche
+
+[[templates]]
+description = "A pandoc filter to change date metadata to a different format. It requires panflute and python-dateutil."
+license = { name = "UNLICENSE", url = "", repository_url = "https://gist.github.com/7937d04120ac27fcfb1955ae15773b05" }
+contents_file = "filters/second-date.py"
+
+# https://github.com/limarka/pandoc_abnt is written in Ruby and it is very niche
+
+# https://github.com/joseflaviojr/nheengatu contains many files
+
+# https://github.com/mhwombat/pandoc-logic-proofis written in Haskell
