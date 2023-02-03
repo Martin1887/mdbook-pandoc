@@ -40,7 +40,7 @@ contents_file = "latex/resume.latex"
 [[templates]]
 description = "Beamer slides and handouts (use slide-level 2 and check https://gist.github.com/lmullen/c3d4c7883f081ed8692a#file-makefile for generating handouts)."
 license = { name = "UNLICENSE", url = "", repository_url = "https://gist.github.com/lmullen/c3d4c7883f081ed8692a" }
-contents_file = "latex/lmullen_slides_handouts.latex"
+contents_file = "latex/lmullen_slides_handouts.beamer"
 
 
 ################
