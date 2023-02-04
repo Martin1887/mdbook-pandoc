@@ -3,28 +3,52 @@
 ################
 [[templates]]
 description = "A template for creating a PhD thesis in Pandoc, `nature` CSL."
+version = "Unreleased 2014/04/30"
+docs = "(None)"
+dependencies = []
+latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/chiakaivalya/thesis-markdown-pandoc" }
 contents_file = "csl/nature.csl"
 [[templates]]
 description = "A template for creating a PhD thesis in Pandoc, `cell` CSL."
+version = "Unreleased 2014/04/30"
+docs = "(None)"
+dependencies = []
+latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/chiakaivalya/thesis-markdown-pandoc" }
 contents_file = "csl/cell.csl"
 [[templates]]
 description = "A template for creating a PhD thesis in Pandoc, `science` CSL."
+version = "Unreleased 2014/04/30"
+docs = "(None)"
+dependencies = []
+latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/chiakaivalya/thesis-markdown-pandoc" }
 contents_file = "csl/science.csl"
 
 [[templates]]
 description = "Harvard Style ARU (being deprecated in 2023 in favour of Cite Them Right Harvard)."
+version = "Unreleased 2012/09/27"
+docs = "https://library.aru.ac.uk/referencing/harvard.htm"
+dependencies = []
+latex_packages = []
 license = { name = "Creative Commons 3.0 NC ND", url = "http://creativecommons.org/licenses/by-nc-nd/3.0/", repository_url = "https://library.aru.ac.uk/referencing/harvard.htm" }
 contents_file = "csl/harvard_aru.csl"
 
 [[templates]]
 description = "APA without DOI nor issue."
+version = "Unreleased 2014/07/06"
+docs = "(None)"
+dependencies = []
+latex_packages = []
 license = { name = "Creative Commons 3.0 BY SA", url = "http://creativecommons.org/licenses/by-sa/3.0/", repository_url = "http://www.zotero.org/styles/apa-no-doi-no-issue" }
 contents_file = "csl/apa_no_doi_no_issue.csl"
 
 [[templates]]
 description = "Modern Language Association (MLA) 8th edition."
+version = "Unreleased 2021/04/27"
+docs = "(None)" 
+dependencies = []
+latex_packages = []
 license = { name = "Creative Commons 3.0 BY SA", url = "http://creativecommons.org/licenses/by-sa/3.0/", repository_url = "http://www.zotero.org/styles/modern-language-association" }
 contents_file = "csl/mla8.csl"

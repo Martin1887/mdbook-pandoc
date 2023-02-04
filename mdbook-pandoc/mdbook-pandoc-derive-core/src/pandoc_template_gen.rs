@@ -29,8 +29,31 @@ pub struct PandocTemplates {
 #[derive(Serialize, Deserialize)]
 pub struct PandocTemplateSpec {
     pub description: String,
+    pub version: String,
+    pub docs: String,
+    pub dependencies: Vec<String>,
+    pub latex_packages: Vec<String>,
     pub license: TemplateLicense,
     pub contents_file: String,
+}
+
+impl Display for PandocTemplateSpec {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let separator = "--------------------------------\n";
+        write!(
+            f,
+            "{}{}: {}\nVersion: {}.\n{}\nDocs: {}.\nDependencies:\n{}LaTeX packages:\n{}{}\n",
+            separator,
+            self.contents_file.split("/").last().unwrap(),
+            self.description,
+            self.version,
+            self.license,
+            self.docs,
+            self.dependencies.join("\n"),
+            self.latex_packages.join("\n"),
+            separator
+        )
+    }
 }
 
 /// Struct representing the license of a template.

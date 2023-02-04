@@ -1,5 +1,9 @@
 # https://github.com/cagix/pandoc-lecture (exam, homework and lecture)
 [[templates]]
 description = "Template for exams."
+version = "Unreleased 2022/08/30"
+docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
+dependencies = []
+latex_packages = ["exam"]
 license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/master/LICENSE.md", repository_url = "https://github.com/cagix/pandoc-lecture" }
 contents_file = "include_after_body/exam_end.latex"

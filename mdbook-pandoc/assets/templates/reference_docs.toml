@@ -1,14 +1,26 @@
 [[templates]]
 description = "MLA-formatted docx."
+version = "Unreleased 2021/04/27"
+docs = "(None)" 
+dependencies = []
+latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/shushcat/mla_paper_template" }
 contents_file = "reference_docs/mla8.docx"
 
 [[templates]]
 description = "Simple book template."
+version = "Unreleased 2022/09/26"
+docs = "https://github.com/wikiti/pandoc-book-template/blob/master/README.md" 
+dependencies = []
+latex_packages = []
 license = { name = "MIT", url = "https://github.com/wikiti/pandoc-book-template/blob/master/LICENSE.md", repository_url = "https://github.com/wikiti/pandoc-book-template" }
 contents_file = "reference_docs/simple_book.docx"
 
 [[templates]]
 description = "Numbered sections docx."
+version = "Unreleased 2020/07/17"
+docs = "(None)" 
+dependencies = []
+latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/krissen/pandoc-extra" }
 contents_file = "reference_docs/numbered_sections.docx"
