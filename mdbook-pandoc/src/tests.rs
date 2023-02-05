@@ -9,7 +9,7 @@ use env_logger::Env;
 use log::warn;
 use mdbook::MDBook;
 
-use crate::PandocRenderer;
+use crate::{config::MdBookPandocConfig, process_metadata_block, PandocRenderer};
 
 static INIT: Once = Once::new();
 
@@ -63,4 +63,59 @@ fn test_parse_book() {
 
     assert!(pdf_path.is_file());
     assert!(epub_path.is_file());
+}
+
+/// Test that the metadata block is correctly placed only if it has contents.
+#[test]
+fn test_process_metadata_block() {
+    let contents = r#"
+---
+author: Test author
+...
+
+Test contents.
+"#
+    .to_string();
+    let no_metadata_config: MdBookPandocConfig = toml::from_str(
+        r#"
+[general]    
+"#,
+    )
+    .unwrap();
+    let empty_metadata_config: MdBookPandocConfig = toml::from_str(
+        r#"
+[general]
+
+[general.epub_metadata_fields]    
+"#,
+    )
+    .unwrap();
+    let with_metadata_config: MdBookPandocConfig = toml::from_str(
+        r#"
+[general]
+
+[general.epub_metadata_fields]
+title = "Test title"
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        contents,
+        process_metadata_block(
+            contents.clone(),
+            &no_metadata_config.general.epub_metadata_fields
+        )
+    );
+    assert_eq!(
+        contents,
+        process_metadata_block(
+            contents.clone(),
+            &empty_metadata_config.general.epub_metadata_fields
+        )
+    );
+    assert_eq!(
+        format!("---\ntitle: Test title\n---\n\n{}", contents),
+        process_metadata_block(contents, &with_metadata_config.general.epub_metadata_fields)
+    );
 }

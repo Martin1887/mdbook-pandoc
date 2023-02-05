@@ -36,7 +36,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use config::MdBookPandocConfig;
+use config::{epub_metadata::EpubMetadata, MdBookPandocConfig};
 use env_logger::Env;
 use log::warn;
 use mdbook::{renderer::RenderContext, Renderer};
@@ -69,15 +69,11 @@ impl Renderer for PandocRenderer {
             .unwrap();
         let general_cfg = cfg.general;
         let title_labels = &general_cfg.labels;
-        let metadata = format!(
-            "---\n{}---\n",
-            serde_yaml::to_string(&general_cfg.epub_metadata_fields).expect(
-                "Error reading the EPUB metadata fields, check the \
-            value of the `epub_metadata_fields`.",
-            )
-        );
 
-        let parsed = format!("{}{}", metadata, parse_book(&ctx, &title_labels));
+        let parsed = process_metadata_block(
+            parse_book(&ctx, &title_labels),
+            &general_cfg.epub_metadata_fields,
+        );
         let parsed_path = write_pandoc_md_file(&ctx.destination, &parsed);
 
         // the path must be the book `src` folder because paths are relative to
@@ -127,4 +123,27 @@ fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
         .expect("Error writing the parsed MD File");
 
     md_path
+}
+
+/// Write and clean the metadata header following these rules:
+/// - If the metadata is `null` or empty, nothing is modified.
+/// - If the metadata has some values, a new metadata block is added at the
+/// start of the document.
+fn process_metadata_block(
+    mut parsed_contents: String,
+    metadata_block: &Option<EpubMetadata>,
+) -> String {
+    match metadata_block {
+        Some(metadata_block) => {
+            let metadata_block_str = serde_yaml::to_string(&metadata_block).expect(
+                "Error reading the EPUB metadata fields, check the \
+            value of the `epub_metadata_fields`.",
+            );
+            if !metadata_block_str.is_empty() && metadata_block_str.trim() != "{}" {
+                parsed_contents = format!("---\n{}---\n\n{}", metadata_block_str, parsed_contents);
+            }
+        }
+        None => {}
+    }
+    parsed_contents
 }
