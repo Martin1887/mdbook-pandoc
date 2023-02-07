@@ -1,4 +1,8 @@
 [[templates]]
 description = "Test template"
+version = "Unreleased 2099/01/01"
+docs = "(None)" 
+dependencies = []
+latex_packages = []
 license = { name = "MIT", url = "", repository_url = "" }
 contents_file = "tex/test.tex"
