@@ -20,6 +20,13 @@ pub trait PandocResource {
     fn filename(&self) -> Option<&str>;
 }
 
+/// Trait to list the assets specifications in different formats.
+pub trait PandocResourceSpec {
+    fn to_plain(&self) -> String;
+    fn to_json(&self) -> String;
+    fn to_yaml(&self) -> String;
+}
+
 #[macro_export]
 macro_rules! write_vec_to_src_folder {
     ($struct: ident, $field: ident) => {

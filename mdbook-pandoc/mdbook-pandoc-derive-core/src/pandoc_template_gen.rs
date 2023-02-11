@@ -2,7 +2,8 @@
 //! deserialized into a `PandocTemplates` struct.
 //!
 //! In addition of generating the variants, the macro generates the
-//! implementation of the following functions:
+//! implementation of the following functions (implementing the
+//! `PandocResource` trait):
 //!
 //! - `license`: return the license of the template.
 //! - `description`: return a description of the template.
@@ -14,7 +15,7 @@ use std::{fmt::Display, fs::read_to_string, path::PathBuf};
 
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::quote;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, Serializer};
 use syn::{parse2, parse_quote, punctuated::Punctuated, token::Comma, ItemEnum, LitStr, Variant};
 
 /// Struct representing the `licenses.toml` file with the specification of all
@@ -28,31 +29,55 @@ pub struct PandocTemplates {
 /// `templates.toml` specification file.
 #[derive(Serialize, Deserialize)]
 pub struct PandocTemplateSpec {
+    #[serde(rename(serialize = "name"))]
+    #[serde(serialize_with = "map_contents_file_to_snake_case_name")]
+    pub contents_file: String,
     pub description: String,
     pub version: String,
     pub docs: String,
     pub dependencies: Vec<String>,
     pub latex_packages: Vec<String>,
     pub license: TemplateLicense,
-    pub contents_file: String,
+}
+
+fn map_contents_file_to_snake_case_name<S>(
+    contents_file: &str,
+    serializer: S,
+) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let (extension, snake_case_filename) = filename_to_snake_case_name(contents_file);
+    serializer.serialize_str(&format!("{}_{}", extension, snake_case_filename))
 }
 
 impl Display for PandocTemplateSpec {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let separator = "--------------------------------\n";
+        let (extension, snake_case_filename) = filename_to_snake_case_name(&self.contents_file);
         write!(
             f,
-            "{}{}: {}\nVersion: {}.\n{}\nDocs: {}.\nDependencies:\n{}LaTeX packages:\n{}{}\n",
+            "{}Name: {}\nDescription: {}\nVersion: {}.\nDocs: {}\n{}\nDependencies:\n{}\nLaTeX packages:\n{}\n{}\n",
             separator,
-            self.contents_file.split("/").last().unwrap(),
+            format!("{}_{}", extension, snake_case_filename),
             self.description,
             self.version,
-            self.license,
             self.docs,
+            self.license,
             self.dependencies.join("\n"),
             self.latex_packages.join("\n"),
             separator
         )
+    }
+}
+
+impl PandocTemplateSpec {
+    fn to_json(&self) -> String {
+        serde_json::to_string(self).unwrap()
+    }
+
+    fn to_yaml(&self) -> String {
+        format!("---\n{}\n...\n", serde_yaml::to_string(self).unwrap())
     }
 }
 
@@ -82,12 +107,8 @@ fn capitalize(word: &str) -> String {
     )
 }
 
-/// Return the enum variant name transforming the filename (the last part of
-/// the path) to CamelCase and putting the extension before the name to ease
-/// the identification and sorting of the format.
-///
-/// The path is assumed to be separated by `/`.
-fn filename_to_enum_variant(filename: &str) -> String {
+/// Return extension and snake_case name of an asset from the contents file.
+fn filename_to_snake_case_name(filename: &str) -> (String, String) {
     let mut filename_split: Vec<&str> = filename
         .split("/")
         .last()
@@ -95,14 +116,27 @@ fn filename_to_enum_variant(filename: &str) -> String {
         .split(".")
         .collect();
     let extension = filename_split.pop().unwrap();
-    let snake_case_name = filename_split.join("_").replace("-", "_");
+
+    (
+        extension.to_string(),
+        filename_split.join("_").replace("-", "_"),
+    )
+}
+
+/// Return the enum variant name transforming the filename (the last part of
+/// the path) to CamelCase and putting the extension before the name to ease
+/// the identification and sorting of the format.
+///
+/// The path is assumed to be separated by `/`.
+fn filename_to_enum_variant(filename: &str) -> String {
+    let (extension, snake_case_name) = filename_to_snake_case_name(filename);
     let name_split = snake_case_name.split("_");
     let mut name = String::new();
     for split in name_split {
         name.push_str(&capitalize(split));
     }
 
-    format!("{}{}", capitalize(extension), name)
+    format!("{}{}", capitalize(&extension), name)
 }
 
 pub fn pandoc_template_gen_core(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -139,16 +173,22 @@ fn impl_pandoc_template_gen(templates_toml_path: &str, mut ast: ItemEnum) -> Tok
         &read_to_string(&templates_toml_absolute_path).expect("Error reading the templates file"),
     )
     .expect("Error deserializing the templates file");
+
     let mut license_quote = quote! {};
     let mut description_quote = quote! {};
     let mut contents_quote = quote! {};
     let mut filename_quote = quote! {};
+    let mut to_plain_quote = quote! {};
+    let mut to_json_quote = quote! {};
+    let mut to_yaml_quote = quote! {};
+
+    let mut first = true;
     for template in templates.templates {
         let name = Ident::new(
             &filename_to_enum_variant(&template.contents_file),
             Span::call_site(),
         );
-        let template_description = template.description;
+        let template_description = template.description.clone();
         enum_variants.push(parse_quote! {
             #[doc = #template_description]
             #name
@@ -174,6 +214,20 @@ fn impl_pandoc_template_gen(templates_toml_path: &str, mut ast: ItemEnum) -> Tok
         filename_quote.extend(quote! {
             #enum_name::#name => Some(#filename),
         });
+        let template_plain = template.to_string();
+        let template_json = template.to_json();
+        let template_yaml = template.to_yaml();
+        to_plain_quote.extend(quote! {
+            #enum_name::#name => #template_plain.to_string(),
+        });
+        let json_separator = if first { "" } else { ",\n" };
+        to_json_quote.extend(quote! {
+            #enum_name::#name => format!("{}{}", #json_separator, #template_json),
+        });
+        to_yaml_quote.extend(quote! {
+            #enum_name::#name => #template_yaml.to_string(),
+        });
+        first = false;
     }
 
     ast.variants = enum_variants;
@@ -228,6 +282,27 @@ fn impl_pandoc_template_gen(templates_toml_path: &str, mut ast: ItemEnum) -> Tok
                 match self.filename() {
                     Some(filename) => write!(f, "{}", filename),
                     None => write!(f, "")
+                }
+            }
+        }
+
+        impl PandocResourceSpec for #enum_name {
+            fn to_plain(&self) -> String {
+                match self {
+                    #to_plain_quote
+                    _ => String::new(),
+                }
+            }
+            fn to_json(&self) -> String {
+                match self {
+                    #to_json_quote
+                    _ => String::new(),
+                }
+            }
+            fn to_yaml(&self) -> String {
+                match self {
+                    #to_yaml_quote
+                    _ => String::new(),
                 }
             }
         }

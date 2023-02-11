@@ -11,11 +11,14 @@
 //! TOML file with the filename, license and other properties of each built-in
 //! template.
 //!
+//! - Derive `AssetTypeList` to print the information about assets in different
+//! formats.
+//!
 //! This is a separate crate to ease testing.
 
 use mdbook_pandoc_derive_core::{
-    pandoc_command_args_derive_core, pandoc_repeated_args_derive_core, pandoc_template_gen_core,
-    serde_enum_display_derive_core,
+    asset_type_list_derive_core, pandoc_command_args_derive_core, pandoc_repeated_args_derive_core,
+    pandoc_template_gen_core, serde_enum_display_derive_core,
 };
 use proc_macro::TokenStream;
 
@@ -57,4 +60,11 @@ pub fn serde_enum_display_derive(input: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn pandoc_template_gen(attr: TokenStream, item: TokenStream) -> TokenStream {
     pandoc_template_gen_core(attr.into(), item.into()).into()
+}
+
+/// Derive the `AssetTypeList` trait to print assets information in different
+/// formats.
+#[proc_macro_derive(AssetTypeList)]
+pub fn pandoc_asset_type_list_derive(input: TokenStream) -> TokenStream {
+    asset_type_list_derive_core(input.into()).into()
 }

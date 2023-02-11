@@ -5,8 +5,8 @@ use proc_macro2::TokenStream;
 use quote::quote;
 
 use crate::{
-    pandoc_command_args_derive_core, pandoc_repeated_args_derive_core, pandoc_template_gen_core,
-    serde_enum_display_derive_core,
+    asset_type_list_derive_core, pandoc_command_args_derive_core, pandoc_repeated_args_derive_core,
+    pandoc_template_gen_core, serde_enum_display_derive_core,
 };
 
 #[test]
@@ -280,11 +280,94 @@ fn test_templates_enum() {
                 }
             }
         }
+
+        impl PandocResourceSpec for PandocTemplate {
+            fn to_plain(&self) -> String {
+                match self {
+                    PandocTemplate::TexTest => "--------------------------------\nName: tex_test\nDescription: Test template\nVersion: Unreleased 2099/01/01.\nDocs: (None)\nLicense: MIT ().\nRepository URL: \nDependencies:\n\nLaTeX packages:\n\n--------------------------------\n\n".to_string(),
+                    _ => String::new(),
+                }
+            }
+            fn to_json(&self) -> String {
+                match self {
+                    PandocTemplate::TexTest => format!("{}{}", "", "{\"name\":\"tex_test\",\"description\":\"Test template\",\"version\":\"Unreleased 2099/01/01\",\"docs\":\"(None)\",\"dependencies\":[],\"latex_packages\":[],\"license\":{\"name\":\"MIT\",\"url\":\"\",\"repository_url\":\"\"}}"),
+                    _ => String::new(),
+                }
+            }
+            fn to_yaml(&self) -> String {
+                match self {
+                    PandocTemplate::TexTest => "---\nname: tex_test\ndescription: Test template\nversion: Unreleased 2099/01/01\ndocs: (None)\ndependencies: []\nlatex_packages: []\nlicense:\n  name: MIT\n  url: ''\n  repository_url: ''\n\n...\n".to_string(),
+                    _ => String::new(),
+                }
+            }
+        }
     };
     assert_tokens_eq(
         &expected,
         &pandoc_template_gen_core(quote!(#templates_toml_path), test_enum),
     );
+}
+
+#[test]
+fn test_asset_type_list_derive() {
+    let test_enum = quote! {
+        #[derive(Clone, ValueEnum, EnumIter, AssetTypeList)]
+        enum AssetType {
+            Template,
+        }
+    };
+    let expected = quote! {
+        impl AssetTypeList for AssetType {
+            fn to_plain(&self) -> String {
+                let mut output = String::new();
+                match self {
+                    AssetType::Template => {
+                        for asset in PandocTemplate::iter() {
+                            match asset {
+                                PandocTemplate::Default | PandocTemplate::Custom(_) => {},
+                                _ => output.push_str(&asset.to_plain())
+                            }
+                        }
+                    }
+                }
+
+                output
+            }
+
+            fn to_json(&self) -> String {
+                let mut output = String::new();
+                match self {
+                    AssetType::Template => {
+                        for asset in PandocTemplate::iter() {
+                            match asset {
+                                PandocTemplate::Default | PandocTemplate::Custom(_) => {},
+                                _ => output.push_str(&asset.to_json())
+                            }
+                        }
+                    }
+                }
+
+                output
+            }
+
+            fn to_yaml(&self) -> String {
+                let mut output = String::new();
+                match self {
+                    AssetType::Template => {
+                        for asset in PandocTemplate::iter() {
+                            match asset {
+                                PandocTemplate::Default | PandocTemplate::Custom(_) => {},
+                                _ => output.push_str(&asset.to_yaml())
+                            }
+                        }
+                    }
+                }
+
+                output
+            }
+        }
+    };
+    assert_tokens_eq(&expected, &asset_type_list_derive_core(test_enum));
 }
 
 // Function really inspired by (`anyinput` crate)

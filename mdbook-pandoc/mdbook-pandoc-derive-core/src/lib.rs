@@ -1,5 +1,6 @@
 //! Core implementation of the arguments derive.
 
+mod asset_type_list_derive;
 mod command_args;
 mod pandoc_template_gen;
 mod repeated_args;
@@ -8,6 +9,7 @@ mod serde_enum_derive;
 #[cfg(test)]
 mod tests;
 
+pub use asset_type_list_derive::*;
 pub use command_args::*;
 pub use pandoc_template_gen::*;
 pub use repeated_args::*;
