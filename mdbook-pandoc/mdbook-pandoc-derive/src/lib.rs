@@ -7,9 +7,9 @@
 //! value called `Custom` printing that value or the serialization of the
 //! variant in the rest of variants.
 //!
-//! - Attribute-like macro to generate the `PandocTemplate` enum reading a
+//! - Attribute-like macro to generate the `PandocResource` enums reading a
 //! TOML file with the filename, license and other properties of each built-in
-//! template.
+//! Pandoc resource.
 //!
 //! - Derive `AssetTypeList` to print the information about assets in different
 //! formats.
@@ -18,7 +18,7 @@
 
 use mdbook_pandoc_derive_core::{
     asset_type_list_derive_core, pandoc_command_args_derive_core, pandoc_repeated_args_derive_core,
-    pandoc_template_gen_core, serde_enum_display_derive_core,
+    pandoc_resource_gen_core, serde_enum_display_derive_core,
 };
 use proc_macro::TokenStream;
 
@@ -58,8 +58,8 @@ pub fn serde_enum_display_derive(input: TokenStream) -> TokenStream {
 /// Generation of the `PandocTemplate` variants reading a TOML file. Check the
 /// core crate for the full documentation.
 #[proc_macro_attribute]
-pub fn pandoc_template_gen(attr: TokenStream, item: TokenStream) -> TokenStream {
-    pandoc_template_gen_core(attr.into(), item.into()).into()
+pub fn pandoc_resource_gen(attr: TokenStream, item: TokenStream) -> TokenStream {
+    pandoc_resource_gen_core(attr.into(), item.into()).into()
 }
 
 /// Derive the `AssetTypeList` trait to print assets information in different

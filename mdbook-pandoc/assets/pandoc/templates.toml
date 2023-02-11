@@ -1,7 +1,7 @@
 ################
 # General
 ################
-[[templates]]
+[[resources]]
 description = "A simple annotated template. Note that it is very old and it is recommendable only to create other templates."
 version = "Unreleased 2011/06/10"
 docs = "(None)"
@@ -10,7 +10,7 @@ latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://gist.github.com/michaelt/1017790" }
 contents_file = "templates/latex/simple_annotated.latex"
 
-[[templates]]
+[[resources]]
 description = "The default template removing 'Figure #' automatic labels from caption. Note that it is very old."
 version = "Unreleased 2011/11/15"
 docs = "(None)"
@@ -19,7 +19,7 @@ latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://gist.github.com/1366514" }
 contents_file = "templates/latex/no_numbered_captions.latex"
 
-[[templates]]
+[[resources]]
 description = "Minimal (designed to customize complete templates) template to customize tables using booktabs."
 version = "Unreleased 2013/12/04"
 docs = "(None)"
@@ -32,7 +32,7 @@ contents_file = "templates/latex/minimal_booktabs.latex"
 ################
 # Everyday
 ################
-[[templates]]
+[[resources]]
 description = "A clean pandoc LaTeX template for lecture notes and exercises with a focus on computer science."
 version = "2.2.0"
 docs = "https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/README.md"
@@ -43,7 +43,7 @@ contents_file = "templates/latex/eisvogel.latex"
 
 # https://github.com/aaronwolen/pandoc-letter cannot be included because it is GPL-3.0 licensed
 
-[[templates]]
+[[resources]]
 description = "Template for making Tufte-style handouts."
 version = "Unreleased 2016/09/01"
 docs = "(None)"
@@ -52,7 +52,7 @@ latex_packages = ["tufte-latex", "units"]
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/wcaleb/pandoc-templates" }
 contents_file = "templates/latex/tufte_handouts.latex"
 
-[[templates]]
+[[resources]]
 description = "The Markdown resume. ConTeXt required."
 version = "Unreleased 2021/11/23"
 docs = "https://mszep.github.io/pandoc_resume"
@@ -61,7 +61,7 @@ latex_packages = []
 license = { name = "CC BY-SA 3.0", url = "https://creativecommons.org/licenses/by-sa/3.0/deed.en_US", repository_url = "https://github.com/mszep/pandoc_resume" }
 contents_file = "templates/latex/resume.latex"
 
-[[templates]]
+[[resources]]
 description = "Beamer slides and handouts (use slide-level 2 and check https://gist.github.com/lmullen/c3d4c7883f081ed8692a#file-makefile for generating handouts)."
 version = "Unreleased 2014/08/10"
 docs = "(None)"
@@ -77,7 +77,7 @@ contents_file = "templates/latex/lmullen_slides_handouts.beamer"
 # https://github.com/chiakaivalya/thesis-markdown-pandoc is not a template but uses preamble and csl
 
 # TODO: UC logo as variable
-[[templates]]
+[[resources]]
 description = "Template for PhD thesis used for submission to University College London."
 version = "Unreleased 2021/01/30"
 docs = "https://github.com/tompollard/phd_thesis_markdown/blob/master/README.md"
@@ -85,7 +85,7 @@ dependencies = ["python", "pandoc-fignos", "pandoc-eqnos", "pandoc-tablenos", "p
 latex_packages = ["truncate", "tocloft", "wallpaper", "morefloats", "sectsty", "siunitx", "threeparttable", "l3packages", "l3kernel", "l3experimental", "l3backend"]
 license = { name = "MIT", url = "https://github.com/tompollard/phd_thesis_markdown/blob/master/LICENSE", repository_url = "https://github.com/tompollard/phd_thesis_markdown" }
 contents_file = "templates/latex/ucl_phd_thesis.latex"
-[[templates]]
+[[resources]]
 description = "Template for PhD thesis used for submission to University College London."
 version = "Unreleased 2021/01/30"
 docs = "https://github.com/tompollard/phd_thesis_markdown/blob/master/README.md"
@@ -97,7 +97,7 @@ contents_file = "templates/html/ucl_phd_thesis.html"
 # https://github.com/mabl/pandoc-thesis is not a template but just an example with custom stys and footers
 # https://github.com/davecap/markdown-latex-boilerplate has GPL 3.0 license
 
-[[templates]]
+[[resources]]
 description = "Sound and versatile LaTeX template for academic articles."
 version = "Unreleased 2018/04/27"
 docs = "https://github.com/periodicpoint/robusta/blob/master/README.md"
@@ -105,7 +105,7 @@ dependencies = []
 latex_packages = []
 license = { name = "MIT", url = "https://github.com/periodicpoint/robusta/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/robusta" }
 contents_file = "templates/latex/robusta.latex"
-[[templates]]
+[[resources]]
 description = "Sound and versatile LaTeX template for academic books."
 version = "Unreleased 2019/01/21"
 docs = "https://github.com/periodicpoint/arabica/blob/master/README.md"
@@ -114,7 +114,7 @@ latex_packages = []
 license = { name = "MIT", url = "https://github.com/periodicpoint/arabica/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/arabica"}
 contents_file = "templates/latex/arabica.latex"
 
-[[templates]]
+[[resources]]
 description = "Simple APA 6 template."
 version = "Unreleased 2013/07/04"
 docs = "(None)"
@@ -130,7 +130,7 @@ contents_file = "templates/latex/apa6.latex"
 # exam, homework and lecture with complex builds
 # TODO: translations using variables
 # TODO: HTML lecture is a complex template that does not pay off now
-[[templates]]
+[[resources]]
 description = "Template for exams, some contents in German."
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
@@ -138,7 +138,7 @@ dependencies = []
 latex_packages = ["exam"]
 license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/master/LICENSE.md", repository_url = "https://github.com/cagix/pandoc-lecture" }
 contents_file = "templates/latex/exam.latex"
-[[templates]]
+[[resources]]
 description = "MD intermediate template for homework, some contents in German."
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
@@ -146,7 +146,7 @@ dependencies = []
 latex_packages = []
 license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/master/LICENSE.md", repository_url = "https://github.com/cagix/pandoc-lecture" }
 contents_file = "templates/md/homework_questions.md"
-[[templates]]
+[[resources]]
 description = "Template for homework, some contents in German."
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
@@ -157,7 +157,7 @@ contents_file = "templates/latex/homework.latex"
 
 
 # Journal templates
-[[templates]]
+[[resources]]
 description = "AMSTAT journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -165,7 +165,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/amstat.latex"
-[[templates]]
+[[resources]]
 description = "Biometrical journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -173,7 +173,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/biometrical_journal.latex"
-[[templates]]
+[[resources]]
 description = "Biometrics journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -181,7 +181,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/biometrics.latex"
-[[templates]]
+[[resources]]
 description = "Biometrika journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -189,7 +189,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/biometrika.latex"
-[[templates]]
+[[resources]]
 description = "Biostatistics journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -197,7 +197,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/biostatistics.latex"
-[[templates]]
+[[resources]]
 description = "IMS journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -206,7 +206,7 @@ latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/ims.latex"
 # JSS bst and cls files are GPL 2.0 licensed.
-# [[templates]]
+# [[resources]]
 # description = "JSS journal."
 # version = "Unreleased 2017/06/27"
 # docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -214,7 +214,7 @@ contents_file = "templates/latex/ims.latex"
 # latex_packages = []
 # license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 # contents_file = "templates/latex/jss.latex"
-[[templates]]
+[[resources]]
 description = "Rjournal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -222,7 +222,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/rjournal.latex"
-[[templates]]
+[[resources]]
 description = "Stats in med journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -232,7 +232,7 @@ license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/s
 contents_file = "templates/latex/stats_in_med.latex"
 
 # MLA templates
-[[templates]]
+[[resources]]
 description = "MLA-formatted PDFs."
 version = "Unreleased 2021/04/27"
 docs = "(None)" 
@@ -240,7 +240,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/shushcat/mla_paper_template" }
 contents_file = "templates/latex/mla8.latex"
-[[templates]]
+[[resources]]
 description = "MLA-formatted opendocument."
 version = "Unreleased 2021/04/27"
 docs = "(None)" 
@@ -248,7 +248,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/shushcat/mla_paper_template" }
 contents_file = "templates/opendocument/mla8.opendocument"
-[[templates]]
+[[resources]]
 description = "MLA-formatted roff."
 version = "Unreleased 2021/04/27"
 docs = "(None)" 
@@ -261,7 +261,7 @@ contents_file = "templates/roff/mla8.roff"
 ################
 # EPUB
 ################
-[[templates]]
+[[resources]]
 description = "Simple book template."
 version = "Unreleased 2022/09/26"
 docs = "https://github.com/wikiti/pandoc-book-template/blob/master/README.md" 
@@ -269,7 +269,7 @@ dependencies = []
 latex_packages = []
 license = { name = "MIT", url = "https://github.com/wikiti/pandoc-book-template/blob/master/LICENSE.md", repository_url = "https://github.com/wikiti/pandoc-book-template" }
 contents_file = "templates/latex/simple_book.latex"
-[[templates]]
+[[resources]]
 description = "Simple book template."
 version = "Unreleased 2022/09/26"
 docs = "https://github.com/wikiti/pandoc-book-template/blob/master/README.md" 
@@ -277,7 +277,7 @@ dependencies = []
 latex_packages = []
 license = { name = "MIT", url = "https://github.com/wikiti/pandoc-book-template/blob/master/LICENSE.md", repository_url = "https://github.com/wikiti/pandoc-book-template" }
 contents_file = "templates/epub/simple_book.epub"
-[[templates]]
+[[resources]]
 description = "Simple book template."
 version = "Unreleased 2022/09/26"
 docs = "https://github.com/wikiti/pandoc-book-template/blob/master/README.md" 
@@ -292,7 +292,7 @@ contents_file = "templates/html/simple_book.html"
 ################
 # https://github.com/ashki23/pandoc-bootstrap is GPL 3.0 licensed
 
-[[templates]]
+[[resources]]
 description = "Bootstrap HTML template."
 version = "Unreleased 2013/07/26"
 docs = "(None)" 
@@ -302,7 +302,7 @@ license = { name = "Apache 2.0", url = "https://github.com/tonyblundell/pandoc-b
 contents_file = "templates/html/bootstrap.html"
 
 # TODO: many CSS and JS files are loaded from the HTML with error
-[[templates]]
+[[resources]]
 description = "Bootstrap HTML with a sticky accordion menu template."
 version = "Unreleased 2013/07/26"
 docs = "(None)" 

@@ -1,4 +1,4 @@
-[[templates]]
+[[resources]]
 description = "Simple book template CSS taken from https://gist.github.com/killercup/5917178."
 version = "Unreleased 2020/10/17"
 docs = "(None)" 
@@ -7,7 +7,7 @@ latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://gist.github.com/killercup/5917178" }
 contents_file = "css/simple_book.css"
 
-[[templates]]
+[[resources]]
 description = "Bootstrap 2.3.2 original CSS (without template customizations)."
 version = "Unreleased 2013/07/26"
 docs = "(None)" 
@@ -16,7 +16,7 @@ latex_packages = []
 license = { name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0", repository_url = "https://github.com/twbs/bootstrap" }
 contents_file = "css/bootstrap.css"
 
-[[templates]]
+[[resources]]
 description = "Bootstrap HTML template."
 version = "Unreleased 2013/07/26"
 docs = "(None)" 
@@ -25,7 +25,7 @@ latex_packages = []
 license = { name = "Apache 2.0", url = "https://github.com/diversen/pandoc-bootstrap-template/blob/master/LICENSE", repository_url = "https://github.com/diversen/pandoc-bootstrap-template" }
 contents_file = "css/bootstrap_customized.css"
 
-[[templates]]
+[[resources]]
 description = "Bootstrap HTML with a sticky accordion menu template."
 version = "Unreleased 2013/07/26"
 docs = "(None)" 

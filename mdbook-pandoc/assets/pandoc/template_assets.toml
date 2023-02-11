@@ -1,4 +1,4 @@
-[[templates]]
+[[resources]]
 description = "List of RGB colors from X11, used by APA6."
 version = "Unreleased 2013/05/12"
 docs = "(None)"
@@ -10,7 +10,7 @@ contents_file = "misc/rgb.tex"
 #############
 # Biometrical
 #############
-[[templates]]
+[[resources]]
 description = "Biometrical bibliography style."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -18,7 +18,7 @@ dependencies = []
 latex_packages = []
 license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/biometrical.bst" } 
 contents_file = "misc/biometrical.bst"
-[[templates]]
+[[resources]]
 description = "w-art.cls generated using docstrip utility."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -26,7 +26,7 @@ dependencies = []
 latex_packages = []
 license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-art.cls" } 
 contents_file = "misc/w-art.cls"
-[[templates]]
+[[resources]]
 description = "w-bimj.clo generated using docstrip utility."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -34,7 +34,7 @@ dependencies = []
 latex_packages = []
 license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-bimj.clo" } 
 contents_file = "misc/w-bimj.clo"
-[[templates]]
+[[resources]]
 description = "w-thm.sty generated using docstrip utility."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -47,7 +47,7 @@ contents_file = "misc/w-thm.sty"
 #############
 # Biometrics
 #############
-[[templates]]
+[[resources]]
 description = "Biometrics bibliography style."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -55,7 +55,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrics/biom.bst" } 
 contents_file = "misc/biom.bst"
-[[templates]]
+[[resources]]
 description = "Biometrics cls."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -63,7 +63,7 @@ dependencies = []
 latex_packages = []
 license = { name = "Copyright (C) The International Biometric Society 2006", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrics/biom.cls" } 
 contents_file = "misc/biom.cls"
-[[templates]]
+[[resources]]
 description = "Put sideways figures and tables at end (used by Biometrics template)."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -76,7 +76,7 @@ contents_file = "misc/endrotfloat.sty"
 #############
 # Biometrika
 #############
-[[templates]]
+[[resources]]
 description = "Biometrika lineno sty."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -84,7 +84,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/Biomet-lineno.sty" } 
 contents_file = "misc/Biomet-lineno.sty"
-[[templates]]
+[[resources]]
 description = "Biometrika bibliography style."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -92,7 +92,7 @@ dependencies = []
 latex_packages = []
 license = { name = "Copyright (C) 1994-98 Patrick W. Daly, for non-profit purposes", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/biometrika.bst" } 
 contents_file = "misc/biometrika.bst"
-[[templates]]
+[[resources]]
 description = "Biometrika cls."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -105,7 +105,7 @@ contents_file = "misc/biometrika.cls"
 #############
 # Biostatistics
 #############
-[[templates]]
+[[resources]]
 description = "Biostatistics cls."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -113,7 +113,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biostatistics/bio.cls" } 
 contents_file = "misc/bio.cls"
-[[templates]]
+[[resources]]
 description = "Biostatistics bibliography style."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -126,7 +126,7 @@ contents_file = "misc/biorefs.bst"
 #############
 # ims
 #############
-[[templates]]
+[[resources]]
 description = "ims bibliography style."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -134,7 +134,7 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/ims/acmtrans-ims.bst" } 
 contents_file = "misc/acmtrans-ims.bst"
-[[templates]]
+[[resources]]
 description = "imsart-number bibliography style."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -142,7 +142,7 @@ dependencies = []
 latex_packages = []
 license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/ims/imsart-number.bst" } 
 contents_file = "misc/imsart-number.bst"
-[[templates]]
+[[resources]]
 description = "imsart cls."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -150,7 +150,7 @@ dependencies = []
 latex_packages = []
 license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/ims/imsart.cls" } 
 contents_file = "misc/imsart.cls"
-[[templates]]
+[[resources]]
 description = "imsart sty."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -163,7 +163,7 @@ contents_file = "misc/imsart.sty"
 #############
 # rjournal
 #############
-[[templates]]
+[[resources]]
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
 dependencies = []
@@ -176,7 +176,7 @@ contents_file = "misc/RJournal.sty"
 #############
 # stats-in-med
 #############
-[[templates]]
+[[resources]]
 description = "statmed bibliography style."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
@@ -184,7 +184,7 @@ dependencies = []
 latex_packages = []
 license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/stats-in-med/statmed.bst" } 
 contents_file = "misc/statmed.bst"
-[[templates]]
+[[resources]]
 description = "stats-in-med simauth.cls."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 

@@ -6,7 +6,7 @@ use quote::quote;
 
 use crate::{
     asset_type_list_derive_core, pandoc_command_args_derive_core, pandoc_repeated_args_derive_core,
-    pandoc_template_gen_core, serde_enum_display_derive_core,
+    pandoc_resource_gen_core, serde_enum_display_derive_core,
 };
 
 #[test]
@@ -199,7 +199,7 @@ fn test_serde_enum_display_derive() {
 }
 
 #[test]
-fn test_templates_enum() {
+fn test_resource_gen() {
     let project_root = PathBuf::from(env!["CARGO_MANIFEST_DIR"]).join("..");
     let templates_toml_path = "assets/tests/templates/templates.toml";
     let templates_toml_absolute_path = project_root.join(templates_toml_path);
@@ -230,43 +230,43 @@ fn test_templates_enum() {
         }
 
         impl PandocResource for PandocTemplate {
-            /// Return a String with the license information of the template.
+            /// Return a String with the license information of the resource.
             fn license(&self) -> Option<&str> {
                 match self {
                     PandocTemplate::TexTest => Some("License: MIT ().\nRepository URL: "),
-                    // Default and custom templates have not a known license
+                    // Default and custom resources have not a known license
                     _ => None,
                 }
             }
 
-            /// Return the description of the template.
+            /// Return the description of the resource.
             fn description(&self) -> Option<&str> {
                 match self {
                     PandocTemplate::TexTest => Some("Test template"),
-                    // Default and custom templates have not description
+                    // Default and custom resources have not description
                     _ => None,
                 }
             }
 
-            /// Return the contents of the template as a vector of bytes.
+            /// Return the contents of the resource as a vector of bytes.
             fn contents(&self) -> Option<Vec<u8>> {
                 match self {
                     PandocTemplate::TexTest => Some(include_bytes!(#test_template_path).to_vec()),
-                    // Default and custom templates have not contents
-                    // (custom templates files must already exist in the
-                    // Pandoc templates directory)
+                    // Default and custom resources have not contents
+                    // (custom resources files must already exist in the
+                    // Pandoc resources directory)
                     _ => None,
                 }
             }
 
-            /// Return the filename that must have the template in the Pandoc
-            /// templates directory.
+            /// Return the filename that must have the resource in the Pandoc
+            /// resources directory.
             fn filename(&self) -> Option<&str> {
                 match self {
                     PandocTemplate::TexTest => Some("test.tex"),
-                    // For custom templates the filename is the specified one
+                    // For custom resources the filename is the specified one
                     PandocTemplate::Custom(s) => Some(s),
-                    // Default templates have not a filename
+                    // Default resources have not a filename
                     _ => None,
                 }
             }
@@ -304,7 +304,7 @@ fn test_templates_enum() {
     };
     assert_tokens_eq(
         &expected,
-        &pandoc_template_gen_core(quote!(#templates_toml_path), test_enum),
+        &pandoc_resource_gen_core(quote!(#templates_toml_path), test_enum),
     );
 }
 

@@ -1,7 +1,7 @@
 ################
 # Everyday
 ################
-[[templates]]
+[[resources]]
 description = "The Markdown resume, HTML version."
 version = "Unreleased 2020/01/26"
 docs = "https://mszep.github.io/pandoc_resume"
@@ -16,7 +16,7 @@ contents_file = "include_in_header/resume.css.html"
 ################
 # TODO: convert fonts in variables
 # TODO: a lot of problems (rare packages and chapters decorations don't work)
-[[templates]]
+[[resources]]
 description = "A template for creating a PhD thesis in Pandoc."
 version = "Unreleased 2014/04/30"
 docs = "(None)"
@@ -25,7 +25,7 @@ latex_packages = ["quotchap", "threeparttable"]
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/chiakaivalya/thesis-markdown-pandoc" }
 contents_file = "include_in_header/thesis_markdown.latex"
 
-[[templates]]
+[[resources]]
 description = "Template for PhD thesis used for submission to University College London."
 version = "Unreleased 2021/01/30"
 docs = "https://github.com/tompollard/phd_thesis_markdown/blob/master/README.md"
@@ -33,7 +33,7 @@ dependencies = ["python", "pandoc-fignos", "pandoc-eqnos", "pandoc-tablenos", "p
 latex_packages = ["truncate", "tocloft", "wallpaper", "morefloats", "sectsty", "siunitx", "threeparttable", "l3packages", "l3kernel", "l3experimental", "l3backend"]
 license = { name = "MIT", url = "https://github.com/tompollard/phd_thesis_markdown/blob/master/LICENSE", repository_url = "https://github.com/tompollard/phd_thesis_markdown" }
 contents_file = "include_in_header/ucl_phd_thesis_preamble.latex"
-[[templates]]
+[[resources]]
 description = "Template for PhD thesis used for submission to University College London."
 version = "Unreleased 2021/01/30"
 docs = "https://github.com/tompollard/phd_thesis_markdown/blob/master/README.md"
@@ -44,7 +44,7 @@ contents_file = "include_in_header/ucl_phd_thesis.css.html"
 
 
 # https://github.com/cagix/pandoc-lecture (exam, homework and lecture)
-[[templates]]
+[[resources]]
 description = "Template for exams."
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
@@ -52,7 +52,7 @@ dependencies = []
 latex_packages = ["exam"]
 license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/master/LICENSE.md", repository_url = "https://github.com/cagix/pandoc-lecture" }
 contents_file = "include_in_header/exam_homework_lecture_definitions.latex"
-[[templates]]
+[[resources]]
 description = "Template for lecture slides."
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
