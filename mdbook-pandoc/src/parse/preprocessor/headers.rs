@@ -221,11 +221,11 @@ pub(crate) fn header_identifier_sanitize(text: &str) -> String {
         static ref NOT_WORDS_NOR_NUMBERS: Regex = Regex::new(r"[_[^\w\d]]+").unwrap();
     }
     // Non ASCII characters must be escaped and they are transformed in
-    // `\things` so those slashes must also be escaped
+    // `\things` so those slashes must also be converted to dashes
     NOT_WORDS_NOR_NUMBERS
         .replace_all(&text.to_lowercase(), "-")
         .as_bytes()
         .escape_ascii()
         .to_string()
-        .replace(r"\", r"\\")
+        .replace(r"\", r"-")
 }

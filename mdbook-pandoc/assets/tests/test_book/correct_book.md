@@ -122,7 +122,7 @@ This is a example subsection.
 
 #### Subsubsection {#h1__1__2__2__subsubsection}
 
-##### Another header but with únicoñe {#h1__1__2__2__1__another-header-but-with-\\xc3\\xbanico\\xc3\\xb1e .unnumbered .unlisted}
+##### Another header but with únicoñe {#h1__1__2__2__1__another-header-but-with--xc3-xbanico-xc3-xb1e .unnumbered .unlisted}
 Deeper level!
 
 
