@@ -69,9 +69,10 @@ impl Renderer for PandocRenderer {
             .unwrap();
         let general_cfg = cfg.general;
         let title_labels = &general_cfg.labels;
+        let unlist_headers: bool = general_cfg.unlist_not_main_headers;
 
         let parsed = process_metadata_block(
-            parse_book(&ctx, &title_labels),
+            parse_book(&ctx, &title_labels, unlist_headers),
             &general_cfg.epub_metadata_fields,
         );
         let parsed_path = write_pandoc_md_file(&ctx.destination, &parsed);

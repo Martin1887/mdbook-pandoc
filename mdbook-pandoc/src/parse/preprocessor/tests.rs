@@ -82,7 +82,7 @@ fn test_new_header_level() {
 fn test_transform_header() {
     let mut section_number = vec![1];
     assert_eq!(
-        transform_header("# Title", 1, false, &mut section_number),
+        transform_header("# Title", 1, false, true, &mut section_number),
         (
             format!(
                 "## Title {{#{}{}}}",
@@ -93,7 +93,7 @@ fn test_transform_header() {
         )
     );
     assert_eq!(
-        transform_header("# Title", 1, true, &mut section_number),
+        transform_header("# Title", 1, false, false, &mut section_number),
         (
             format!(
                 "## Title {{#{}}}",
@@ -103,7 +103,17 @@ fn test_transform_header() {
         )
     );
     assert_eq!(
-        transform_header("Things", 1, true, &mut section_number),
+        transform_header("# Title", 1, true, true, &mut section_number),
+        (
+            format!(
+                "## Title {{#{}}}",
+                header_identifier("Title", &section_number),
+            ),
+            true
+        )
+    );
+    assert_eq!(
+        transform_header("Things", 1, true, true, &mut section_number),
         (String::from("Things"), false)
     );
 }
@@ -118,6 +128,7 @@ fn test_chapter_change_section_number() {
         &Some(Path::new("src/1.md").to_path_buf()),
         &Box::new(HashSet::new()),
         &mut section_number,
+        true,
     );
     assert_eq!(section_number, vec![1, 1, 1]);
     recursively_concatenate_book(
@@ -130,6 +141,7 @@ fn test_chapter_change_section_number() {
         level + 1,
         &Box::new(HashSet::new()),
         &mut section_number,
+        false,
     );
     assert_eq!(section_number, vec![1, 1, 2])
 }

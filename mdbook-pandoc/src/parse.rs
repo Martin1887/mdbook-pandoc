@@ -53,6 +53,7 @@ fn transform_md(
     source_path: &Option<PathBuf>,
     book_paths: &Box<HashSet<PathBuf>>,
     mut section_number: &mut Vec<u32>,
+    unlist_headers: bool,
 ) -> String {
     let source_path_str = source_path.clone().unwrap().to_str().unwrap().to_string();
     let mut formatted = format!("\n<!-- {} begins -->\n\n", source_path_str);
@@ -60,8 +61,13 @@ fn transform_md(
     let lines = md_atx_only.lines().chain("\n".lines());
     let mut first_transform = true;
     for line in lines {
-        let (transformed_line, is_transformed) =
-            transform_header(&line, level, first_transform, &mut section_number);
+        let (transformed_line, is_transformed) = transform_header(
+            &line,
+            level,
+            first_transform,
+            unlist_headers,
+            &mut section_number,
+        );
         formatted.push_str(&format!("{}\n", transformed_line));
 
         if is_transformed {
@@ -87,6 +93,7 @@ fn recursively_concatenate_book(
     level: usize,
     book_paths: &Box<HashSet<PathBuf>>,
     section_number: &mut Vec<u32>,
+    unlist_headers: bool,
 ) -> String {
     let mut parsed_contents = String::new();
     for item in items {
@@ -99,12 +106,14 @@ fn recursively_concatenate_book(
                     &c.source_path,
                     book_paths,
                     section_number,
+                    unlist_headers,
                 ));
                 parsed_contents.push_str(&recursively_concatenate_book(
                     &c.sub_items,
                     level + 1,
                     book_paths,
                     section_number,
+                    unlist_headers,
                 ));
             }
             // Separators are ignored, they make no sense in documents
@@ -274,6 +283,7 @@ fn parse_book_contents(
     chapters_have_parts: bool,
     initial_level: usize,
     title_labels: &TitleLabels,
+    unlist_headers: bool,
 ) -> String {
     // The whole document section number is initialized to 0 in order the first
     // header is 1
@@ -289,6 +299,7 @@ fn parse_book_contents(
             initial_level,
             book_paths,
             &mut section_number,
+            unlist_headers,
         ));
     }
     write_chapters_header(
@@ -304,6 +315,7 @@ fn parse_book_contents(
         initial_level,
         &book_paths,
         &mut section_number,
+        unlist_headers,
     ));
     if !suffix_chapters.is_empty() {
         parsed_content.push_str(&format_part_header(
@@ -315,6 +327,7 @@ fn parse_book_contents(
             initial_level,
             &book_paths,
             &mut section_number,
+            unlist_headers,
         ));
     }
 
@@ -326,7 +339,7 @@ fn parse_book_contents(
 /// Parse a full mdBook getting (and adding) parts and concatenating prefixes,
 /// numbered chapters and suffixes, returning the result as String. writing the contents in the file
 /// `book/pandoc/md/book.md` and returning that path.
-pub fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> String {
+pub fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels, unlist_headers: bool) -> String {
     // Set the current working directory to the `src` path (everything is relative to the summary)
     let src_path = ctx.root.join("src");
     set_current_dir(&src_path).expect("Error setting the current dir to root path");
@@ -347,5 +360,6 @@ pub fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels) -> String {
         chapters_have_parts,
         initial_level,
         title_labels,
+        unlist_headers,
     )
 }

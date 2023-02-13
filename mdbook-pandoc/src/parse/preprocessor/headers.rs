@@ -150,6 +150,7 @@ pub(crate) fn transform_header<'a>(
     line: &str,
     hierarchy_level: usize,
     first_transform: bool,
+    unlist_headers: bool,
     mut section_number: &mut Vec<u32>,
 ) -> (String, bool) {
     if is_atx_header(&line) {
@@ -168,7 +169,7 @@ pub(crate) fn transform_header<'a>(
                 "#".repeat(new_header_level),
                 clean_line,
                 header_identifier(&clean_line, section_number),
-                if first_transform {
+                if first_transform || !unlist_headers {
                     ""
                 } else {
                     UNNUMBERED_UNLISTED
