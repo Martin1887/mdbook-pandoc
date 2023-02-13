@@ -1,3 +1,7 @@
+---
+title: Overwritten title
+---
+
 # Chapter 1
 
 This is an example chapter. It has many subchapters like [Subsection](Subsection.md), [Level 10 section](Level10Section.md   ) and

@@ -41,8 +41,8 @@ fn setext_replacer(caps: &Captures) -> String {
         None => "",
     };
 
-    // replace nothing if the prelude is a paragraph
-    let new_header: String = if PARAGRAPH_RE.is_match(&prelude) {
+    // replace nothing if the prelude is a paragraph or 3 dashes (YAML header)
+    let new_header: String = if PARAGRAPH_RE.is_match(&prelude) || prelude.trim() == "---" {
         format!("{}{}", &caps["header"], &caps["underline"])
     } else {
         let formatted_header = caps["header"]

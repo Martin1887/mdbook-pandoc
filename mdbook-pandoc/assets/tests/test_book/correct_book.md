@@ -21,6 +21,10 @@ ibooks:
 
 <!-- Introduction/README.md begins -->
 
+---
+title: Overwritten title
+---
+
 ## Chapter 1 {#h1__1__chapter-1}
 
 This is an example chapter. It has many subchapters like [Subsection](#h1__1__2__subsection), [Level 10 section](Introduction/Level10Section.md#   ) and
