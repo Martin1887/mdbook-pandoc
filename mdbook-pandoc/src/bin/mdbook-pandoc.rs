@@ -85,7 +85,7 @@ macro_rules! serialize_and_contents {
         match serde_yaml::from_str::<$head>($name) {
             Ok(object) => {
                 object.contents()
-                .expect("Specify a built-in asset variant, not `Custom` nor `Default`")
+                    .expect("Specify a built-in asset variant, not `Custom` nor `Default`")
             },
             _ => {
                 serialize_and_contents!($name, [$($tail),*])
@@ -93,10 +93,15 @@ macro_rules! serialize_and_contents {
         }
     };
     ($name: expr, [$head: ident]) => {
-        serde_yaml::from_str::<$head>($name)
-            .expect("Specify a built-in asset variant, not `Custom` nor `Default`")
-            .contents()
-            .expect("Specify a built-in asset variant, not `Custom` nor `Default`")
+        match serde_yaml::from_str::<$head>($name) {
+            Ok(object) => {
+                object.contents()
+                    .expect("Specify a built-in asset variant, not `Custom` nor `Default`")
+            },
+            _ => {
+                panic!("Specify a built-in asset variant")
+            }
+        }
     };
 }
 
