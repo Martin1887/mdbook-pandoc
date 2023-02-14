@@ -100,16 +100,9 @@ pub(crate) fn fix_external_links(text: &str) -> String {
 /// Fix links relative to the own file (no file name in the link) or another
 /// file of the book according to the `external` argument.
 fn fix_links(text: &str, external: bool) -> String {
-    let replacer = if external {
-        HeaderLinkReplacer {
-            text: text.to_string(),
-            external_links: true,
-        }
-    } else {
-        HeaderLinkReplacer {
-            text: text.to_string(),
-            external_links: false,
-        }
+    let replacer = HeaderLinkReplacer {
+        text: text.to_string(),
+        external_links: external,
     };
     PATH_RE.replace_all(text, replacer).to_string()
 }

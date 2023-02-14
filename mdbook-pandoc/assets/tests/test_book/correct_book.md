@@ -19,8 +19,6 @@ ibooks:
 
 # Part 1 {#h1__part-1}
 
-<!-- Introduction/README.md begins -->
-
 ---
 title: Overwritten title
 ---
@@ -99,10 +97,6 @@ ibooks:
 ```
 
 
-<!-- Introduction/README.md ends -->
-
-
-<!-- Introduction/Subsection.md begins -->
 
 ### Subsection {#h1__1__2__subsection}
 
@@ -119,10 +113,6 @@ This is a example subsection.
 
 
 
-<!-- Introduction/Subsection.md ends -->
-
-
-<!-- Introduction/Subsubsection.md begins -->
 
 #### Subsubsection {#h1__1__2__2__subsubsection}
 
@@ -130,95 +120,57 @@ This is a example subsection.
 Deeper level!
 
 
-<!-- Introduction/Subsubsection.md ends -->
-
-
-<!-- Introduction/Level4Section.md begins -->
 
 ##### Level4 Section {#h1__1__2__2__2__level4-section}
 Level4 Section contents.
 
 
-<!-- Introduction/Level4Section.md ends -->
-
-
-<!-- Introduction/Level5Section.md begins -->
 
 ###### Level5 Section {#h1__1__2__2__2__1__level5-section}
 Level5 Section contents.
 
 
-<!-- Introduction/Level5Section.md ends -->
-
-
-<!-- Introduction/Level6Section.md begins -->
 
 **Level6 Section**
 
 Level6 Section contents.
 
 
-<!-- Introduction/Level6Section.md ends -->
-
-
-<!-- Introduction/Level7Section.md begins -->
 
 **Level7 Section**
 
 Level7 Section contents.
 
 
-<!-- Introduction/Level7Section.md ends -->
-
-
-<!-- Introduction/Level8Section.md begins -->
 
 **Level8 Section**
 
 Level8 Section contents.
 
 
-<!-- Introduction/Level8Section.md ends -->
-
-
-<!-- Introduction/Level9Section.md begins -->
 
 **Level9 Section**
 
 Level9 Section contents.
 
 
-<!-- Introduction/Level9Section.md ends -->
-
-
-<!-- Introduction/Level10Section.md begins -->
 
 **Level10 Section**
 
 Level10 Section contents.
 
 
-<!-- Introduction/Level10Section.md ends -->
-
 
 # Part 3 {#h2__part-3}
-
-<!-- Conclusion.md begins -->
 
 ## Conclusion {#h2__1__conclusion}
 
 This works like a charm!
 
 
-<!-- Conclusion.md ends -->
-
 # Annexes {#h3__annexes}
-
-<!-- suffix.md begins -->
 
 ## Suffix chapter {#h3__1__suffix-chapter}
 
 This is a suffix!
 
-
-<!-- suffix.md ends -->

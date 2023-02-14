@@ -94,7 +94,8 @@ fn recursively_concatenate_book(
     book_paths: &Box<HashSet<PathBuf>>,
     section_number: &mut Vec<u32>,
     unlist_headers: bool,
-) -> String {
+) -> (String, Vec<String>) {
+    let mut source_paths = Vec::new();
     let mut parsed_contents = String::new();
     for item in items {
         parsed_contents.push_str("\n");
@@ -108,13 +109,16 @@ fn recursively_concatenate_book(
                     section_number,
                     unlist_headers,
                 ));
-                parsed_contents.push_str(&recursively_concatenate_book(
+                let (sub_contents, sub_paths) = &recursively_concatenate_book(
                     &c.sub_items,
                     level + 1,
                     book_paths,
                     section_number,
                     unlist_headers,
-                ));
+                );
+                parsed_contents.push_str(sub_contents);
+                source_paths.push(c.source_path.clone().unwrap().to_str().unwrap().to_string());
+                source_paths.extend_from_slice(&sub_paths);
             }
             // Separators are ignored, they make no sense in documents
             BookItem::Separator => (),
@@ -124,7 +128,7 @@ fn recursively_concatenate_book(
         }
     }
 
-    parsed_contents
+    (parsed_contents, source_paths)
 }
 
 /// Return the `Summary` object searching the file from the root src and
@@ -274,6 +278,21 @@ fn write_chapters_header(
     }
 }
 
+/// Remove the comments used to mark the begin and end of each chapter to fix
+/// links with more precision. An additional line break between chapters is kept.
+fn remove_chapters_marks_comments(parsed_content: &str, source_paths: &[String]) -> String {
+    let mut fixed = parsed_content.to_string();
+    for source in source_paths {
+        let begin_mark = format!("\n<!-- {} begins -->\n\n", source);
+        let end_mark = format!("\n<!-- {} ends -->\n", source);
+
+        fixed = fixed.replace(&begin_mark, "\n");
+        fixed = fixed.replace(&end_mark, "");
+    }
+
+    fixed
+}
+
 /// Parse the book contents and return the result of parse all chapters.
 fn parse_book_contents(
     prefix_chapters: &[BookItem],
@@ -288,20 +307,25 @@ fn parse_book_contents(
     // The whole document section number is initialized to 0 in order the first
     // header is 1
     let mut section_number = vec![0];
+    let mut source_paths = Vec::new();
     let mut parsed_content = String::new();
+
     if !prefix_chapters.is_empty() {
         parsed_content.push_str(&format_part_header(
             &title_labels.preamble,
             &mut section_number,
         ));
-        parsed_content.push_str(&recursively_concatenate_book(
+        let (sub_contents, sub_paths) = &recursively_concatenate_book(
             prefix_chapters,
             initial_level,
             book_paths,
             &mut section_number,
             unlist_headers,
-        ));
+        );
+        parsed_content.push_str(&sub_contents);
+        source_paths.extend_from_slice(&sub_paths);
     }
+
     write_chapters_header(
         &mut parsed_content,
         &mut section_number,
@@ -310,28 +334,35 @@ fn parse_book_contents(
         prefix_chapters.is_empty(),
         suffix_chapters.is_empty(),
     );
-    parsed_content.push_str(&recursively_concatenate_book(
+    let (sub_contents, sub_paths) = &recursively_concatenate_book(
         content_chapters,
         initial_level,
         &book_paths,
         &mut section_number,
         unlist_headers,
-    ));
+    );
+    parsed_content.push_str(&sub_contents);
+    source_paths.extend_from_slice(&sub_paths);
+
     if !suffix_chapters.is_empty() {
         parsed_content.push_str(&format_part_header(
             &title_labels.annexes,
             &mut section_number,
         ));
-        parsed_content.push_str(&recursively_concatenate_book(
+        let (sub_contents, sub_paths) = &recursively_concatenate_book(
             suffix_chapters,
             initial_level,
             &book_paths,
             &mut section_number,
             unlist_headers,
-        ));
+        );
+        parsed_content.push_str(&sub_contents);
+        source_paths.extend_from_slice(&sub_paths);
     }
 
     parsed_content = fix_external_links(&parsed_content);
+
+    parsed_content = remove_chapters_marks_comments(&parsed_content, &source_paths);
 
     parsed_content
 }
