@@ -48,7 +48,7 @@ pub enum HighlightStyle {
     Pygments,
     Kate,
     Monochrome,
-    BreezeDark,
+    Breezedark,
     Espresso,
     Zenburn,
     Haddock,
