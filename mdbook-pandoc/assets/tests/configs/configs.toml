@@ -1,0 +1,3 @@
+[[configs]]
+description = "Test configuration file."
+contents_file = "test.toml"

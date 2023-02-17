@@ -1,0 +1,2 @@
+[output.pandoc."test.pdf"]
+template = "test"

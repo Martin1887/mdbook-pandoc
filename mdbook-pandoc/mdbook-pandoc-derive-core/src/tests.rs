@@ -5,8 +5,8 @@ use proc_macro2::TokenStream;
 use quote::quote;
 
 use crate::{
-    asset_type_list_derive_core, pandoc_command_args_derive_core, pandoc_repeated_args_derive_core,
-    pandoc_resource_gen_core, serde_enum_display_derive_core,
+    asset_type_list_derive_core, pandoc_command_args_derive_core, pandoc_config_gen_core,
+    pandoc_repeated_args_derive_core, pandoc_resource_gen_core, serde_enum_display_derive_core,
 };
 
 #[test]
@@ -368,6 +368,53 @@ fn test_asset_type_list_derive() {
         }
     };
     assert_tokens_eq(&expected, &asset_type_list_derive_core(test_enum));
+}
+
+#[test]
+fn test_config_gen() {
+    let project_root = PathBuf::from(env!["CARGO_MANIFEST_DIR"]).join("..");
+    let configs_toml_path = "assets/tests/configs/configs.toml";
+    let configs_toml_absolute_path = project_root.join(configs_toml_path);
+    let test_config_path = configs_toml_absolute_path
+        .parent()
+        .unwrap()
+        .join("test.toml")
+        .into_os_string()
+        .into_string()
+        .unwrap();
+    let test_enum = quote! {
+        #[derive(Clone, Default, Serialize, Deserialize, Debug, PartialEq, SerdeEnumDisplay)]
+        #[serde(rename_all = "snake_case")]
+        pub enum PandocConfig {}
+    };
+    let expected = quote! {
+        #[derive(Clone, Default, Serialize, Deserialize, Debug, PartialEq, SerdeEnumDisplay)]
+        #[serde(rename_all = "snake_case")]
+        pub enum PandocConfig {
+            #[doc = "Test configuration file."]
+            Test
+        }
+
+        impl TomlLoad for PandocConfig {
+            /// Return the description of the configuration.
+            fn description(&self) -> String {
+                match self {
+                    PandocConfig::Test => "Test configuration file.".to_string(),
+                }
+            }
+
+            /// Return the contents of the configuration file as a vector of bytes.
+            fn load(&self) -> Vec<u8> {
+                match self {
+                    PandocConfig::Test => include_bytes!(#test_config_path).to_vec(),
+                }
+            }
+        }
+    };
+    assert_tokens_eq(
+        &expected,
+        &pandoc_config_gen_core(quote!(#configs_toml_path), test_enum),
+    );
 }
 
 // Function really inspired by (`anyinput` crate)

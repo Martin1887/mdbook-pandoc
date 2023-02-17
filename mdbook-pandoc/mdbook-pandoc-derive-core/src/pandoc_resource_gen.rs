@@ -18,7 +18,9 @@ use quote::quote;
 use serde::{Deserialize, Serialize, Serializer};
 use syn::{parse2, parse_quote, punctuated::Punctuated, token::Comma, ItemEnum, LitStr, Variant};
 
-/// Struct representing the `licenses.toml` file with the specification of all
+use crate::{filename_to_enum_variant, filename_to_snake_case_name};
+
+/// Struct representing the files with the specification of all
 /// the built-in resources.
 #[derive(Serialize, Deserialize)]
 pub struct PandocResources {
@@ -98,47 +100,6 @@ impl Display for ResourceLicense {
     }
 }
 
-fn capitalize(word: &str) -> String {
-    let mut chars = word.chars();
-    format!(
-        "{}{}",
-        chars.next().unwrap().to_uppercase(),
-        chars.collect::<String>()
-    )
-}
-
-/// Return extension and snake_case name of a resource from the contents file.
-fn filename_to_snake_case_name(filename: &str) -> (String, String) {
-    let mut filename_split: Vec<&str> = filename
-        .split("/")
-        .last()
-        .expect("Error getting the filename of a resource")
-        .split(".")
-        .collect();
-    let extension = filename_split.pop().unwrap();
-
-    (
-        extension.to_string(),
-        filename_split.join("_").replace("-", "_"),
-    )
-}
-
-/// Return the enum variant name transforming the filename (the last part of
-/// the path) to CamelCase and putting the extension before the name to ease
-/// the identification and sorting of the format.
-///
-/// The path is assumed to be separated by `/`.
-fn filename_to_enum_variant(filename: &str) -> String {
-    let (extension, snake_case_name) = filename_to_snake_case_name(filename);
-    let name_split = snake_case_name.split("_");
-    let mut name = String::new();
-    for split in name_split {
-        name.push_str(&capitalize(split));
-    }
-
-    format!("{}{}", capitalize(&extension), name)
-}
-
 pub fn pandoc_resource_gen_core(attr: TokenStream, item: TokenStream) -> TokenStream {
     let old_enum = match parse2::<ItemEnum>(item) {
         Ok(ast) => ast,
@@ -185,7 +146,7 @@ fn impl_pandoc_resource_gen(resources_toml_path: &str, mut ast: ItemEnum) -> Tok
     let mut first = true;
     for resource in resources.resources {
         let name = Ident::new(
-            &filename_to_enum_variant(&resource.contents_file),
+            &filename_to_enum_variant(&resource.contents_file, true),
             Span::call_site(),
         );
         let resource_description = resource.description.clone();

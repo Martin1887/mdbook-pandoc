@@ -1,0 +1,3 @@
+[[configs]]
+description = "Empty config to avoid compilation errors in the empty enum."
+contents_file = "configs/empty.toml"

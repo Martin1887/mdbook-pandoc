@@ -6,6 +6,8 @@ pub mod commands;
 pub mod epub_metadata;
 /// Documents formats.
 pub mod formats;
+/// Pandoc built-in (and custom) configurations.
+pub mod pandoc_config;
 /// Pandoc resources including templates and filters.
 pub mod resources;
 #[cfg(test)]
@@ -15,6 +17,14 @@ use commands::*;
 use epub_metadata::EpubMetadata;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+/// Load a TOML chunk and provide description to it.
+pub trait TomlLoad {
+    /// Load the contents of the TOML into a vector of bytes.
+    fn load(&self) -> Vec<u8>;
+    /// Description of what the configuration does.
+    fn description(&self) -> String;
+}
 
 /// Configuration struct containing all the available options.
 /// All options have a default value.

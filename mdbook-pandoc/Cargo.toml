@@ -10,7 +10,7 @@ edition = "2021"
 
 [[bin]]
 name = "mdbook-pandoc"
-path = "src/bin/mdbook-pandoc.rs"
+path = "src/bin/mdbook-pandoc/main.rs"
 
 [workspace]
 members = ["mdbook-pandoc-derive", "mdbook-pandoc-derive-core"]
@@ -27,6 +27,7 @@ serde = {version = "1.0", features = ["derive"]}
 serde_repr = "0.1"
 serde_yaml = "0.9"
 toml = "0.7"
+serde-toml-merge = "0.3"
 void = "1"
 anyhow = "1.0"
 log = "0.4"

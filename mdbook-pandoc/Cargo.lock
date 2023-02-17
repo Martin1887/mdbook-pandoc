@@ -933,6 +933,7 @@ dependencies = [
  "mdbook-pandoc-derive",
  "regex",
  "serde",
+ "serde-toml-merge",
  "serde_repr",
  "serde_yaml",
  "strum",
@@ -1476,6 +1477,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "728eb6351430bccb993660dfffc5a72f91ccc1295abaa8ce19b27ebe4f75568b"
 dependencies = [
  "serde_derive",
+]
+
+[[package]]
+name = "serde-toml-merge"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a78072b550e5c20bc4a9d1384be28809cbdb7b25b2b4707ddc6d908b7e6de3bf"
+dependencies = [
+ "toml 0.7.2",
 ]
 
 [[package]]
