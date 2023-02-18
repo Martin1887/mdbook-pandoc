@@ -1,34 +1,37 @@
-use anyhow::{bail, Result};
-use std::fs::{read, write};
+use anyhow::Result;
+use std::{
+    fs::{read, OpenOptions},
+    io::Write,
+};
 use strum::IntoEnumIterator;
+use toml_edit::Document;
 
 use clap::Subcommand;
 use mdbook_pandoc::config::{pandoc_config::PandocConfig, TomlLoad};
 
 #[derive(Subcommand)]
 pub(crate) enum ConfigsSubcommand {
-    /// Load a built-in configuration file. The full `output.pandoc` table will
-    /// be replaced. If instead you want to merge configuration files replacing
-    /// all existing entries, use the `--merge` option.
+    /// Add the contents of a built-in configuration at the end of the file.
+    /// The full `output.pandoc` table will
+    /// be replaced if the option `clear` is set. An empty
+    /// `output.pandoc.general` table is added if it does not exist.
     Load {
         config_to_load: PandocConfig,
         destination_file: Option<String>,
-        /// Merge the contents into the existing configuration file instead of
-        /// overwriting the `output.pandoc` table.
+        /// Clear the contents of the `output.pandoc` table.
         #[arg(long)]
-        merge: bool,
+        clear: bool,
     },
-    /// Load the contents of the provided configuration file. The full
+    /// Add the contents of the provided configuration file at the end. The full
     /// `output.pandoc` table will
-    /// be replaced. If instead you want to merge configuration files replacing
-    /// all existing entries, use the `--merge` option.
+    /// be replaced if the option `clear` is set. An empty
+    /// `output.pandoc.general` table is added if it does not exist.
     LoadFile {
         config_path: String,
         destination_file: Option<String>,
-        /// Merge the contents into the existing configuration file instead of
-        /// overwriting the `output.pandoc` table.
+        /// Clear the contents of the `output.pandoc` table.
         #[arg(long)]
-        merge: bool,
+        clear: bool,
     },
     /// List the available configuration files.
     List,
@@ -36,37 +39,65 @@ pub(crate) enum ConfigsSubcommand {
     Print { config: PandocConfig },
 }
 
-/// Read the TOML configuration file of the book and write the contents as TOML
-/// replacing the whole `output.pandoc` table if `merge` = `false` and replacing
-/// only the existing entries and keeping the others otherwise.
+/// Read the TOML configuration file of the book and write the contents at the
+/// end replacing the whole `output.pandoc` table if `clear` and adding an
+/// empty `output.pandoc.general` table if it does not exist.
 pub(crate) fn write_in_book_config(
     contents: &[u8],
     destination_file: Option<String>,
-    merge: bool,
+    clear: bool,
 ) -> Result<()> {
     let actual_dest_path = destination_file.unwrap_or("book.toml".to_string());
 
-    let mut init_config: toml::Value;
+    let mut append_file = OpenOptions::new().append(true).open(&actual_dest_path)?;
+    let mut general_table_exists = false;
     match read(&actual_dest_path) {
         Ok(dest_contents) => {
-            init_config = toml::from_str(&String::from_utf8_lossy(&dest_contents))?;
-            if !merge {
-                if let Some(output) = init_config.get_mut("output") {
-                    output["pandoc"] = toml::Value::Table(toml::map::Map::new());
+            let mut output_pandoc_exists = false;
+            let mut doc = String::from_utf8_lossy(&dest_contents).parse::<Document>()?;
+            if doc.contains_key("output")
+                && doc["output"].is_table_like()
+                && doc["output"]
+                    .as_table_like()
+                    .unwrap()
+                    .contains_key("pandoc")
+            {
+                output_pandoc_exists = true;
+                if doc["output"]["pandoc"].is_table_like()
+                    && doc["output"]["pandoc"]
+                        .as_table_like()
+                        .unwrap()
+                        .contains_key("general")
+                {
+                    general_table_exists = true;
                 }
             }
+            if clear && output_pandoc_exists {
+                doc["output"]["pandoc"] = toml_edit::Item::None;
+                std::fs::write(&actual_dest_path, doc.to_string().as_bytes())?;
+            }
         }
-        _ => init_config = toml::from_str("")?,
-    }
-    let to_merge = toml::from_str(&String::from_utf8_lossy(contents))?;
-
-    let config;
-    match serde_toml_merge::merge(init_config, to_merge) {
-        Ok(value) => config = value,
-        _ => bail!("Error merging configuration files"),
+        _ => {}
     }
 
-    write(actual_dest_path, toml::to_string_pretty(&config)?)?;
+    // Write an empty `[output.pandoc.general]` table only if the contents
+    // and the destination file do not already have it
+    let doc = String::from_utf8_lossy(&contents).parse::<Document>()?;
+    let contents_contains_general = doc.contains_key("output")
+        && doc["output"].is_table_like()
+        && doc["output"]
+            .as_table_like()
+            .unwrap()
+            .contains_key("pandoc")
+        && doc["output"]["pandoc"].is_table_like()
+        && doc["output"]["pandoc"]
+            .as_table_like()
+            .unwrap()
+            .contains_key("general");
+    if !contents_contains_general && (!general_table_exists || clear) {
+        append_file.write("\n[output.pandoc.general]\n\n".as_bytes())?;
+    }
+    append_file.write(contents)?;
 
     Ok(())
 }

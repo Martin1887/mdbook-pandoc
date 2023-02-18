@@ -24,7 +24,7 @@ unlist_not_main_headers = false
     write_in_book_config(
         initial_contents.as_bytes(),
         Some(destination_file.clone()),
-        false,
+        true,
     )
     .unwrap();
     assert_eq!(
@@ -39,7 +39,7 @@ preamble_label = "My custom preamble"
     "#
     .as_bytes();
 
-    write_in_book_config(new_contents, Some(destination_file.clone()), true).unwrap();
+    write_in_book_config(new_contents, Some(destination_file.clone()), false).unwrap();
     assert_eq!(
         String::from_utf8_lossy(&read(&destination_file).unwrap()).trim(),
         r#"
@@ -53,10 +53,14 @@ preamble_label = "My custom preamble"
         "Configuration files have not been correctly merged"
     );
 
-    write_in_book_config(new_contents, Some(destination_file.clone()), false).unwrap();
+    write_in_book_config(new_contents, Some(destination_file.clone()), true).unwrap();
     assert_eq!(
         String::from_utf8_lossy(&read(&destination_file).unwrap()).trim(),
         r#"
+
+[output.pandoc.general]
+
+
 [output.pandoc.not_general]
 preamble_label = "My custom preamble"
 "#

@@ -57,16 +57,16 @@ fn main() {
             ConfigsSubcommand::Load {
                 config_to_load,
                 destination_file,
-                merge,
+                clear,
             } => match config_to_load {
-                _ => write_in_book_config(&config_to_load.load(), destination_file, merge).unwrap(),
+                _ => write_in_book_config(&config_to_load.load(), destination_file, clear).unwrap(),
             },
             ConfigsSubcommand::LoadFile {
                 config_path,
                 destination_file,
-                merge,
+                clear,
             } => {
-                write_in_book_config(&read(config_path).unwrap(), destination_file, merge).unwrap()
+                write_in_book_config(&read(config_path).unwrap(), destination_file, clear).unwrap()
             }
             ConfigsSubcommand::List => {
                 println!("{}", list_configs());
