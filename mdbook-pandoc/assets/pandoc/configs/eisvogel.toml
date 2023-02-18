@@ -1,0 +1,52 @@
+
+[output.pandoc."eisvogel.pdf"]
+format = "pdf"
+template = "latex_eisvogel"
+listings = true
+# Change to "chapter" or "part". if you want a book. If deleted or blank,
+# it will be set to "part" if the book have parts and to "chapter" otherwise
+top-level-division = "section"
+# These metadata variables are betther in a YAML metadata block
+# in the first document or in a YAML file
+metadata = [
+    "title:<Title>",
+    "author:<[Author, Another author]>",
+    "date:<date>",
+    "subject:<subject>",
+    "keywords:<[key1, key2]>",
+]
+variable = [
+    "lang:en-US",
+    "titlepage:true",
+    "titlepage-color:FFFFFF",
+    "titlepage-text-color:000000",
+    "titlepage-rule-color:435488",
+    "titlepage-rule-height:4",
+    # To use underscores in the file names put them as "`file_path`{=latex}"
+    # "titlepage-logo:<logo-path-relative-to-src>",
+    # "titlepage-background:<background-path-relative-to-src>",
+    # "page-background:<background-path-relative-to-src>",
+    "page-background-opacity:0.2",
+    "caption-justification:raggedright",
+    "toc-own-page:true",
+    "listings-disable-line-numbers:false",
+    "listings-no-page-break:false",
+    "disable-header-and-footer:false",
+    # "header-left:<default_is_title>",
+    # "header-center:<header_center>",
+    # "header-right:<default_is_date>",
+    # "footer-left:<default_is_author>",
+    # "footer-center:<footer_center>",
+    # "footer-right:<default_is_page_number>",
+    "footnotes-pretty:false",
+    "footnotes-disable-backlinks:false",
+    "book:false",
+    "logo-width:35mm",
+    "first-chapter:1",
+    # Other combinable options:htbp
+    "float-placement-figure:H",
+    "table-use-row-colors:false",
+    "code-block-font-size:\\small",
+    # Use the below line for one-side books or comment it for two-side
+    # "classoption=oneside"
+]
