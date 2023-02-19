@@ -200,9 +200,9 @@ $endfor$
 \begin{titlepage}
     \begin{center}
 
-    % Delete the following line
-    % to remove the UCL header logo
-    % \ThisULCornerWallPaper{1.0}{style/univ_logo.eps}
+    $if(logo)$
+    \ThisULCornerWallPaper{1.0}{$logo$}
+    $endif$
 
         \vspace*{2.5cm}
 
@@ -236,9 +236,9 @@ $endfor$
 
         \vspace{0.8cm}
 
-        % Uncomment the following line
-        % to add a centered university logo
-        % \includegraphics[width=0.4\textwidth]{style/univ_logo.eps}
+        $if(logo)$
+        \ThisULCornerWallPaper{1.0}{$logo$}
+        $endif$
 
         \normalsize
         $location$\\

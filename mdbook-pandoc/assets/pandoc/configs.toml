@@ -17,3 +17,7 @@ contents_file = "configs/lmullen_slides_handouts.toml"
 [[configs]]
 description = "A template for creating a PhD thesis in Pandoc."
 contents_file = "configs/thesis_markdown.toml"
+
+[[configs]]
+description = "Template for PhD thesis used for submission to University College London."
+contents_file = "configs/ucl_phd_thesis.toml"

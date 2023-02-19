@@ -76,7 +76,6 @@ contents_file = "templates/latex/lmullen_slides_handouts.beamer"
 ################
 # https://github.com/chiakaivalya/thesis-markdown-pandoc is not a template but uses preamble and csl
 
-# TODO: UC logo as variable
 [[resources]]
 description = "Template for PhD thesis used for submission to University College London."
 version = "Unreleased 2021/01/30"

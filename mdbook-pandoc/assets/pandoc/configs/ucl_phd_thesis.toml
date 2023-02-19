@@ -1,0 +1,75 @@
+[output.pandoc."ucl_phd_thesis.pdf"]
+format = "pdf"
+pdf-engine = "xelatex"
+template = "latex_ucl_phd_thesis"
+include-in-header = ["latex_ucl_phd_thesis_preamble"]
+csl = "csl_harvard_aru"
+# bibliography = "<path>.bib"
+citeproc = true
+# set toc as false if you include statement, summary, acknowledgements,
+# table_of_contents, list_of_figures, list_of_tables and abbreviations MD files
+toc = true
+number-sections = true
+
+variable = [
+    # "logo:<optional_logo_path",
+    "fontsize:12pt",
+    "papersize:a4paper",
+    "documentclass:report"
+]
+
+# these variables are better inside a  `metadata.yaml` file or in a metadata block
+metadata = [
+    "pagetitle:<title>",
+    "title:<title>",
+    "subtitle:<subtitle>",
+    "author:<author>",
+    "date:<date>",
+    "location:<location>",
+    "supervisor:<supervisors>",
+    "degree:<degree>"    
+]
+
+filter = [
+    # pandoc-shortcaption is GPL and must be installed separately, the lua filter can replace it
+    # pandoc-xnos is GPL and must be installed separately, pandoc-numbering can replace it
+    # "pandoc-xnos",
+    "py_pandoc_numbering"
+]
+
+lua_filter = [
+    "lua_short_captions"
+]
+
+[output.pandoc."ucl_phd_thesis.html"]
+format = "html"
+template = "html_ucl_phd_thesis"
+include-in-header = ["html_ucl_phd_thesis_css"]
+csl = "csl_harvard_aru"
+# bibliography = "<path>.bib"
+citeproc = true
+toc = true
+number-sections = true
+
+# these variables are better inside a  `metadata.yaml` file or in a metadata block
+metadata = [
+    "pagetitle:<title>",
+    "title:<title>",
+    "subtitle:<subtitle>",
+    "author:<author>",
+    "date:<date>",
+    "location:<location>",
+    "supervisor:<supervisors>",
+    "degree:<degree>"    
+]
+
+filter = [
+    # pandoc-shortcaption is GPL and must be installed separately, the lua filter can replace it
+    # pandoc-xnos is GPL and must be installed separately, pandoc-numbering can replace it
+    # "pandoc-xnos",
+    "py_pandoc_numbering"
+]
+
+lua_filter = [
+    "lua_short_captions"    
+]
