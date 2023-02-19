@@ -1,0 +1,26 @@
+[output.pandoc."lmullen_slides.pdf"]
+format = "beamer"
+template = "beamer_lmullen_slides_handouts"
+variable = [
+    "fontsize:12pt",
+    # "classoption:",
+    # "documentclass:",
+    # "theme:",
+    "colortheme:dove",
+    # "fonttheme:",
+]
+
+[output.pandoc."lmullen_handouts.pdf"]
+format = "beamer"
+template = "beamer_lmullen_slides_handouts"
+variable = [
+    "handout",
+    "fontsize:12pt",
+    # "classoption:",
+    # "documentclass:",
+    # "theme:",
+    "colortheme:dove",
+    # "fonttheme:",
+]
+# The following command must be executed over the generated PDF to get the handouts
+# pdfnup <file> --nup 1x2 --no-landscape --keepinfo --paper letterpaper --frame true --scale 0.9 --suffix "nup"

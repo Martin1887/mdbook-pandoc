@@ -9,3 +9,7 @@ contents_file = "configs/tufte_handouts.toml"
 [[configs]]
 description = "The Markdown resume. ConTeXt required."
 contents_file = "configs/resume.toml"
+
+[[configs]]
+description = "Beamer slides and handouts by lmullen"
+contents_file = "configs/lmullen_slides_handouts.toml"
