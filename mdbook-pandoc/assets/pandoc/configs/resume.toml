@@ -1,0 +1,14 @@
+[output.pandoc."resume.pdf"]
+format = "pdf"
+pdf-engine = "context"
+template = "latex_resume"
+variable = ["papersize=A4"]
+toc = false
+number-sections = false
+
+[output.pandoc."resume.html"]
+format = "html"
+include-in-header = ["html_resume_css"]
+lua_filter = ["lua_add_target_blank"]
+toc = false
+number-sections = false
