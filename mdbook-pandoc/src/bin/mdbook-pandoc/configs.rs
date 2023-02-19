@@ -95,9 +95,11 @@ pub(crate) fn write_in_book_config(
             .unwrap()
             .contains_key("general");
     if !contents_contains_general && (!general_table_exists || clear) {
-        append_file.write("\n[output.pandoc.general]\n\n".as_bytes())?;
+        append_file.write("\n[output.pandoc.general]".as_bytes())?;
     }
+    append_file.write("\n\n".as_bytes())?;
     append_file.write(contents)?;
+    append_file.write("\n".as_bytes())?;
 
     Ok(())
 }

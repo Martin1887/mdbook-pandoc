@@ -1,4 +1,3 @@
-
 [output.pandoc."eisvogel.pdf"]
 format = "pdf"
 template = "latex_eisvogel"
