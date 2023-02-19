@@ -1,0 +1,3 @@
+[output.pandoc."tufte_handouts.pdf"]
+format = "pdf"
+template = "latex_tufte_handouts"

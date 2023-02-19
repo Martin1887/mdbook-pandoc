@@ -1,3 +1,7 @@
 [[configs]]
 description = "A clean pandoc LaTeX template for lecture notes and exercises with a focus on computer science."
 contents_file = "configs/eisvogel.toml"
+
+[[configs]]
+description = "Template for making Tufte-style handouts."
+contents_file = "configs/tufte_handouts.toml"
