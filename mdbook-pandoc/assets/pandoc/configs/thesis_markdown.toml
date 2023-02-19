@@ -1,0 +1,12 @@
+[output.pandoc."thesis_markdown.pdf"]
+format = "pdf"
+pdf-engine = "xelatex"
+include_in_header = ["latex_thesis_markdown"]
+csl = "csl_nature"
+variable = [
+    "fontsize:12pt",
+    "documentclass:book",
+    "papersize:a4paper",
+    "clasoption:openright"
+]
+# bibliography = "<path>.bib"

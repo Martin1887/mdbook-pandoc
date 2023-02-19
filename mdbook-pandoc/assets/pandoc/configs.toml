@@ -13,3 +13,7 @@ contents_file = "configs/resume.toml"
 [[configs]]
 description = "Beamer slides and handouts by lmullen"
 contents_file = "configs/lmullen_slides_handouts.toml"
+
+[[configs]]
+description = "A template for creating a PhD thesis in Pandoc."
+contents_file = "configs/thesis_markdown.toml"
