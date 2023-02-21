@@ -1,0 +1,25 @@
+[output.pandoc."arabica.pdf"]
+format = "pdf"
+pdf-engine = "xelatex"
+top-level-division = "chapter"
+number-sections = true
+toc = true
+template = "latex_arabica"
+
+filter = [
+    # pandoc-crossref is GPL licensed and must be installed separately
+    # pandoc-crossref
+]
+
+assets = [
+    "yaml_arabica_settings",
+    "yaml_arabica_metadata"
+]
+
+metadata-file = [
+    "arabica_metadata.yaml"
+]
+
+defaults = "arabica_settings.yaml"
+
+citeproc = true

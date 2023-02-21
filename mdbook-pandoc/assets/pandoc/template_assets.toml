@@ -17,6 +17,24 @@ license = { name = "MIT", url = "https://github.com/periodicpoint/robusta/blob/m
 contents_file = "misc/robusta_settings.yaml"
 
 [[resources]]
+description = "Arabica metadata YAML."
+version = "Unreleased 2019/01/21"
+docs = "https://github.com/periodicpoint/arabica/blob/master/README.md"
+dependencies = []
+latex_packages = []
+license = { name = "MIT", url = "https://github.com/periodicpoint/arabica/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/arabica"}
+contents_file = "misc/arabica_metadata.yaml"
+
+[[resources]]
+description = "Arabica settings YAML."
+version = "Unreleased 2019/01/21"
+docs = "https://github.com/periodicpoint/arabica/blob/master/README.md"
+dependencies = []
+latex_packages = []
+license = { name = "MIT", url = "https://github.com/periodicpoint/arabica/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/arabica"}
+contents_file = "misc/arabica_settings.yaml"
+
+[[resources]]
 description = "List of RGB colors from X11, used by APA6."
 version = "Unreleased 2013/05/12"
 docs = "(None)"

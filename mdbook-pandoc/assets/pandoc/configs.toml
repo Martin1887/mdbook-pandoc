@@ -25,3 +25,7 @@ contents_file = "configs/ucl_phd_thesis.toml"
 [[configs]]
 description = "Sound and versatile LaTeX template for academic articles."
 contents_file = "configs/robusta.toml"
+
+[[configs]]
+description = "Sound and versatile LaTeX template for academic books."
+contents_file = "configs/arabica.toml"
