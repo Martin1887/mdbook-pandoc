@@ -1,0 +1,22 @@
+[output.pandoc."apa6.pdf"]
+format = "pdf"
+added_extensions = ["tex_math_double_backslash"]
+template = "latex_apa6"
+
+bibliography = ["bibliography.bib"]
+
+# These variables and metadata are better inside a YAML metadata block or file
+variable = [
+    "shorttitle:<shorttitle>",
+    "abstract=<abstract>",
+    "keywords=<keywords>",
+    "affiliations=\\affiliation{Put Your Affiliations in Here\\\\ More here}"
+]
+metadata = [
+    "author=author",
+    "title=title"
+]
+
+assets = [
+    "tex_rgb"
+]

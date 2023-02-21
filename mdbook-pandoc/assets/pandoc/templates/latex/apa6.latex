@@ -30,9 +30,6 @@ $endif$
 }
 
 
-% This material needs to be reviewed and changed.
-\addbibresource{bibliography.bib}
-
 \title{$title$}
 
 \author{$author$}
@@ -50,6 +47,8 @@ $affiliations$
 
 \begin{document}
 \maketitle
+
 $body$
+
 \printbibliography
 \end{document}
