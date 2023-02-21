@@ -101,7 +101,7 @@ description = "Sound and versatile LaTeX template for academic articles."
 version = "Unreleased 2018/04/27"
 docs = "https://github.com/periodicpoint/robusta/blob/master/README.md"
 dependencies = []
-latex_packages = []
+latex_packages = ["lplfitch", "ccaption", "wrapfig", "picinpar"]
 license = { name = "MIT", url = "https://github.com/periodicpoint/robusta/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/robusta" }
 contents_file = "templates/latex/robusta.latex"
 [[resources]]
@@ -109,7 +109,7 @@ description = "Sound and versatile LaTeX template for academic books."
 version = "Unreleased 2019/01/21"
 docs = "https://github.com/periodicpoint/arabica/blob/master/README.md"
 dependencies = []
-latex_packages = []
+latex_packages = ["lplfitch", "ccaption", "wrapfig", "picinpar"]
 license = { name = "MIT", url = "https://github.com/periodicpoint/arabica/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/arabica"}
 contents_file = "templates/latex/arabica.latex"
 
