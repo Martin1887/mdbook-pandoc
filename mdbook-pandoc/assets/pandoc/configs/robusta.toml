@@ -1,0 +1,25 @@
+[output.pandoc."robusta.pdf"]
+format = "pdf"
+pdf-engine = "xelatex"
+top-level-division = "section"
+number-sections = true
+toc = false
+template = "latex_robusta"
+
+filter = [
+    # pandoc-crossref is GPL licensed and must be installed separately
+    # pandoc-crossref
+]
+
+assets = [
+    "yaml_robusta_settings",
+    "yaml_robusta_metadata"
+]
+
+metadata-file = [
+    "robusta_metadata.yaml"
+]
+
+defaults = "robusta_settings.yaml"
+
+citeproc = true
