@@ -54,6 +54,8 @@ pub struct PandocRepeatedArguments {
     pub metadata: Option<Vec<String>>,
     /// Template variables values in format `key` or `key:val`.
     pub variable: Option<Vec<String>>,
+    /// Bibliography file overriding any value set in the metadata.
+    pub bibliography: Option<Vec<String>>,
     /// Syntax definitions XML files.
     pub syntax_definition: Option<Vec<PandocSyntaxDefinition>>,
     /// Files whose contents are included in the header of HTML documents.
@@ -169,8 +171,6 @@ pub struct PandocCommandArguments {
     pub pdf_engine_opt: Option<String>,
     /// Process the citations in the files.
     pub citeproc: Option<bool>,
-    /// Bibliography file overriding any value set in the metadata.
-    pub bibliography: Option<String>,
     /// CSL metadata field as the specified file (equivalent to
     /// `--metadata csl=FILE`), overriding any value set in the metadata.
     pub csl: Option<PandocCsl>,
