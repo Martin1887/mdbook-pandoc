@@ -33,3 +33,7 @@ contents_file = "configs/arabica.toml"
 [[configs]]
 description = "Simple APA 6 template."
 contents_file = "configs/apa6.toml"
+
+[[configs]]
+description = "Template for exams"
+contents_file = "configs/exam.toml"

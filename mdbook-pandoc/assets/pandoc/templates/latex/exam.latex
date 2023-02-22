@@ -385,8 +385,8 @@ $endfor$
 %% `[...]{.answer}` will be translated by the lua filter into `\x{...}`
 \newcommand{\x}[1]{\ifprintanswers{\color{red}\bfseries#1\xspace}\fi}
 
-\newcommand{\Fortsetzung}{\begin{textblock*}{54mm}(80mm,276mm)\textsl{\textbf{Fortsetzung nächste Seite}}\end{textblock*}}
-\newcommand{\Leerseite}{\newpage\centerline{\textsl{\textbf{Leerseite}}}\newpage}
+\newcommand{\Fortsetzung}{\begin{textblock*}{54mm}(80mm,276mm)\textsl{\textbf{$lang_continued_next_page$}}\end{textblock*}}
+\newcommand{\Leerseite}{\newpage\centerline{\textsl{\textbf{$lang_blank_page$}}}\newpage}
 %------------------------------------- CMDs ---------------------
 
 %------------------------------------- Listings ---------------------
@@ -431,9 +431,9 @@ $endfor$
 %------------------------------------- Answers --------------------------------
 
 %------------------------------------- Grading Table --------------------------------
-\hqword{\textbf{Aufgabe}}
-\hpword{\textbf{Punkte}}
-\hsword{\raisebox{-1mm}[6mm][4mm]{\textbf{Erreicht}}}
+\hqword{\textbf{$lang_task$}}
+\hpword{\textbf{$lang_points$}}
+\hsword{\raisebox{-1mm}[6mm][4mm]{\textbf{$lang_achieved$}}}
 \htword{\raisebox{-1mm}[6mm][4mm]{\textcolor{headcolor}{\LARGE\ensuremath{\;\;\;\pmb{\Sigma}\;\;\;}}}}
 %------------------------------------- Grading Table --------------------------------
 
@@ -446,17 +446,17 @@ $endfor$
 \pagestyle{headandfoot}     %% from exam.cls
 \headrule
 \ifprintanswers
-\header{}{\textcolor{dkred}{\textbf{\Huge MUSTER}}}{}
+\header{}{\textcolor{dkred}{\textbf{\Huge $lang_sample$}}}{}
 \else
-\header{Name:}{Matrikelnummer:}{}
+\header{$lang_surname$:}{$lang_matriculation_number$:}{}
 \fi
 \footrule
 %% footer-definition for single-sided printing (empty backside)
 %\footer{$LVKURZ$}{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}{Seite \thepage\ von \numpages}
 %% footer-definition for double-sided printing
-\lfoot{\oddeven{Seite \thepage\ von \numpages}{$LVKURZ$}}
-\rfoot{\oddeven{$LVKURZ$}{Seite \thepage\ von \numpages}}
-\cfoot{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}
+\lfoot{\oddeven{$lang_page$ \thepage\ $lang_page_of$ \numpages}{$LVKURZ$}}
+\rfoot{\oddeven{$LVKURZ$}{$lang_page$ \thepage\ $lang_page_of$ \numpages}}
+\cfoot{$lang_exam$ $if(PART)$$PART$ \xspace$endif$ $NR$}
 %------------------------------------- Custom Header ---------------------
 
 %------------------------------------- Questions --------------------------------
@@ -464,7 +464,7 @@ $endfor$
 \providecommand{\myQuestion}[2][0]{\vskip11pt\renewcommand{\theMyQuestionTitle}{#2}\question[#1]{\ }\vskip5pt}
 \qformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyQuestionTitle\hfill \fbox{\thepoints}}}}  % add only question points
 \boxedpoints    % no effect w/ qformat
-\pointpoints{Punkt}{Punkte}
+\pointpoints{$lang_point$}{$lang_points$}
 %------------------------------------- Questions --------------------------------
 
 
@@ -595,7 +595,7 @@ $endfor$
     \begin{minipage}[c]{0.75\textwidth}
         \parindent0pt
         \textcolor{headcolor}{\large\scshape{$subtitle$}}\\[1ex]
-        \textcolor{headcolor}{\Large\textbf{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}}\\[2ex]
+        \textcolor{headcolor}{\Large\textbf{$lang_exam$ $if(PART)$$PART$ \xspace$endif$ $NR$}}\\[2ex]
         $if(TAG)$
         \textbf{$TAG$}\\[2ex]
         $endif$
@@ -604,7 +604,7 @@ $endfor$
     \end{minipage}
     \begin{minipage}[c]{0.25\textwidth}
         \ifprintanswers
-        \hfill\textcolor{dkred}{\textbf{\Huge MUSTER}}\hfill\hfill
+        \hfill\textcolor{dkred}{\textbf{\Huge $lang_sample$}}\hfill\hfill
         \fi
     \end{minipage}
     \vspace{10mm}
@@ -613,29 +613,22 @@ $endfor$
     \begin{minipage}[c]{0.5\textwidth}
         \begin{minipage}[c]{0.96\textwidth}
             \vspace{2mm}
-            {\textbf{Bearbeitungszeit}: {\ }90 Minuten}\par
+            {\textbf{Bearbeitungszeit}: {\ }$minutes$ $lang_minutes$}\par
             \bigskip
             \begin{itemize}
-                \item Bitte kontrollieren Sie die Vollständigkeit des an Sie
-                ausgegebenen Klausurexemplars.
+                \item $lang_check_completeness$.
                 \medskip
-                \item Tragen Sie auf dem Deckblatt Ihren Namen und die
-                Matrikelnummer ein und unterschreiben Sie die Klausur.
+                \item $lang_enter_name$.
                 \medskip
-                \item Achten Sie auf Lesbarkeit und Nachvollziehbarkeit Ihrer
-                Antworten und Lösungswege.
+                \item $lang_legible_answers$.
                 \medskip
-                \item \textbf{Erlaubte Hilfsmittel}: Ein handschriftlich
-                angefertigter DIN-A4-Zettel mit Notizen.
-
+                \item \textbf{$lang_permitted_aids_label$}: $lang_permitted_aids$.
                 \smallskip
-                Andere/Weitere Hilfsmittel sind \textbf{nicht} zugelassen. Die
-                Nutzung nicht zugelassener Hilfsmittel führt zur Bewertung
-                \enquote{nicht bestanden}.
+                $lang_not_permitted$.
             \end{itemize}
             \bigskip
             \medskip
-            \textbf{Gutes Gelingen!}
+            \textbf{$lang_good_succeed$}
             \smallskip
             \vspace{2mm}
         \end{minipage}
@@ -645,24 +638,21 @@ $endfor$
         \bigskip
         \begin{center}
             \textcolor{headcolor}
-            {\textbf{--- vom Studierenden auszufüllen ---}} \\[6mm]
+            {\textbf{--- $lang_filled_out_student$ ---}} \\[6mm]
         \end{center}
         \begin{center}
             \renewcommand{\arraystretch}{1.5}
             \begin{tabular}{@{\bfseries}lp{5cm}}
-                Name:     & \dotfill \\[1mm]
-                Vorname:  & \dotfill \\[1mm]
-                Matr.-Nr.:& \dotfill \\[6mm]
+                $lang_surname$:     & \dotfill \\[1mm]
+                $lang_first_name$:  & \dotfill \\[1mm]
+                $lang_matr_nr$.:& \dotfill \\[6mm]
 
                 \multicolumn{2}{l}{\begin{minipage}[c]{76mm}
-                                       Ich erkläre, daß ich mich zur Prüfung ordnungsgemäß angemeldet habe,
-                                       zur Prüfung zugelassen bin und mich prüfungsfähig fühle.
-                                       Ich werde die Klausur eigenständig bearbeiten und aus\-schließlich die
-                                       zugelassenen Hilfsmittel nutzen.
+                                       $lang_duty_declaration$.
                 \end{minipage}
                 }\\[22mm]
 
-                Unterschrift:& \dotfill
+                $lang_signature$:& \dotfill
             \end{tabular}
         \end{center}
         \smallskip
@@ -672,20 +662,20 @@ $endfor$
 
     \begin{center}
         \textcolor{headcolor}
-        {\textbf{--- vom Prüfer auszufüllen ---}}
+        {\textbf{--- $lang_filled_out_examiner$ ---}}
     \end{center}
     \begin{center}
         \begin{small}
-            \gradetable[h][questions]
+            \gradetable[h][$lang_questions$]
         \end{small}
     \end{center}
     \vspace{12mm}
     \begin{center}
         \ifprintanswers
-        \textcolor{dkred}{\textbf{\Huge MUSTER}}
+        \textcolor{dkred}{\textbf{\Huge $lang_sample$}}
         \else
         \begin{tabular}{lp{1cm}lp{3cm}lp{3cm}}
-            Note:     & \dotfill & Minden, den & \dotfill & Unterschrift Erstprüfer: &
+            $lang_grade$:     & \dotfill & $graded_by$ & \dotfill & $lang_signature_examiner$: &
             \dotfill
         \end{tabular}
         \fi

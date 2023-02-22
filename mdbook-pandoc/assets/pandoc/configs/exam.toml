@@ -1,0 +1,64 @@
+[output.pandoc."exam.pdf"]
+format = "pdf"
+pdf-engine = "pdflatex"
+template = "latex_exam"
+include-in-header = ["latex_exam_homework_lecture_definitions"]
+include-after-body = ["latex_exam_end"]
+
+default-image-extension = "pdf"
+number-sections = true
+toc = true
+listings = true
+highlight-style = "tango"
+
+variable = [
+    "documentclass=exam",
+    "classoption=addpoints",
+    # uncomment the following line to show answers
+    # "classoption=answers",
+    "fontsize=11pt",
+    "papersize=a4",
+    "geometry:left=2cm",
+    "geomtry:right=2cm",
+    "geomtry:top=2cm",
+    "geomtry:bottom=2.5cm",
+    "LVKURZ=Modulenumber ModuleSHORT, Year",
+    "NR=Exam No.",
+    "lang_continued_next_page=Continued next page",
+    "lang_blank_page=Blank page",
+    "lang_task=Task",
+    "lang_achieved=Achieved",
+    "lang_matriculation_number=Matriculation number",
+    "lang_page=Page",
+    "lang_page_of=of",
+    "lang_exam=Exam",
+    "lang_point=Point",
+    "lang_points=Points",
+    "minutes=90",
+    "lang_exam=Exam",
+    "lang_sample=SAMPLE",
+    "lang_minutes=minutes",
+    "lang_check_completeness=Please check the completeness of the exam copy given to you",
+    "lang_enter_name=Enter your name and matriculation number on the cover sheet and sign the exam",
+    "lang_legible_answers=Make sure your answers and solutions are legible and comprehensible",
+    "lang_permitted_aids_label=Permitted aids",
+    "lang_permitted_aids=A handwritten A4 sheet of paper with notes",
+    "lang_not_permitted=Other/additional resources are \\textbf{not} permitted. The use of non-approved aids leas to the assessment \\enquote{not passed}",
+    "lang_good_succeed=Good succeed!",
+    "lang_filled_out_student=To be filled out by the student",
+    "lang_surname=Surname",
+    "lang_first_name=First name",
+    "lang_matr_nr=Matr.-Nr",
+    "lang_duty_declaration=I declare that I have duty registered for the examination, I am admitted to the examination and I feel capable of taking the examination. I will work on the exam independently and only with the use of the approved tools",
+    "lang_signature=Signature",
+    "lang_filled_out_examiner=To be filled out by the examiner",
+    "lang_questions=questions",
+    "lang_grade=Grade",
+    "lang_graded_by=Graded by",
+    "lang_signature_examiner=Signature of first examiner"
+]
+
+lua-filter = [
+    "lua_pandoc_lecture_exams",
+    "lua_pandoc_lecture_tex"
+]
