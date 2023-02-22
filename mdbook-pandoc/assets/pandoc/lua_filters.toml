@@ -34,7 +34,7 @@ license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/ma
 contents_file = "lua_filters/pandoc_lecture_deprecated.lua"
 [[resources]]
 description = "Exams custom filter."
-version = "Unreleased 2022/08/30"
+version = "Unreleased 2022/08/30 patched with issue #7"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
 dependencies = []
 latex_packages = []

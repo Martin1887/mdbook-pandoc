@@ -26,7 +26,7 @@ end
 
 
 -- transform markdown table to simple latex tabular
-local function mdtabletotabular(el)
+local function mdtabletotabular(elt)
     -- returns (list of) `Block` (since `Table` is of type `Block`)
 
     local function addcell(tab, cell)
@@ -47,6 +47,9 @@ local function mdtabletotabular(el)
         -- the last cell of a row must not be ended by `&`, end row with newline and separator
         tab[#tab] = pandoc.RawBlock("latex", "\\\\\\hline")
     end
+    
+    -- FP: the parameter is a Table, but afterwards is treated as a SimpleTable
+    local el = pandoc.utils.to_simple_table(elt)
 
     -- alignments: pandoc to tex
     local align = { [pandoc.AlignDefault] = "c", [pandoc.AlignLeft] = "l", [pandoc.AlignRight] = "r", [pandoc.AlignCenter] = "c" }
