@@ -39,6 +39,32 @@ impl Default for Dpi {
     }
 }
 
+/// Possible values for the wrap options.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize, strum_macros::Display)]
+#[serde(rename_all = "kebab-case")]
+#[strum(serialize_all = "kebab-case")]
+pub enum Wrap {
+    /// The default value, try to wrap lines to `--columns` value (72 by default).
+    #[default]
+    Auto,
+    /// Not wrap lines at all.
+    None,
+    /// Attempt to preserve the wrapping from the source document.
+    Preserve,
+}
+
+/// The number of columns for wrapped text, 72 by default.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize, SerdeEnumDisplay)]
+#[serde(untagged)]
+pub enum Columns {
+    Custom(u32),
+}
+impl Default for Columns {
+    fn default() -> Self {
+        Columns::Custom(72)
+    }
+}
+
 /// Possible values for the highlight style.
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize, SerdeEnumDisplay)]
 #[serde(rename_all = "camelCase")]

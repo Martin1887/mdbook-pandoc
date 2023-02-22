@@ -109,6 +109,10 @@ pub struct PandocCommandArguments {
     pub sandbox: Option<bool>,
     /// Default images DPI, 96 by default.
     pub dpi: Option<Dpi>,
+    /// How text is wrapped in the output source code file.
+    pub wrap: Option<Wrap>,
+    /// The number of columns for wrapped text.
+    pub columns: Option<Columns>,
     /// Disable the highlight of source code blocks.
     pub no_highlight: Option<bool>,
     /// Highlight style for source code, `pygments` by default.
