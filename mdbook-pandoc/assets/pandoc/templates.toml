@@ -127,7 +127,6 @@ contents_file = "templates/latex/apa6.latex"
 
 # https://github.com/cagix/pandoc-lecture consists of
 # exam, homework and lecture with complex builds
-# TODO: translations using variables
 # TODO: HTML lecture is a complex template that does not pay off now
 [[resources]]
 description = "Template for exams, some contents in German."
