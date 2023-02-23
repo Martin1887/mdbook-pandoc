@@ -1,0 +1,36 @@
+[output.pandoc."lecture_beamer.pdf"]
+format = "beamer"
+pdf-engine = "pdflatex"
+pdf-engine-opt = "-shell-escape"
+include-in-header = ["latex_lecture_beamer", "latex_exam_homework_lecture_definitions"]
+
+added-extensions = ["rebase_relative_paths", "lists_without_preceding_blankline"]
+default-image-extension = ".pdf"
+strip-comments = true
+slide-level = 2
+toc = false
+number-sections = false
+citeproc = true
+
+metadata = [
+    "subtitle:<subtitle>",
+    "author:<author> (<institute>)",
+    "lang:en",
+    "suppress-bibliography:true",
+    "link-citations:false"
+]
+
+variable = [
+    "aspectratio=1610",
+    "fontsize=smaller",
+    "theme=metropolis",
+    "themeoptions=numbering=none",
+    "themeoptions=progressbar=foot"
+]
+
+lua-filter = [
+    "lua_pandoc_lecture_deprecated",
+    "lua_pandoc_lecture_prepare_slides",
+    "lua_pandoc_lecture_listings",
+    "lua_pandoc_lecture_tex"
+]

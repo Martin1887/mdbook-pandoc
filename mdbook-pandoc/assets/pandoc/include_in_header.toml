@@ -57,6 +57,6 @@ description = "Template for lecture slides."
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
 dependencies = []
-latex_packages = []
+latex_packages = ["metropolis"]
 license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/master/LICENSE.md", repository_url = "https://github.com/cagix/pandoc-lecture" }
 contents_file = "include_in_header/lecture_beamer.latex"

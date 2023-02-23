@@ -41,3 +41,7 @@ contents_file = "configs/exam.toml"
 [[configs]]
 description = "Template for homework"
 contents_file = "configs/homework.toml"
+
+[[configs]]
+description = "Template for lecture slides."
+contents_file = "configs/lecture_beamer.toml"
