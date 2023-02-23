@@ -1,0 +1,103 @@
+# This step is optional and adds the evaluation to the generated MD file
+[output.pandoc.md]
+format = "markdown"
+template = "md_homework_evaluation"
+wrap = "preserve"
+lua_filters = [
+    "lua_questions"
+]
+
+variable = [
+    # Maximum number of points
+    # "points=<points>",
+    "lang_evaluation_title=Evaluation",
+    "lang_group_information=Group information",
+    "lang_surname=Surname",
+    "lang_first_name=First name",
+    "lang_part=Part",
+    "lang_total=Total",
+    "lang_formal_assessment=Formal assessment",
+    "lang_content_rating=Content rating",
+    "lang_in_total=In total",
+    "lang_max=max",
+    "lang_min=min",
+    "lang_rated_by=Rated by",
+    "lang_criteria=Criteria",
+    "lang_up_to=Up to",
+    "lang_note=Note",
+    "lang_deductions=Deductions",
+    "lang_annotation=Annotation",
+    "lang_cutoff_at=Cut off at",
+    "lang_deduction=Deduction",
+    "lang_points=Points",
+]
+
+[output.pandoc."homework_header.tex"]
+format = "latex"
+template = "latex_homework"
+
+wrap = "preserve"
+default-image-extension = ".pdf"
+number-sections = false
+toc = false
+
+metadata = [
+    "subtitle:<subtitle>",
+    "author:<author> (<institute>)",
+    "lang:en",
+    # "bibliography:<path>.bib"
+]
+
+variable = [
+    "lang_points=Points",
+    "lang_date=Date"
+]
+
+lua-filter = [
+    "lua_pandoc_lecture_addpoints",
+]
+
+[output.pandoc."final_homework.pdf"]
+format = "pdf"
+pdf-engine = "pdflatex"
+pdf-engine-opt = "-shell-escape"
+include-in-header = ["latex_exam_homework_lecture_definitions", {custom="../book/book.homework_header.tex"}]
+added-extensions = ["lists_without_preceding_blankline"]
+
+wrap = "preserve"
+default-image-extension = ".pdf"
+number-sections = true
+toc = false
+strip-comments = true
+citeproc = true
+
+metadata = [
+    "subtitle:<subtitle>",
+    "author:<author> (<institute>)",
+    "lang:en",
+    # "bibliography:<path>.bib"
+]
+
+variable = [
+    "documentclass=scrartcl",
+    "fontsize=10pt",
+    "papersize=a4",
+    "colorlinks=true",
+    "linkcolor=headcolor",
+    "citecolor=headcolor",
+    "urlcolor=headcolor",
+    "geometry:left=1.6cm",
+    "geomtry:right=1.6cm",
+    "geomtry:top=2cm",
+    "geomtry:bottom=1.6cm",
+    "lang_points=Points",
+    "lang_date=Date"
+]
+
+lua-filter = [
+    "lua_pandoc_lecture_deprecated",
+    "lua_pandoc_lecture_headertotask",
+    "lua_pandoc_lecture_listings",
+    "lua_pandoc_lecture_tex",
+    "lua_pandoc_lecture_fhbib"
+]

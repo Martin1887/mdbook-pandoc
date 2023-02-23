@@ -37,3 +37,7 @@ contents_file = "configs/apa6.toml"
 [[configs]]
 description = "Template for exams"
 contents_file = "configs/exam.toml"
+
+[[configs]]
+description = "Template for homework"
+contents_file = "configs/homework.toml"
