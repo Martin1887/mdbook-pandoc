@@ -113,6 +113,8 @@ pub struct PandocCommandArguments {
     pub wrap: Option<Wrap>,
     /// The number of columns for wrapped text.
     pub columns: Option<Columns>,
+    /// Strip out HTML comments in the source.
+    pub strip_comments: Option<bool>,
     /// Disable the highlight of source code blocks.
     pub no_highlight: Option<bool>,
     /// Highlight style for source code, `pygments` by default.
