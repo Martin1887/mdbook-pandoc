@@ -12,6 +12,8 @@ listings = true
 highlight-style = "tango"
 
 variable = [
+    # Maximum number of points
+    # "points=<points>",
     "documentclass=exam",
     "classoption=addpoints",
     # uncomment the following line to show answers
