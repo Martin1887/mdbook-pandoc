@@ -5,7 +5,7 @@ template = "latex_exam"
 include-in-header = ["latex_exam_homework_lecture_definitions"]
 include-after-body = ["latex_exam_end"]
 
-default-image-extension = "pdf"
+default-image-extension = ".pdf"
 number-sections = true
 toc = true
 listings = true
