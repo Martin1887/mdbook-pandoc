@@ -45,3 +45,7 @@ contents_file = "configs/homework.toml"
 [[configs]]
 description = "Template for lecture slides."
 contents_file = "configs/lecture_beamer.toml"
+
+[[configs]]
+description = "AMSTAT journal."
+contents_file = "configs/amstat.toml"

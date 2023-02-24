@@ -1,0 +1,10 @@
+[output.pandoc."amstat.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_amstat"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+citeproc = true
+csl = "csl_apa_no_doi_no_issue"
