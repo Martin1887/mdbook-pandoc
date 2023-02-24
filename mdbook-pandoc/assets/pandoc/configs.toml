@@ -57,3 +57,7 @@ contents_file = "configs/biometrical_journal.toml"
 [[configs]]
 description = "Biometrics journal."
 contents_file = "configs/biometrics.toml"
+
+[[configs]]
+description = "Biometrika journal."
+contents_file = "configs/biometrika.toml"

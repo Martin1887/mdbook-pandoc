@@ -1,0 +1,24 @@
+[output.pandoc."biometrika.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_biometrika"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+natbib = true
+
+variable = [
+    "jvol=0",
+    "jnum=0",
+    "doi=00.0000/biomet/asm023",
+    "access_date=Advance Access publication on 31 July 2012",
+    "received_date=date",
+    "revised_date=date"
+]
+
+assets = [
+    "sty_biomet_lineno",
+    "bst_biometrika",
+    "cls_biometrika"
+]
