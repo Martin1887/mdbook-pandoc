@@ -1,0 +1,21 @@
+[output.pandoc."biometrics.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_biometrics"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+natbib = true
+
+variable = [
+    "volume=0",
+    "artmonth=month",
+    "doi=0000-0000-0000"
+]
+
+assets = [
+    "bst_biom",
+    "cls_biom",
+    "sty_endrotfloat"
+]

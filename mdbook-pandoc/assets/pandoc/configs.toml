@@ -53,3 +53,7 @@ contents_file = "configs/amstat.toml"
 [[configs]]
 description = "Biometrical journal."
 contents_file = "configs/biometrical_journal.toml"
+
+[[configs]]
+description = "Biometrics journal."
+contents_file = "configs/biometrics.toml"
