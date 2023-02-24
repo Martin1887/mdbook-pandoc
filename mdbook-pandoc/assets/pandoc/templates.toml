@@ -184,7 +184,7 @@ description = "Biometrika journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
 dependencies = []
-latex_packages = []
+latex_packages = ["epsf", "algorithm2e"]
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/biometrika.latex"
 [[resources]]
