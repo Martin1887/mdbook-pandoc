@@ -1,0 +1,26 @@
+[output.pandoc."biometrical.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_biometrical_journal"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+natbib = true
+
+assets = [
+    "bst_biometrical",
+    "cls_w_art",
+    "clo_w_bimj",
+    "sty_w_thm"
+]
+
+variable = [
+    "doi_suffix=bimj.DOIsuffix",
+    "volume=00",
+    "issue=00",
+    "doi_url=http://dx.doi.org/10.1022/bimj.XXXXXXX",
+    "received_date=zzz",
+    "revised_date=zzz",
+    "accepted_date=zzz"
+]
