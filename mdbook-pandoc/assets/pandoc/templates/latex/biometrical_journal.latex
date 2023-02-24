@@ -23,13 +23,13 @@ $endif$
 \let\abs=\envert
 
 \begin{document}
-\DOIsuffix{bimj.DOIsuffix}
-\Volume{00}
-\Issue{00}
+\DOIsuffix{$doi_suffix$}
+\Volume{$volume$}
+\Issue{$issue$}
 \Year{$year$}
 \pagespan{1}{}
 \keywords{$keywords$\\[1pc]
-\noindent\hspace*{-4.2pc} Supporting Information for this article is available from the author or on the WWW under\break \hspace*{-4pc} \underline{http://dx.doi.org/10.1022/bimj.XXXXXXX}} %%% semicolon and fullpoint added here for keyword style
+\noindent\hspace*{-4.2pc} Supporting Information for this article is available from the author or on the WWW under\break \hspace*{-4pc} \underline{$doi_url$}} %%% semicolon and fullpoint added here for keyword style
 
 \title[$header$]{$title$}
 %% Information for the first author.
@@ -44,7 +44,7 @@ $for(affiliation)$
 \address[\inst{$affiliation.key$}]{$affiliation.name$}$sep$ 
 $endfor$
 
-\Receiveddate{zzz} \Reviseddate{zzz} \Accepteddate{zzz} 
+\Receiveddate{$received_date$} \Reviseddate{$revised_date$} \Accepteddate{$accepted_date$} 
 
 \begin{abstract}
 $abstract$
