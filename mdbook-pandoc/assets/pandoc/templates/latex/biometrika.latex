@@ -47,16 +47,16 @@ $endif$
 \jname{Biometrika}
 %% The year, volume, and number are determined on publication
 \jyear{$year$}
-\jvol{99}
-\jnum{1}
+\jvol{$jvol$}
+\jnum{$jnum$}
 %% The \doi{...} and \accessdate commands are used by the production team
-%\doi{10.1093/biomet/asm023}
-\accessdate{Advance Access publication on 31 July 2012}
+\doi{$doi$}
+\accessdate{$access_date$}
 \copyrightinfo{\Copyright\ 2012 Biometrika Trust\goodbreak {\em Printed in Great Britain}}
 
 %% These dates are usually set by the production team
-\received{April 2012}
-\revised{September 2012}
+\received{$received_date$}
+\revised{$revised_date$}
 
 %% The left and right page headers are defined here:
 \markboth{$authabbr$}{$header$}
