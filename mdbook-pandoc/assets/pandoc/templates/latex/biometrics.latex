@@ -60,9 +60,9 @@ $endif$
 
 \pagerange{\pageref{firstpage}--\pageref{lastpage}} \pubyear{$year$}
 
-\volume{0}
-\artmonth{January}
-\doi{0000-0000-0000}
+\volume{$volume$}
+\artmonth{$artmonth$}
+\doi{$doi$}
 
 %  This label and the label ``lastpage'' are used by the \pagerange
 %  command above to give the page range for the article
