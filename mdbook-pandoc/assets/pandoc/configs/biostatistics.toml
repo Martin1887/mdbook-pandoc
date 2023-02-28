@@ -1,0 +1,27 @@
+[output.pandoc."biostatistics.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_biostatistics"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+natbib = true
+
+assets = [
+    "cls_bio",
+    "bst_biorefs"
+]
+
+metadata = [
+    "author:Me",
+    "address:Street",
+    "email:me@me.me",
+    "abstract:Abstract",
+    "keywords:mykeywords",
+    "bibliography:file.bib",
+    "referee:true",
+    "date:1990",
+    "header:Header",
+    "authhead:authheader"
+]

@@ -8,7 +8,7 @@ $endif$
 \usepackage{color}
 \usepackage{tikz}
 
-\usepackage[colorlinks=true, urlcolor=citecolor, linkcolor=citecolor, citecolor=citecolor]{hyperref}
+\usepackage[colorlinks=true, urlcolor=green, linkcolor=green, citecolor=green]{hyperref}
 
 % Add history information for the article if required
 \history{Received $date$}

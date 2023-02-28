@@ -239,10 +239,6 @@ j\hspace*{-.5pt}o\hspace*{-.5pt}u\hspace*{-.5pt}r\hspace*{-.5pt}n\hspace*{-.5pt}
    \@ifundefined{Hy@Warning}{% hyperref not loaded
      \immediate\write\@auxout{\string
      \newlabel{firstpage}{{}{\thepage}}}
-   }{
-     \immediate\write\@auxout{\string
-     \newlabel{firstpage}{{}{\thepage}{}{%
-     \ifHy@pageanchor page.\Hy@temp\fi}{}}}
    }
 }
 
