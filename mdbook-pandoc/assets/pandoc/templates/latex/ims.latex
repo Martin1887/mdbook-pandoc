@@ -28,7 +28,9 @@ $endif$
 \usepackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
 
 % provide arXiv number if available:
-%\arxiv{arXiv:0000.0000}
+$if(arxivnumber)$
+\arxiv{arXiv:$arxivnumber$}
+$endif$
 
 % put your definitions there:
 \startlocaldefs
