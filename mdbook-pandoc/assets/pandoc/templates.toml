@@ -225,7 +225,7 @@ description = "Stats in med journal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
 dependencies = []
-latex_packages = []
+latex_packages = ["moreverb"]
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/stats_in_med.latex"
 
