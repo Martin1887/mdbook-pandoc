@@ -1,0 +1,14 @@
+[output.pandoc."stats_in_med.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_stats_in_med"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+natbib = true
+
+assets = [
+    "bst_statmed",
+    "cls_simauth"
+]

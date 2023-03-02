@@ -73,3 +73,7 @@ contents_file = "configs/ims.toml"
 [[configs]]
 description = "Rjournal."
 contents_file = "configs/rjournal.toml"
+
+[[configs]]
+description = "Stats in med journal."
+contents_file = "configs/stats_in_med.toml"
