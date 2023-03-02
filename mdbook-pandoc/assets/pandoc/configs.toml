@@ -65,3 +65,7 @@ contents_file = "configs/biometrika.toml"
 [[configs]]
 description = "Biostatistics journal."
 contents_file = "configs/biostatistics.toml"
+
+[[configs]]
+description = "IMS journal."
+contents_file = "configs/ims.toml"

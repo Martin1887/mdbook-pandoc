@@ -1,0 +1,21 @@
+[output.pandoc."ims.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_ims"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+natbib = true
+
+variable = [
+    # this variable can be ommited to not show it
+    "arxivnumber=0000.0000",
+]
+
+assets = [
+    "bst_acmtrans_ims",
+    "bst_imsart_number",
+    "cls_imsart",
+    "sty_imsart"
+]
