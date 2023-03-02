@@ -15,11 +15,11 @@
 \begin{document}
 
 %% do not edit, for illustration only
-\sectionhead{Contributed research article}
-\volume{XX}
-\volnumber{YY}
-\year{20ZZ}
-\month{AAAA}
+\sectionhead{$sectionhead$}
+\volume{$volume$}
+\volnumber{$volnumber$}
+\year{$year$}
+\month{$month$}
 
 \begin{article}
 
@@ -46,7 +46,7 @@ $for(author)$
 \address{$author.name$\\
   $author.affiliation$\\
   $author.address$\\
-  USA\\}
+  $country$\\}
 \email{$author.email$}
 $endfor$
 
