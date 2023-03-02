@@ -1,0 +1,22 @@
+[output.pandoc."rjournal.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_rjournal"
+added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
+no-highlight = true
+number-sections = false
+toc = false
+natbib = true
+
+variable = [
+    "sectionhead=Contributed research article",
+    "volume=XX",
+    "volnumber=YY",
+    "year=20ZZ",
+    "month=AAAA",
+    "country=USA"
+]
+
+assets = [
+    "sty_r_journal"
+]
