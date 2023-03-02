@@ -1,0 +1,95 @@
+[output.pandoc."simple_book.pdf"]
+format = "pdf"
+pdf-engine = "xelatex"
+template = "latex_simple_book"
+webtex = ""
+crossref = true
+toc = true
+toc-depth = 2
+number-sections = false
+
+# This is better in a YAML metadata block or in a metadata file
+metadata = [
+    "title:My book title",
+    "author:Author",
+    "rights:License",
+    "lang:en-US",
+    "mainlang:english",
+    "otherlang:english",
+    "tags:",
+    "abstract:Summary",
+    "mainfont:DejaVu Sans",
+    "linkReferences:true"
+]
+
+[output.pandoc."simple_book.epub"]
+format = "epub"
+template = "epub_simple_book"
+css = ["css_simple_book"]
+webtex = ""
+crossref = true
+toc = true
+toc-depth = 2
+number-sections = false
+# epub-cover-image = cover_path_from_src_folder
+
+# This is better in a YAML metadata block or in a metadata file
+metadata = [
+    "title:My book title",
+    "author:Author",
+    "rights:License",
+    "lang:en-US",
+    "mainlang:english",
+    "otherlang:english",
+    "tags:",
+    "abstract:Summary",
+    "mainfont:DejaVu Sans",
+    "linkReferences:true"
+]
+
+[output.pandoc."simple_book.html"]
+format = "html"
+template = "html_simple_book"
+css = ["css_simple_book"]
+webtex = ""
+crossref = true
+toc = true
+toc-depth = 2
+number-sections = false
+
+# This is better in a YAML metadata block or in a metadata file
+metadata = [
+    "title:My book title",
+    "author:Author",
+    "rights:License",
+    "lang:en-US",
+    "mainlang:english",
+    "otherlang:english",
+    "tags:",
+    "abstract:Summary",
+    "mainfont:DejaVu Sans",
+    "linkReferences:true"
+]
+
+[output.pandoc."simple_book.docx"]
+format = "docx"
+reference-doc = "docx_simple_book"
+webtex = ""
+crossref = true
+toc = true
+toc-depth = 2
+number-sections = false
+
+# This is better in a YAML metadata block or in a metadata file
+metadata = [
+    "title:My book title",
+    "author:Author",
+    "rights:License",
+    "lang:en-US",
+    "mainlang:english",
+    "otherlang:english",
+    "tags:",
+    "abstract:Summary",
+    "mainfont:DejaVu Sans",
+    "linkReferences:true"
+]

@@ -81,3 +81,7 @@ contents_file = "configs/stats_in_med.toml"
 [[configs]]
 description = "MLA-formatted PDF, ROFF, DOCX and ODT."
 contents_file = "configs/mla8.toml"
+
+[[configs]]
+description = "Simple book template."
+contents_file = "configs/simple_book.toml"
