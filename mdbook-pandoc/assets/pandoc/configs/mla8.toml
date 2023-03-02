@@ -1,0 +1,81 @@
+[output.pandoc."mla8.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_mla8"
+csl = "csl_mla8"
+number-sections = false
+toc = false
+citeproc = true
+
+# This metadata is better in a YAML metadata block or in a YAML file
+metadata = [
+    "title:Paper Title",
+    "author:Author Name",
+    "hauthor:Header Author",
+    "instructor:Professor Name",
+    "date:\\today",
+    "bibliography:references.bib",
+    "header-includes:",
+    "nocite:"
+]
+
+# This output file does not includes the 'Works Cited header'
+[output.pandoc."mla8.roff.pdf"]
+format = "ms"
+template = "roff_mla8"
+csl = "csl_mla8"
+number-sections = false
+toc = false
+citeproc = true
+
+# This metadata is better in a YAML metadata block or in a YAML file
+metadata = [
+    "title:Paper Title",
+    "author:Author Name",
+    "hauthor:Header Author",
+    "instructor:Professor Name",
+    "date:\\today",
+    "bibliography:references.bib",
+    "header-includes:",
+    "nocite:"
+]
+
+# This output file does not includes the 'Works Cited header'
+[output.pandoc."mla8.docx"]
+format = "docx"
+reference-doc = "docx_mla8"
+number-sections = false
+toc = false
+citeproc = true
+
+# This metadata is better in a YAML metadata block or in a YAML file
+metadata = [
+    "title:Paper Title",
+    "author:Author Name",
+    "hauthor:Header Author",
+    "instructor:Professor Name",
+    "date:\\today",
+    "bibliography:references.bib",
+    "header-includes:",
+    "nocite:"
+]
+
+# This output file does not includes the 'Works Cited header'
+[output.pandoc."mla8.odt"]
+format = "odt"
+template = "opendocument_mla8"
+number-sections = false
+toc = false
+citeproc = true
+
+# This metadata is better in a YAML metadata block or in a YAML file
+metadata = [
+    "title:Paper Title",
+    "author:Author Name",
+    "hauthor:Header Author",
+    "instructor:Professor Name",
+    "date:\\today",
+    "bibliography:references.bib",
+    "header-includes:",
+    "nocite:"
+]

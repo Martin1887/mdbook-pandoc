@@ -77,3 +77,7 @@ contents_file = "configs/rjournal.toml"
 [[configs]]
 description = "Stats in med journal."
 contents_file = "configs/stats_in_med.toml"
+
+[[configs]]
+description = "MLA-formatted PDF, ROFF, DOCX and ODT."
+contents_file = "configs/mla8.toml"
