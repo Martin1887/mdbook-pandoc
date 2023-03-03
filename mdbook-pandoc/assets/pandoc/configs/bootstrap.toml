@@ -1,0 +1,6 @@
+[output.pandoc."bootstrap.html"]
+format = "html"
+template = "html_bootstrap"
+css = ["css_bootstrap", "css_bootstrap_customized"]
+toc-depth = 2
+number-sections = false

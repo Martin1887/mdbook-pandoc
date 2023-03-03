@@ -85,3 +85,7 @@ contents_file = "configs/mla8.toml"
 [[configs]]
 description = "Simple book template."
 contents_file = "configs/simple_book.toml"
+
+[[configs]]
+description = "Bootstrap HTML template."
+contents_file = "configs/bootstrap.toml"
