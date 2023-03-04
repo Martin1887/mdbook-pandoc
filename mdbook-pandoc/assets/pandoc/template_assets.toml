@@ -228,3 +228,21 @@ dependencies = []
 latex_packages = []
 license = { name = "Copyright (c) 2008 John Wiley & Sons, Ltd, The Atrium, Southern Gate, Chichester, West Sussex, PO19 8SQ UK.   All rights reserved. You are NOT ALLOWED to change this file. The user may not exploit any part of the class file commercially.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/stats-in-med/simauth.cls" } 
 contents_file = "misc/simauth.cls"
+
+
+
+#############
+# Beamer themes
+#############
+
+# Metropolis (https://github.com/matze/mtheme) is in TexLive and other
+# distributions and it consists of 5 files
+
+[[resources]]
+description = "Execushares Beamer theme. It requires LuaLaTeX."
+version = "Unreleased 2019/03/16"
+docs = "https://blog.hamaluik.ca/posts/better-beamer-themes" 
+dependencies = ["LuaLaTeX"]
+latex_packages = ["hyphenat", "selnolig"]
+license = { name = "MIT", url = "https://github.com/hamaluik/Beamer-Theme-Execushares/blob/master/LICENSE", repository_url = "https://github.com/hamaluik/Beamer-Theme-Execushares" } 
+contents_file = "misc/beamer/beamerthemeExecushares.sty"
