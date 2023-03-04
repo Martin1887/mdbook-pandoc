@@ -1,0 +1,33 @@
+
+\usepackage{xpatch}
+\makeatletter
+\newcommand{\my@beamer@setsep}{%
+\ifnum\@itemdepth=1\relax
+     \setlength\itemsep{\my@beamer@itemsepi}% separation for first level
+   \else
+     \ifnum\@itemdepth=2\relax
+       \setlength\itemsep{\my@beamer@itemsepii}% separation for second level
+     \else
+       \ifnum\@itemdepth=3\relax
+         \setlength\itemsep{\my@beamer@itemsepiii}% separation for third level
+   \fi\fi\fi}
+\newlength{\my@beamer@itemsepi}\setlength{\my@beamer@itemsepi}{10pt}
+\newlength{\my@beamer@itemsepii}\setlength{\my@beamer@itemsepii}{6pt}
+\newlength{\my@beamer@itemsepiii}\setlength{\my@beamer@itemsepiii}{3pt}
+\newcommand\setlistsep[3]{%
+    \setlength{\my@beamer@itemsepi}{#1}%
+    \setlength{\my@beamer@itemsepii}{#2}%
+    \setlength{\my@beamer@itemsepiii}{#3}%
+}
+\xpatchcmd{\itemize}
+  {\def\makelabel}
+  {\my@beamer@setsep\def\makelabel}
+ {}
+ {}
+
+\xpatchcmd{\beamer@enum@}
+  {\def\makelabel}
+  {\my@beamer@setsep\def\makelabel}
+ {}
+ {}
+\makeatother
