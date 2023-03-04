@@ -89,3 +89,7 @@ contents_file = "configs/simple_book.toml"
 [[configs]]
 description = "Bootstrap HTML template."
 contents_file = "configs/bootstrap.toml"
+
+[[configs]]
+description = "Beamer slides."
+contents_file = "configs/beamer.toml"

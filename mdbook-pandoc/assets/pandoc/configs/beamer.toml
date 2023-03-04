@@ -1,0 +1,69 @@
+[output.pandoc."beamer.pdf"]
+format = "beamer"
+# Some themes may require another engine
+pdf-engine = "pdflatex"
+
+# To change the units defined for the item separators, after the first build
+# edit the `beamer_itemsep.latex` and load it as a custom header file.
+# An alternative to this LaTeX snippet is the GPL licensed better-beamer of
+# the repository https://github.com/jayrobwilliams/TeX-Misc
+include-in-header = ["latex_beamer_itemsep"]
+
+slide-level = 2
+
+toc = true
+toc-depth = 2
+
+# Built-in Beamer themes must be loaded here.
+# The full list can be printed with the following command
+# (and looking only the Beamer ones):
+# mdbook-pandoc assets list --types template-asset
+assets = []
+
+variable = [
+    # possible values: 43, 169, 1610, 149, 141, 54, 32
+    "aspectratio=169",
+    # possible values: empty, frame, vertical, horizontal
+    "navigation=empty",
+    "section-titles=true",
+    # "institute=",
+    # "beameroption=",
+    # Probably one of the built-in themes (loaded in the `assets` property)
+    # Some of the best themes are
+    # (a bigger list in https://github.com/martinbjeldbak/ultimate-beamer-theme-list):
+    # - DarkConsoleFiraRemix
+    # - DarkConsole
+    # - metropolis (in LaTeX distributions)
+    # - material
+    # - focus (in LaTeX distributions)
+    # - Nord (in LaTeX distributions)
+    # - Arguelles (in CTAN only since 2022, probably the built-in assets are needed)
+    # - lausanne
+    # - Cuerna (in LaTeX distributions)
+    # - trigon (in LaTeX distributions)
+    # "theme=",
+    # "colortheme=",
+    # "fonttheme=",
+    # "innertheme=",
+    # "outhertheme=",
+    # "themeoptions=",
+    # image for title slide
+    # "titlegraphic=image_path",
+    # "logo=image_path",
+    # "fontfamily=",
+    # "fontfamilyoptions=",
+    # "fontsize=",
+    "colorlinks=true",
+    # "linkcolor=",
+    # "filecolor=",
+    # "citecolor=",
+    # "urlcolor=",
+    # "toccolor=",
+    "links-as-notes=false",
+    # For instance, tt, same, etc.
+    # "urlstyle=",
+    # "biblatexoptions=",
+    # "biblio-style=",
+    # "bibliography=",
+    # "natbiboptions=",
+]
