@@ -299,15 +299,8 @@ latex_packages = []
 license = { name = "Apache 2.0", url = "https://github.com/tonyblundell/pandoc-bootstrap-template/blob/master/LICENSE", repository_url = "https://github.com/tonyblundell/pandoc-bootstrap-template" }
 contents_file = "templates/html/bootstrap.html"
 
-# TODO: many CSS and JS files are loaded from the HTML with error
-[[resources]]
-description = "Bootstrap HTML with a sticky accordion menu template."
-version = "Unreleased 2013/07/26"
-docs = "(None)" 
-dependencies = []
-latex_packages = []
-license = { name = "Apache 2.0", url = "https://github.com/diversen/pandoc-bootstrap-adaptive-template/blob/master/LICENSE", repository_url = "https://github.com/diversen/pandoc-bootstrap-adaptive-template" }
-contents_file = "templates/html/bootstrap_sticky_menu.html"
+# Many CSS, JS and image files are loaded from the HTML and it does not pay off
+# https://github.com/diversen/pandoc-bootstrap-adaptive-template
 
 # https://github.com/diversen/pandoc-uikit uses UIKIT CSS and JS files, could be included but it doesn't seem right
 # https://github.com/bitfragment/mindoc does not seem a great template
