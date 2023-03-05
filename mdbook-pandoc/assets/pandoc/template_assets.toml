@@ -238,6 +238,148 @@ contents_file = "misc/simauth.cls"
 # Metropolis (https://github.com/matze/mtheme) is in TexLive and other
 # distributions and it consists of 5 files
 
+#############
+# kmbeamer variants, 2 common stys, 1 colortheme and 1 theme for each variant
+# and 1 canvas image in some of them
+#############
+
+# DarkConsoleFiraRemix
+[[resources]]
+description = "DarkConsoleFiraRemix Beamer theme. It requires loading color, kmbeamer_color and kmbeamer_common."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor", "fira (usually in Linux repositories inside a latexfontsextra package)"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamerthemeDarkConsoleFiraRemix.sty"
+[[resources]]
+description = "DarkConsoleFiraRemix Beamer color theme. It requires loading kmbeamer_color."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor", "fira (usually in Linux repositories inside a latexfontsextra package)"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamercolorthemeDarkConsoleFiraRemix.sty"
+# LightConsoleFiraRemix
+[[resources]]
+description = "LightConsoleFiraRemix Beamer theme. It requires loading color, kmbeamer_color and kmbeamer_common."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor", "fira (usually in Linux repositories inside a latexfontsextra package)"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamerthemeLightConsoleFiraRemix.sty"
+[[resources]]
+description = "LightConsoleFiraRemix Beamer color theme. It requires loading kmbeamer_color."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor", "fira (usually in Linux repositories inside a latexfontsextra package)"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamercolorthemeLightConsoleFiraRemix.sty"
+# DarkConsole
+[[resources]]
+description = "DarkConsole Beamer theme. It requires loading color, kmbeamer_color and kmbeamer_common."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamerthemeDarkConsole.sty"
+[[resources]]
+description = "DarkConsole Beamer color theme. It requires loading kmbeamer_color."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamercolorthemeDarkConsole.sty"
+# LightConsole
+[[resources]]
+description = "LightConsole Beamer theme. It requires loading color, kmbeamer_color and kmbeamer_common."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamerthemeLightConsole.sty"
+[[resources]]
+description = "LightConsole Beamer color theme. It requires loading kmbeamer_color."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamercolorthemeLightConsole.sty"
+# Blackboard
+[[resources]]
+description = "Blackboard Beamer theme. It requires loading canvas image, color, kmbeamer_color and kmbeamer_common."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamerthemeBlackboard.sty"
+[[resources]]
+description = "Blackboard Beamer color theme. It requires loading kmbeamer_color."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamercolorthemeBlackboard.sty"
+[[resources]]
+description = "Blackboard Beamer canvas image."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/kmbeamer_bg_Blackboard.pdf"
+# Notebook
+[[resources]]
+description = "Notebook Beamer theme. It requires loading canvas image, color, kmbeamer_color and kmbeamer_common."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamerthemeNotebook.sty"
+[[resources]]
+description = "Notebook Beamer color theme. It requires loading kmbeamer_color."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/beamercolorthemeNotebook.sty"
+[[resources]]
+description = "Notebook Beamer canvas image."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/kmbeamer_bg_Notebook.pdf"
+# common
+[[resources]]
+description = "kmbeamer_common."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/kmbeamer_common.sty"
+[[resources]]
+description = "kmbeamer_color."
+version = "Unreleased 2023/03/02"
+docs = "https://github.com/kmaed/kmbeamer/" 
+dependencies = []
+latex_packages = ["svgcolor"]
+license = { name = "MIT", url = "https://github.com/kmaed/kmbeamer/blob/master/LICENSE", repository_url = "https://github.com/kmaed/kmbeamer/" } 
+contents_file = "misc/beamer/kmbeamer/kmbeamer_color.sty"
+
+
 # material, 4 files needed
 [[resources]]
 description = "material Beamer theme. It requires loading color, inner and outer themes."
