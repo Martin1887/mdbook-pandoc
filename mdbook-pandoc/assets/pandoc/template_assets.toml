@@ -388,7 +388,7 @@ docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDe
 dependencies = []
 latex_packages = ["tcolorbox"]
 license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
-contents_file = "misc/beamer/beamerthemematerial.sty"
+contents_file = "misc/beamer/material/beamerthemematerial.sty"
 [[resources]]
 description = "material Beamer color theme. Needed by the material Beamer theme."
 version = "1.1 beta Bismuth"
@@ -396,7 +396,7 @@ docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDe
 dependencies = []
 latex_packages = ["tcolorbox"]
 license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
-contents_file = "misc/beamer/beamercolorthemematerial.sty"
+contents_file = "misc/beamer/material/beamercolorthemematerial.sty"
 [[resources]]
 description = "material Beamer inner theme. It requires loading color, inner and outter themes."
 version = "1.1 beta Bismuth"
@@ -404,7 +404,7 @@ docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDe
 dependencies = []
 latex_packages = ["tcolorbox"]
 license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
-contents_file = "misc/beamer/beamerinnerthemematerial.sty"
+contents_file = "misc/beamer/material/beamerinnerthemematerial.sty"
 [[resources]]
 description = "material Beamer outer theme. It requires loading color, inner and outter themes."
 version = "1.1 beta Bismuth"
@@ -412,7 +412,7 @@ docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDe
 dependencies = []
 latex_packages = ["tcolorbox"]
 license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
-contents_file = "misc/beamer/beamerouterthemematerial.sty"
+contents_file = "misc/beamer/material/beamerouterthemematerial.sty"
 
 
 [[resources]]
