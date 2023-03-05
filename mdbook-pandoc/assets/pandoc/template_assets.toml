@@ -238,6 +238,41 @@ contents_file = "misc/simauth.cls"
 # Metropolis (https://github.com/matze/mtheme) is in TexLive and other
 # distributions and it consists of 5 files
 
+# material, 4 files needed
+[[resources]]
+description = "material Beamer theme. It requires loading color, inner and outer themes."
+version = "1.1 beta Bismuth"
+docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDesignExample.pdf" 
+dependencies = []
+latex_packages = ["tcolorbox"]
+license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
+contents_file = "misc/beamer/beamerthemematerial.sty"
+[[resources]]
+description = "material Beamer color theme. Needed by the material Beamer theme."
+version = "1.1 beta Bismuth"
+docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDesignExample.pdf" 
+dependencies = []
+latex_packages = ["tcolorbox"]
+license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
+contents_file = "misc/beamer/beamercolorthemematerial.sty"
+[[resources]]
+description = "material Beamer inner theme. It requires loading color, inner and outter themes."
+version = "1.1 beta Bismuth"
+docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDesignExample.pdf" 
+dependencies = []
+latex_packages = ["tcolorbox"]
+license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
+contents_file = "misc/beamer/beamerinnerthemematerial.sty"
+[[resources]]
+description = "material Beamer outer theme. It requires loading color, inner and outter themes."
+version = "1.1 beta Bismuth"
+docs = "https://github.com/edasubert/beamerMaterialDesign/blob/master/materialDesignExample.pdf" 
+dependencies = []
+latex_packages = ["tcolorbox"]
+license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesign/blob/master/LICENSE", repository_url = "https://github.com/edasubert/beamerMaterialDesign" } 
+contents_file = "misc/beamer/beamerouterthemematerial.sty"
+
+
 [[resources]]
 description = "Execushares Beamer theme. It requires LuaLaTeX."
 version = "Unreleased 2019/03/16"
