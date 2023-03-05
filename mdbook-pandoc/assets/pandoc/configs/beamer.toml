@@ -3,6 +3,11 @@ format = "beamer"
 # Some themes may require another engine
 pdf-engine = "pdflatex"
 
+# An issue with background images has been resolved in the default Pandoc LaTeX
+# template very recently, so if you use a background image, this template will
+# be probably needed.
+template = "latex_default20230307"
+
 # To change the units defined for the item separators, after the first build
 # edit the `beamer_itemsep.latex` and load it as a custom header file.
 # An alternative to this LaTeX snippet is the GPL licensed better-beamer of
@@ -49,6 +54,7 @@ variable = [
     # "themeoptions=",
     # image for title slide
     # "titlegraphic=image_path",
+    # "background-image=image_path",
     # "logo=image_path",
     # "fontfamily=",
     # "fontfamilyoptions=",

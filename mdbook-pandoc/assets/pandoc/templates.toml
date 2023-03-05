@@ -307,3 +307,16 @@ contents_file = "templates/html/bootstrap.html"
 # https://github.com/tajmone/gh-themes-magick seems more adequate for static site generators
 # https://github.com/tajmone/pandoc-goodies/tree/master/templates/html5/github has several licenses and it doesn't seem right for documents
 # https://github.com/ryangrose/easy-pandoc-templates is GPL 3.0 licensed
+
+
+################
+# Updated LaTeX template
+################
+[[resources]]
+description = "Updated LaTeX template (2023/03/07)."
+version = "Unreleased 2023/03/07"
+docs = "(None)" 
+dependencies = []
+latex_packages = []
+license = { name = "BSD-3-Clause", url = "", repository_url = "https://github.com/jgm/pandoc-templates" }
+contents_file = "templates/latex/default20230307.latex"
