@@ -415,6 +415,7 @@ license = { name = "MIT", url = "https://github.com/edasubert/beamerMaterialDesi
 contents_file = "misc/beamer/material/beamerouterthemematerial.sty"
 
 
+# Execushares, only one file
 [[resources]]
 description = "Execushares Beamer theme. It requires LuaLaTeX."
 version = "Unreleased 2019/03/16"
@@ -423,3 +424,54 @@ dependencies = ["LuaLaTeX"]
 latex_packages = ["hyphenat", "selnolig"]
 license = { name = "MIT", url = "https://github.com/hamaluik/Beamer-Theme-Execushares/blob/master/LICENSE", repository_url = "https://github.com/hamaluik/Beamer-Theme-Execushares" } 
 contents_file = "misc/beamer/beamerthemeExecushares.sty"
+
+
+# Arguelles, 5 files
+[[resources]]
+description = "Arguelles Beamer theme. It requires loading opencolor.sty, color, font, inner and outer themes. The nopatch option has been removed because compilation errors."
+version = "2.1.0"
+docs = "https://github.com/piazzai/arguelles"
+dependencies = []
+latex_packages = ["mathalpha", "alegreya", "eulervm", "microtype", "fontawesome5", "enumitem", "parskip"]
+license = { name = "MIT", url = "https://github.com/piazzai/arguelles/blob/master/LICENSE", repository_url = "https://github.com/piazzai/arguelles" } 
+contents_file = "misc/beamer/arguelles/beamerthemeArguelles.sty"
+[[resources]]
+description = "Arguelles Beamer color theme. It requires loading opencolor.sty, color, font, inner and outer themes."
+version = "2.1.0"
+docs = "https://github.com/piazzai/arguelles"
+dependencies = []
+latex_packages = ["mathalpha", "alegreya", "eulervm", "microtype", "fontawesome5", "enumitem", "parskip"]
+license = { name = "MIT", url = "https://github.com/piazzai/arguelles/blob/master/LICENSE", repository_url = "https://github.com/piazzai/arguelles" } 
+contents_file = "misc/beamer/arguelles/beamercolorthemeArguelles.sty"
+[[resources]]
+description = "Arguelles Beamer font theme. It requires loading opencolor.sty, color, font, inner and outer themes."
+version = "2.1.0"
+docs = "https://github.com/piazzai/arguelles"
+dependencies = []
+latex_packages = ["mathalpha", "alegreya", "eulervm", "microtype", "fontawesome5", "enumitem", "parskip"]
+license = { name = "MIT", url = "https://github.com/piazzai/arguelles/blob/master/LICENSE", repository_url = "https://github.com/piazzai/arguelles" } 
+contents_file = "misc/beamer/arguelles/beamerfontthemeArguelles.sty"
+[[resources]]
+description = "Arguelles Beamer inner theme. It requires loading opencolor.sty, color, font, inner and outer themes."
+version = "2.1.0"
+docs = "https://github.com/piazzai/arguelles"
+dependencies = []
+latex_packages = ["mathalpha", "alegreya", "eulervm", "microtype", "fontawesome5", "enumitem", "parskip"]
+license = { name = "MIT", url = "https://github.com/piazzai/arguelles/blob/master/LICENSE", repository_url = "https://github.com/piazzai/arguelles" } 
+contents_file = "misc/beamer/arguelles/beamerinnerthemeArguelles.sty"
+[[resources]]
+description = "Arguelles Beamer outer theme. It requires loading opencolor.sty, color, font, inner and outer themes."
+version = "2.1.0"
+docs = "https://github.com/piazzai/arguelles"
+dependencies = []
+latex_packages = ["mathalpha", "alegreya", "eulervm", "microtype", "fontawesome5", "enumitem", "parskip"]
+license = { name = "MIT", url = "https://github.com/piazzai/arguelles/blob/master/LICENSE", repository_url = "https://github.com/piazzai/arguelles" } 
+contents_file = "misc/beamer/arguelles/beamerouterthemeArguelles.sty"
+[[resources]]
+description = "Hexadecimal color definitions of the 130 colors included in Open Color library. Required by Arguelles Beamer theme."
+version = "1.0.1"
+docs = "https://github.com/piazzai/opencolor"
+dependencies = []
+latex_packages = ["mathalpha", "alegreya", "eulervm", "microtype", "fontawesome5", "enumitem", "parskip"]
+license = { name = "MIT", url = "https://github.com/piazzai/opencolor/blob/master/LICENSE", repository_url = "https://github.com/piazzai/opencolor" } 
+contents_file = "misc/opencolor.sty"
