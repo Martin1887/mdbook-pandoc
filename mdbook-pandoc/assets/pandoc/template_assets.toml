@@ -475,3 +475,38 @@ dependencies = []
 latex_packages = ["mathalpha", "alegreya", "eulervm", "microtype", "fontawesome5", "enumitem", "parskip"]
 license = { name = "MIT", url = "https://github.com/piazzai/opencolor/blob/master/LICENSE", repository_url = "https://github.com/piazzai/opencolor" } 
 contents_file = "misc/opencolor.sty"
+
+
+# lausanne, 4 files
+[[resources]]
+description = "lausanne Beamer theme. It requires loading color, inner and outer themes."
+version = "Unreleased 2018/03/06"
+docs = "https://github.com/fakufaku/beamerthemelausanne"
+dependencies = []
+latex_packages = []
+license = { name = "MIT", url = "https://github.com/fakufaku/beamerthemelausanne/blob/master/LICENSE", repository_url = "https://github.com/fakufaku/beamerthemelausanne" } 
+contents_file = "misc/beamer/lausanne/beamerthemelausanne.sty"
+[[resources]]
+description = "lausanne Beamer color theme."
+version = "Unreleased 2018/03/06"
+docs = "https://github.com/fakufaku/beamerthemelausanne"
+dependencies = []
+latex_packages = []
+license = { name = "MIT", url = "https://github.com/fakufaku/beamerthemelausanne/blob/master/LICENSE", repository_url = "https://github.com/fakufaku/beamerthemelausanne" } 
+contents_file = "misc/beamer/lausanne/beamercolorthemelausanne.sty"
+[[resources]]
+description = "lausanne Beamer inner theme."
+version = "Unreleased 2018/03/06"
+docs = "https://github.com/fakufaku/beamerthemelausanne"
+dependencies = []
+latex_packages = []
+license = { name = "MIT", url = "https://github.com/fakufaku/beamerthemelausanne/blob/master/LICENSE", repository_url = "https://github.com/fakufaku/beamerthemelausanne" } 
+contents_file = "misc/beamer/lausanne/beamerinnerthemelausanne.sty"
+[[resources]]
+description = "lausanne Beamer outer theme."
+version = "Unreleased 2018/03/06"
+docs = "https://github.com/fakufaku/beamerthemelausanne"
+dependencies = []
+latex_packages = []
+license = { name = "MIT", url = "https://github.com/fakufaku/beamerthemelausanne/blob/master/LICENSE", repository_url = "https://github.com/fakufaku/beamerthemelausanne" } 
+contents_file = "misc/beamer/lausanne/beamerouterthemelausanne.sty"
