@@ -42,8 +42,8 @@ fn test_setext_header() {
         "Fail detecting Setext header of level 1"
     );
     assert_eq!(
-        setext2atx("Paragraph\n\n   Subtitle with\nnewline\n-------------   "),
-        String::from("Paragraph\n\n## Subtitle with newline\n"),
+        setext2atx("Paragraph\n\n Test\n  Subtitle with\nnewline\n-------------   "),
+        String::from("Paragraph\n\n## Test   Subtitle with newline\n"),
         "Fail detecting Setext header of level 2 in several lines"
     );
     assert_eq!(
@@ -62,6 +62,25 @@ fn test_setext_header() {
         setext2atx(&things),
         things,
         "Fail detecting the line is not header"
+    );
+
+    let yaml_block = String::from("---\nfield1 = true\nfield2 = things\n---");
+    assert_eq!(
+        setext2atx(&yaml_block),
+        yaml_block,
+        "YAML block detected as h2"
+    );
+    let yaml_block_with_final_empty_line = String::from("---\nfield1=true\n\n---");
+    assert_eq!(
+        setext2atx(&yaml_block_with_final_empty_line),
+        yaml_block_with_final_empty_line,
+        "YAML block detected as h2"
+    );
+    let paragraph_and_hr = String::from("Things\n\n---");
+    assert_eq!(
+        setext2atx(&paragraph_and_hr),
+        paragraph_and_hr,
+        "hr after blank lines detected as h2"
     );
 }
 

@@ -76,14 +76,14 @@ pub(crate) fn setext2atx(md: &str) -> String {
         static ref LINE_BREAK_RE_STR: &'static str = r"( \n | \r | \r\n )";
         static ref ANY_LINE_RE_STR: &'static str = r".*";
         static ref SETEXT_HEADER_RE_STR: String = format!(
-            r"[\ ]{{0,3}} (. {}?)+", *LINE_BREAK_RE_STR
+            r"[\ ]{{0,3}} ( .*[^\s].*{br}? )* .*[^\s].*{br}", br=*LINE_BREAK_RE_STR
         );
         static ref SETEXT_UNDERLINE_RE_STR: &'static str =
             r"[\ ]{0,3} ( (=)+ | (-)+ ) [\ \t]*";
         static ref SETEXT_RE_STR: String = format!(
             r"^
             (?P<prelude> {line} {br})?
-            (?P<header> {header} {br})
+            (?P<header> {header})
             (?P<underline> {underline})
             $",
             line=*ANY_LINE_RE_STR,
