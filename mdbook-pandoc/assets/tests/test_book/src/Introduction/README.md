@@ -2,7 +2,7 @@
 title: Overwritten title
 ---
 
-# Chapter 1
+# Chapter 1 # {myattr=value}
 
 This is an example chapter. It has many subchapters like [Subsection](Subsection.md), [Level 10 section](Level10Section.md   ) and
 [Level 9 section]( <./Level9Section.md>
@@ -16,7 +16,7 @@ More features can be found in [things](#things) chapter. Links to sections in ot
 
 Shortcuts links also work ([suffix]) and links to missing references report a warning: [suffix1], [suffix1][], [my link][suffix1].
 
-## Things
+## Things ##
 
 And here a LaTeX math formula: \\(\int x dx = \frac{x^2}{2} + C\\) and also a block LaTeX math formula:
 \\[     \mu = \frac{1}{N} \sum_{i=0} x_i     \\]

@@ -156,24 +156,40 @@ pub(crate) fn transform_header<'a>(
     if is_atx_header(&line) {
         let new_header_level = new_header_level(&line, hierarchy_level, HeaderType::Atx);
         update_section_number(&mut section_number, new_header_level);
-        let clean_line = String::from(line.replace("#", "").trim());
+        // The header text is only the contents before the attributes and
+        // without the starting and closing `#`
+        let header_text = header_text(&line);
         let transformed_line = if new_header_level > 6 {
             // Markdown only supports 6 levels, so following levels are coded as
             // simply bold text
-            format!("**{}**\n", clean_line)
+            format!("**{}**\n", header_text)
         } else {
+            // The last curly braces block is considered a set of attributes if
+            // it is after the closing `#` or there are no closing `#`
+            let former_header_attrs = if let Some(attrs) = header_attributes(&line) {
+                format!(" {}", attrs)
+            } else {
+                String::new()
+            };
             // The first transformation does not remove the numeration because
             // it is the section title
+            let additional_attrs = if first_transform || !unlist_headers {
+                ""
+            } else {
+                UNNUMBERED_UNLISTED
+            };
+            let header_attrs = format!(
+                "#{}{}{}",
+                header_identifier(&header_text, section_number),
+                additional_attrs,
+                former_header_attrs
+            );
+
             format!(
-                "{} {} {{#{}{}}}",
+                "{} {} {{{}}}",
                 "#".repeat(new_header_level),
-                clean_line,
-                header_identifier(&clean_line, section_number),
-                if first_transform || !unlist_headers {
-                    ""
-                } else {
-                    UNNUMBERED_UNLISTED
-                }
+                header_text,
+                header_attrs
             )
         };
 
@@ -229,4 +245,59 @@ pub(crate) fn header_identifier_sanitize(text: &str) -> String {
         .escape_ascii()
         .to_string()
         .replace(r"\", r"-")
+}
+
+/// Extract the header text from an ATX header.
+pub(crate) fn header_text(line: &str) -> String {
+    lazy_static! {
+        // 1 ore more `#` followed by blanks at the start of the line
+        static ref FIRST_SHARPS_BLOCK_RE: Regex = Regex::new(
+            r"^\s*#+\s+"
+        ).unwrap();
+        // 1 or more `#` preceded by space or tab and with optional ending blanks
+        static ref FINAL_SHARPS_BLOCK_RE: Regex = Regex::new(
+            r"[ \t]#+\s*$"
+        ).unwrap();
+    }
+
+    let header_attrs = header_attributes(line);
+    let mut header = if let Some(attrs) = header_attrs {
+        line.replace(&format!("{{{}}}", attrs), "")
+            .trim()
+            .to_string()
+    } else {
+        line.trim().to_string()
+    };
+
+    // Remove the first `#` block
+    header = FIRST_SHARPS_BLOCK_RE
+        .replace(&header, "")
+        .trim()
+        .to_string();
+
+    // Remove the last `#` block if it is not preceded by `\`
+    header = FINAL_SHARPS_BLOCK_RE
+        .replace(&header, "")
+        .trim()
+        .to_string();
+
+    header
+}
+
+/// Extract the header attributes from an ATX header.
+pub(crate) fn header_attributes(line: &str) -> Option<String> {
+    lazy_static! {
+        // the final `{}` block of the line
+        static ref HEADER_ATTRS_RE: Regex = Regex::new(
+            r"\s+\{(.+)\}\s*$"
+        ).unwrap();
+    }
+
+    let attrs_match = HEADER_ATTRS_RE.captures(line);
+    if let Some(attrs) = attrs_match {
+        // the attributes are in the first capture (inside curly braces)
+        Some(attrs.get(1).unwrap().as_str().trim().to_string())
+    } else {
+        None
+    }
 }

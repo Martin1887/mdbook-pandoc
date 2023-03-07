@@ -5,8 +5,8 @@ use mdbook::book::Chapter;
 #[test]
 fn test_atx_header() {
     assert!(
-        matches!(is_atx_header("# Title"), true),
-        "Fail detecting Atx header"
+        matches!(is_atx_header("# Title {my_attr}"), true),
+        "Fail detecting Atx header with attributes"
     );
     assert!(
         matches!(is_atx_header("## Subtitle ##"), true),
@@ -17,7 +17,7 @@ fn test_atx_header() {
         "Fail detecting no header starting with '#'"
     );
     assert!(
-        matches!(is_atx_header(" ## Subtitle"), true),
+        matches!(is_atx_header(" ## Subtitle ##"), true),
         "Fail detecting header starting with space"
     );
     assert!(
@@ -115,6 +115,42 @@ fn test_transform_header() {
     assert_eq!(
         transform_header("Things", 1, true, true, &mut section_number),
         (String::from("Things"), false)
+    );
+
+    assert_eq!(
+        transform_header(
+            "# Things # {attr1 attr2=val}",
+            1,
+            false,
+            false,
+            &mut section_number
+        ),
+        (
+            format!(
+                "## Things {{#{} attr1 attr2=val}}",
+                header_identifier("Things", &section_number)
+            ),
+            true
+        ),
+        "Attributes not well captured"
+    );
+
+    assert_eq!(
+        transform_header(
+            "# Things  {attr1 attr2=val} #",
+            1,
+            false,
+            false,
+            &mut section_number
+        ),
+        (
+            format!(
+                "## Things  {{attr1 attr2=val}} {{#{}}}",
+                header_identifier("Things  {{attr1 attr2=val}}", &section_number)
+            ),
+            true
+        ),
+        "Header text inside curly braces wrongly handled as attributes"
     );
 }
 
