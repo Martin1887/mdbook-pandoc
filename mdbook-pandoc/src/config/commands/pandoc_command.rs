@@ -30,7 +30,7 @@ impl PandocCommand {
     /// The `pandoc` command name and the input file are not included.
     pub fn args(
         &self,
-        dest_dir: &PathBuf,
+        dest_dir: &Path,
         extension: &str,
         general_cfg: &GeneralConfig,
     ) -> Vec<String> {
@@ -46,7 +46,7 @@ impl PandocCommand {
         args.push(format!("--to={}", format));
         args.push(format!(
             "--output={}.{}",
-            dest_dir.join(&filename.to_string()).to_str().unwrap(),
+            dest_dir.join(filename.to_string()).to_str().unwrap(),
             extension
         ));
 
@@ -65,14 +65,12 @@ impl PandocCommand {
         args.push(from_format);
 
         let number_sections = actual_or_default!(combined_cfg, number_sections);
-        match number_sections {
-            DefaultTrueBool::Value(true) => args.push("--number-sections".to_string()),
-            _ => {}
+        if let DefaultTrueBool::Value(true) = number_sections {
+            args.push("--number-sections".to_string())
         };
         let toc = actual_or_default!(combined_cfg, toc);
-        match toc {
-            DefaultTrueBool::Value(true) => args.push("--toc".to_string()),
-            _ => {}
+        if let DefaultTrueBool::Value(true) = toc {
+            args.push("--toc".to_string())
         };
 
         let combined_cfg = ActualAndDefaultCfg {
@@ -93,7 +91,7 @@ impl PandocCommand {
     /// Return the command to be executed using the provided configuration.
     pub fn command(
         &self,
-        dest_dir: &PathBuf,
+        dest_dir: &Path,
         parsed_md_path: &PathBuf,
         extension: &str,
         general_cfg: &GeneralConfig,
@@ -218,7 +216,7 @@ impl PandocCommand {
             create_dir(&templates_dir)
                 .expect("Error creating the templates directory in the data-dir");
         }
-        fs::write(&templates_dir.join(filename), contents)
+        fs::write(templates_dir.join(filename), contents)
             .expect("Error writing the contents of the template");
     }
 
@@ -267,7 +265,7 @@ impl PandocCommand {
                 if data_dir.is_dir() {
                     Ok(data_dir.to_str().unwrap().to_string())
                 } else if legacy_data_dir.is_dir() {
-                    Ok(data_dir.to_str().unwrap().to_string())
+                    Ok(legacy_data_dir.to_str().unwrap().to_string())
                 } else {
                     Err(Error::msg(
                         "Nor $HOME/.local/share/pandoc nor $HOME/.pandoc exist.",
