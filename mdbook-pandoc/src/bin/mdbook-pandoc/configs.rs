@@ -51,38 +51,35 @@ pub(crate) fn write_in_book_config(
 
     let mut append_file = OpenOptions::new().append(true).open(&actual_dest_path)?;
     let mut general_table_exists = false;
-    match read(&actual_dest_path) {
-        Ok(dest_contents) => {
-            let mut output_pandoc_exists = false;
-            let mut doc = String::from_utf8_lossy(&dest_contents).parse::<Document>()?;
-            if doc.contains_key("output")
-                && doc["output"].is_table_like()
-                && doc["output"]
+    if let Ok(dest_contents) = read(&actual_dest_path) {
+        let mut output_pandoc_exists = false;
+        let mut doc = String::from_utf8_lossy(&dest_contents).parse::<Document>()?;
+        if doc.contains_key("output")
+            && doc["output"].is_table_like()
+            && doc["output"]
+                .as_table_like()
+                .unwrap()
+                .contains_key("pandoc")
+        {
+            output_pandoc_exists = true;
+            if doc["output"]["pandoc"].is_table_like()
+                && doc["output"]["pandoc"]
                     .as_table_like()
                     .unwrap()
-                    .contains_key("pandoc")
+                    .contains_key("general")
             {
-                output_pandoc_exists = true;
-                if doc["output"]["pandoc"].is_table_like()
-                    && doc["output"]["pandoc"]
-                        .as_table_like()
-                        .unwrap()
-                        .contains_key("general")
-                {
-                    general_table_exists = true;
-                }
-            }
-            if clear && output_pandoc_exists {
-                doc["output"]["pandoc"] = toml_edit::Item::None;
-                std::fs::write(&actual_dest_path, doc.to_string().as_bytes())?;
+                general_table_exists = true;
             }
         }
-        _ => {}
+        if clear && output_pandoc_exists {
+            doc["output"]["pandoc"] = toml_edit::Item::None;
+            std::fs::write(&actual_dest_path, doc.to_string().as_bytes())?;
+        }
     }
 
     // Write an empty `[output.pandoc.general]` table only if the contents
     // and the destination file do not already have it
-    let doc = String::from_utf8_lossy(&contents).parse::<Document>()?;
+    let doc = String::from_utf8_lossy(contents).parse::<Document>()?;
     let contents_contains_general = doc.contains_key("output")
         && doc["output"].is_table_like()
         && doc["output"]
@@ -95,11 +92,11 @@ pub(crate) fn write_in_book_config(
             .unwrap()
             .contains_key("general");
     if !contents_contains_general && (!general_table_exists || clear) {
-        append_file.write("\n[output.pandoc.general]".as_bytes())?;
+        append_file.write_all("\n[output.pandoc.general]".as_bytes())?;
     }
-    append_file.write("\n\n".as_bytes())?;
-    append_file.write(contents)?;
-    append_file.write("\n".as_bytes())?;
+    append_file.write_all("\n\n".as_bytes())?;
+    append_file.write_all(contents)?;
+    append_file.write_all("\n".as_bytes())?;
 
     Ok(())
 }
