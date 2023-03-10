@@ -45,33 +45,31 @@ impl Replacer for HeaderLinkReplacer {
         if (self.external_links && path_str.contains('#') && !path_str.starts_with('#'))
             || (!self.external_links && path_str.starts_with('#'))
         {
-            let fragment_pos = path_str.rfind("#").unwrap();
+            let fragment_pos = path_str.rfind('#').unwrap();
             let filtered_text;
             let text_where_search = if self.external_links {
                 let search_path = Path::new(&path_str[0..fragment_pos]);
                 filtered_text =
-                    filter_text_where_search(&self.text, &search_path).unwrap_or(String::new());
+                    filter_text_where_search(&self.text, search_path).unwrap_or(String::new());
                 &filtered_text
             } else {
                 &self.text
             };
             let header_id = if text_where_search.is_empty() {
                 None
+            } else if fragment_pos + 1 == path_str.len() {
+                find_header_id_in_text("", text_where_search, true)
             } else {
-                if fragment_pos + 1 == path_str.len() {
-                    find_header_id_in_text("", text_where_search, true)
-                } else {
-                    // The link without the `#`
-                    find_header_id_in_text(
-                        &path_str[fragment_pos + 1..path_str.len()],
-                        text_where_search,
-                        false,
-                    )
-                }
+                // The link without the `#`
+                find_header_id_in_text(
+                    &path_str[fragment_pos + 1..path_str.len()],
+                    text_where_search,
+                    false,
+                )
             };
 
             match header_id {
-                Some(id) => replacement = replacement.replace(&path_str, &id),
+                Some(id) => replacement = replacement.replace(path_str, &id),
                 // The link is not modified, it is dead and a warning is printed
                 None => {
                     warn!(

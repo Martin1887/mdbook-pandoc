@@ -39,7 +39,7 @@ fn get_subsection_source_path() -> Option<PathBuf> {
 }
 
 /// Return all paths from `src` folder used in tests.
-fn get_book_paths() -> Box<HashSet<PathBuf>> {
+fn get_book_paths() -> HashSet<PathBuf> {
     let mut set = HashSet::new();
     set.insert(
         PathBuf::from("Introduction/README.md")
@@ -52,7 +52,7 @@ fn get_book_paths() -> Box<HashSet<PathBuf>> {
             .unwrap(),
     );
 
-    Box::new(set)
+    set
 }
 
 /// Return a transformed test text.
@@ -235,10 +235,10 @@ Here a [working    link][].
 
 [working link]: https://worki.ng"#;
 
-    assert_eq!(true, label_matches("Matches", &test_text));
-    assert_eq!(false, label_matches("Matches1", &test_text));
-    assert_eq!(false, label_matches("Matches 1", &test_text));
-    assert_eq!(false, label_matches("missing link", &test_text));
-    assert_eq!(true, label_matches("WORKING LINK", &test_text));
-    assert_eq!(true, label_matches("working   link", &test_text));
+    assert!(label_matches("Matches", test_text));
+    assert!(!label_matches("Matches1", test_text));
+    assert!(!label_matches("Matches 1", test_text));
+    assert!(!label_matches("missing link", test_text));
+    assert!(label_matches("WORKING LINK", test_text));
+    assert!(label_matches("working   link", test_text));
 }

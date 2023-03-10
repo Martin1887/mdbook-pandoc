@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-use colored_diff;
 use proc_macro2::TokenStream;
 use quote::quote;
 

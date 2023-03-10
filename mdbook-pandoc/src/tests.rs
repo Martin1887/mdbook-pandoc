@@ -45,11 +45,11 @@ fn test_parse_book() {
     let output_dir_path = root_path.join("book/pandoc");
     remove_dir_all(output_dir_path.clone()).expect("Error cleaning the output directory");
 
-    let result_path = output_dir_path.clone().join("book.md");
-    let pdf_path = output_dir_path.clone().join("book.latex.pdf");
+    let result_path = output_dir_path.join("book.md");
+    let pdf_path = output_dir_path.join("book.latex.pdf");
     let epub_path = output_dir_path.join("book.epub");
 
-    MDBook::load(root_path.clone())
+    MDBook::load(root_path)
         .expect("Error loading the book")
         .execute_build_process(&PandocRenderer)
         .expect("Error building the book");

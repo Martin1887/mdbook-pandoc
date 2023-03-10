@@ -51,8 +51,8 @@ fn transform_md(
     md: &str,
     level: usize,
     source_path: &Option<PathBuf>,
-    book_paths: &Box<HashSet<PathBuf>>,
-    mut section_number: &mut Vec<u32>,
+    book_paths: &HashSet<PathBuf>,
+    section_number: &mut Vec<u32>,
     unlist_headers: bool,
 ) -> String {
     let source_path_str = source_path.clone().unwrap().to_str().unwrap().to_string();
@@ -61,13 +61,8 @@ fn transform_md(
     let lines = md_atx_only.lines().chain("\n".lines());
     let mut first_transform = true;
     for line in lines {
-        let (transformed_line, is_transformed) = transform_header(
-            &line,
-            level,
-            first_transform,
-            unlist_headers,
-            &mut section_number,
-        );
+        let (transformed_line, is_transformed) =
+            transform_header(line, level, first_transform, unlist_headers, section_number);
         formatted.push_str(&format!("{}\n", transformed_line));
 
         if is_transformed {
@@ -91,14 +86,14 @@ fn transform_md(
 fn recursively_concatenate_book(
     items: &[BookItem],
     level: usize,
-    book_paths: &Box<HashSet<PathBuf>>,
+    book_paths: &HashSet<PathBuf>,
     section_number: &mut Vec<u32>,
     unlist_headers: bool,
 ) -> (String, Vec<String>) {
     let mut source_paths = Vec::new();
     let mut parsed_contents = String::new();
     for item in items {
-        parsed_contents.push_str("\n");
+        parsed_contents.push('\n');
         match item {
             BookItem::Chapter(ref c) => {
                 parsed_contents.push_str(&transform_md(
@@ -118,7 +113,7 @@ fn recursively_concatenate_book(
                 );
                 parsed_contents.push_str(sub_contents);
                 source_paths.push(c.source_path.clone().unwrap().to_str().unwrap().to_string());
-                source_paths.extend_from_slice(&sub_paths);
+                source_paths.extend_from_slice(sub_paths);
             }
             // Separators are ignored, they make no sense in documents
             BookItem::Separator => (),
@@ -136,7 +131,7 @@ fn recursively_concatenate_book(
 fn get_summary(src_path: &Path) -> Summary {
     let summary_path = src_path.join("SUMMARY.md");
     let mut summary_text = String::new();
-    File::open(&summary_path)
+    File::open(summary_path)
         .expect("Failed to open SUMMARY.md file")
         .read_to_string(&mut summary_text)
         .expect("Failed to read SUMMARY.md file");
@@ -162,10 +157,7 @@ fn chapters_have_parts(book_items: &[BookItem]) -> bool {
 fn map_chapters_parts_names(chapters: &[SummaryItem]) -> Vec<String> {
     chapters
         .iter()
-        .filter(|i| match i {
-            SummaryItem::Separator => false,
-            _ => true,
-        })
+        .filter(|i| !matches!(i, SummaryItem::Separator))
         .map(|i| match i {
             SummaryItem::Link(l) => l.name.clone(),
             SummaryItem::PartTitle(t) => t.to_string(),
@@ -228,10 +220,7 @@ fn analyze_summary(
 
     let book_paths = book_items
         .iter()
-        .filter(|c| match c {
-            BookItem::Chapter(_) => true,
-            _ => false,
-        })
+        .filter(|c| matches!(c, BookItem::Chapter(_)))
         .map(|c| match c {
             BookItem::Chapter(ref chapter) => {
                 if let Some(path) = &chapter.source_path {
@@ -267,14 +256,14 @@ fn format_part_header(text: &str, section_number: &mut Vec<u32>) -> String {
 
 fn write_chapters_header(
     parsed_content: &mut String,
-    mut section_number: &mut Vec<u32>,
+    section_number: &mut Vec<u32>,
     chapters_label: &str,
     chapters_have_parts: bool,
     empty_prefixes: bool,
     empty_suffixes: bool,
 ) {
     if (!empty_prefixes || !empty_suffixes) && !chapters_have_parts {
-        parsed_content.push_str(&format_part_header(&chapters_label, &mut section_number));
+        parsed_content.push_str(&format_part_header(chapters_label, section_number));
     }
 }
 
@@ -294,11 +283,12 @@ fn remove_chapters_marks_comments(parsed_content: &str, source_paths: &[String])
 }
 
 /// Parse the book contents and return the result of parse all chapters.
+#[allow(clippy::too_many_arguments)]
 fn parse_book_contents(
     prefix_chapters: &[BookItem],
     content_chapters: &[BookItem],
     suffix_chapters: &[BookItem],
-    book_paths: &Box<HashSet<PathBuf>>,
+    book_paths: &HashSet<PathBuf>,
     chapters_have_parts: bool,
     initial_level: usize,
     title_labels: &TitleLabels,
@@ -322,8 +312,8 @@ fn parse_book_contents(
             &mut section_number,
             unlist_headers,
         );
-        parsed_content.push_str(&sub_contents);
-        source_paths.extend_from_slice(&sub_paths);
+        parsed_content.push_str(sub_contents);
+        source_paths.extend_from_slice(sub_paths);
     }
 
     write_chapters_header(
@@ -337,12 +327,12 @@ fn parse_book_contents(
     let (sub_contents, sub_paths) = &recursively_concatenate_book(
         content_chapters,
         initial_level,
-        &book_paths,
+        book_paths,
         &mut section_number,
         unlist_headers,
     );
-    parsed_content.push_str(&sub_contents);
-    source_paths.extend_from_slice(&sub_paths);
+    parsed_content.push_str(sub_contents);
+    source_paths.extend_from_slice(sub_paths);
 
     if !suffix_chapters.is_empty() {
         parsed_content.push_str(&format_part_header(
@@ -352,12 +342,12 @@ fn parse_book_contents(
         let (sub_contents, sub_paths) = &recursively_concatenate_book(
             suffix_chapters,
             initial_level,
-            &book_paths,
+            book_paths,
             &mut section_number,
             unlist_headers,
         );
-        parsed_content.push_str(&sub_contents);
-        source_paths.extend_from_slice(&sub_paths);
+        parsed_content.push_str(sub_contents);
+        source_paths.extend_from_slice(sub_paths);
     }
 
     parsed_content = fix_external_links(&parsed_content);
@@ -377,7 +367,7 @@ pub fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels, unlist_header
 
     // `BookItems` inner reference is problematic and `.sections` return all sections
     // instead of only the first-depth ones, so this is convenient
-    let book_items: Vec<BookItem> = ctx.book.iter().map(|i| i.clone()).collect();
+    let book_items: Vec<BookItem> = ctx.book.iter().cloned().collect();
     let chapters_have_parts = chapters_have_parts(&book_items);
     let summary = get_summary(&src_path);
     let (initial_level, prefix_chapters, content_chapters, suffix_chapters, book_paths) =

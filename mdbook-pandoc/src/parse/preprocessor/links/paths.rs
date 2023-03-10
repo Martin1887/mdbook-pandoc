@@ -11,7 +11,7 @@ use regex::{Captures, Replacer};
 /// use the source dir path in the replacement function.
 struct SourcePathReplacer {
     source_dir_path: PathBuf,
-    book_paths: Box<HashSet<PathBuf>>,
+    book_paths: HashSet<PathBuf>,
 }
 
 impl Replacer for SourcePathReplacer {
@@ -44,7 +44,7 @@ impl Replacer for SourcePathReplacer {
             // if the path is MD file of the book, append a `#` to link
             // in a posterior step to the first header of the file
             if self.book_paths.contains(&path.canonicalize().unwrap()) {
-                path_str.push_str("#");
+                path_str.push('#');
             }
         } else {
             // the path can contain a link at the end, try to remove it and check again
@@ -83,7 +83,7 @@ fn warn_if_not_uri_nor_internal_link(path_str: &str) {
 pub(crate) fn translate_relative_paths(
     formatted: &str,
     source_path: &Option<PathBuf>,
-    book_paths: &Box<HashSet<PathBuf>>,
+    book_paths: &HashSet<PathBuf>,
 ) -> String {
     let source_dir_path = match source_path {
         // the path is a file, so its directory must be chosen

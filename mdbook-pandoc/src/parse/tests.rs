@@ -123,11 +123,7 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
     map.insert(
         "with_parts_and_suffix",
         (
-            vec![
-                dummy_part.clone(),
-                dummy_chapter.clone(),
-                dummy_suffix.clone(),
-            ],
+            vec![dummy_part, dummy_chapter.clone(), dummy_suffix.clone()],
             Summary {
                 title: Some(String::from("Title")),
                 prefix_chapters: Vec::new(),
@@ -153,11 +149,7 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
     map.insert(
         "with_prefix_and_suffix",
         (
-            vec![
-                dummy_prefix.clone(),
-                dummy_chapter.clone(),
-                dummy_suffix.clone(),
-            ],
+            vec![dummy_prefix, dummy_chapter, dummy_suffix],
             Summary {
                 title: Some(String::from("Title")),
                 prefix_chapters: vec![SummaryItem::Link(Link {
@@ -188,15 +180,12 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
 #[test]
 fn test_chapters_have_parts() {
     let data = get_test_data();
-    assert_eq!(chapters_have_parts(&data["without_parts"].0), false);
-    assert_eq!(chapters_have_parts(&data["with_parts"].0), true);
-    assert_eq!(chapters_have_parts(&data["with_prefix"].0), false);
-    assert_eq!(chapters_have_parts(&data["with_suffix"].0), false);
-    assert_eq!(chapters_have_parts(&data["with_parts_and_suffix"].0), true);
-    assert_eq!(
-        chapters_have_parts(&data["with_prefix_and_suffix"].0),
-        false
-    );
+    assert!(!chapters_have_parts(&data["without_parts"].0));
+    assert!(chapters_have_parts(&data["with_parts"].0));
+    assert!(!chapters_have_parts(&data["with_prefix"].0));
+    assert!(!chapters_have_parts(&data["with_suffix"].0));
+    assert!(chapters_have_parts(&data["with_parts_and_suffix"].0));
+    assert!(!chapters_have_parts(&data["with_prefix_and_suffix"].0));
 }
 
 #[test]
@@ -247,7 +236,7 @@ fn test_write_chapters_header() {
     write_chapters_header(
         &mut parsed_content,
         &mut section_number,
-        &chapters_label,
+        chapters_label,
         true,
         true,
         true,
@@ -258,7 +247,7 @@ fn test_write_chapters_header() {
     write_chapters_header(
         &mut parsed_content,
         &mut section_number,
-        &chapters_label,
+        chapters_label,
         false,
         true,
         true,
@@ -269,7 +258,7 @@ fn test_write_chapters_header() {
     write_chapters_header(
         &mut parsed_content,
         &mut section_number,
-        &chapters_label,
+        chapters_label,
         false,
         false,
         true,
@@ -280,7 +269,7 @@ fn test_write_chapters_header() {
     write_chapters_header(
         &mut parsed_content,
         &mut section_number,
-        &chapters_label,
+        chapters_label,
         true,
         true,
         false,

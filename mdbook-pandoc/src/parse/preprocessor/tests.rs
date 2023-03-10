@@ -181,20 +181,20 @@ fn test_chapter_change_section_number() {
         "# Level 1 \n\nThings. \n\n## Level 2 \n\nThings\n\n",
         level,
         &Some(Path::new("src/1.md").to_path_buf()),
-        &Box::new(HashSet::new()),
+        &HashSet::new(),
         &mut section_number,
         true,
     );
     assert_eq!(section_number, vec![1, 1, 1]);
     recursively_concatenate_book(
-        &vec![BookItem::Chapter(Chapter::new(
+        &[BookItem::Chapter(Chapter::new(
             "Subchapter",
             "# Subsection \n\nMore things.\n\n".to_string(),
             "path",
             vec![],
         ))],
         level + 1,
-        &Box::new(HashSet::new()),
+        &HashSet::new(),
         &mut section_number,
         false,
     );

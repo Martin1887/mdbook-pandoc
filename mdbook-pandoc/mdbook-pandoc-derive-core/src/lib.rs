@@ -60,16 +60,16 @@ fn capitalize(word: &str) -> String {
 /// Return extension and snake_case name of a resource from the contents file.
 fn filename_to_snake_case_name(filename: &str) -> (String, String) {
     let mut filename_split: Vec<&str> = filename
-        .split("/")
+        .split('/')
         .last()
         .expect("Error getting the filename of a resource")
-        .split(".")
+        .split('.')
         .collect();
     let extension = filename_split.pop().unwrap();
 
     (
         extension.to_string(),
-        filename_split.join("_").replace("-", "_"),
+        filename_split.join("_").replace('-', "_"),
     )
 }
 
@@ -80,7 +80,7 @@ fn filename_to_snake_case_name(filename: &str) -> (String, String) {
 /// The path is assumed to be separated by `/`.
 fn filename_to_enum_variant(filename: &str, prepend_extension: bool) -> String {
     let (extension, snake_case_name) = filename_to_snake_case_name(filename);
-    let name_split = snake_case_name.split("_");
+    let name_split = snake_case_name.split('_');
     let mut name = String::new();
     for split in name_split {
         name.push_str(&capitalize(split));

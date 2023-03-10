@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[allow(non_camel_case_types)]
+#[allow(clippy::upper_case_acronyms)]
 pub(crate) enum MetadataSchemeKey {
     ISBN_10,
     GTIN_13,

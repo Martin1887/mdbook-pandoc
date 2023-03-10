@@ -58,9 +58,7 @@ fn main() {
                 config_to_load,
                 destination_file,
                 clear,
-            } => match config_to_load {
-                _ => write_in_book_config(&config_to_load.load(), destination_file, clear).unwrap(),
-            },
+            } => write_in_book_config(&config_to_load.load(), destination_file, clear).unwrap(),
             ConfigsSubcommand::LoadFile {
                 config_path,
                 destination_file,

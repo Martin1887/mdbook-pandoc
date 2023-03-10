@@ -72,7 +72,7 @@ impl Renderer for PandocRenderer {
         let unlist_headers: bool = general_cfg.unlist_not_main_headers;
 
         let parsed = process_metadata_block(
-            parse_book(&ctx, &title_labels, unlist_headers),
+            parse_book(ctx, title_labels, unlist_headers),
             &general_cfg.epub_metadata_fields,
         );
         let parsed_path = write_pandoc_md_file(&ctx.destination, &parsed);
@@ -94,9 +94,9 @@ impl Renderer for PandocRenderer {
             log::info!(
                 "pandoc {}",
                 command_args_str
-                    .strip_prefix("\"")
+                    .strip_prefix('"')
                     .unwrap()
-                    .strip_suffix("\"")
+                    .strip_suffix('"')
                     .unwrap(),
             );
             let status = command.status().expect(COMMAND_ERROR_MSG);
@@ -114,7 +114,7 @@ impl Renderer for PandocRenderer {
 /// (`./book/pandoc/md/book.md`)
 fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
     if !dest_path.is_dir() {
-        create_dir_all(&dest_path).expect("Error creating the destination directory");
+        create_dir_all(dest_path).expect("Error creating the destination directory");
     }
     let md_path = dest_path.join("book.md");
 

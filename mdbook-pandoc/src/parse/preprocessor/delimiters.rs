@@ -28,6 +28,6 @@ pub(crate) fn replace_custom_mdbook_code_block_annotations(formatted: &str) -> S
         ).multi_line(true).dot_matches_new_line(false).build().unwrap();
     }
     CUSTOM_CODE_BLOCK_ANNOTATIONS_RE
-        .replace_all(&formatted, "$1")
+        .replace_all(formatted, "$1")
         .to_string()
 }

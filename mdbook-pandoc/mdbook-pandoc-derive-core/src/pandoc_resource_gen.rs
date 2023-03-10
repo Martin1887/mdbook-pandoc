@@ -61,7 +61,7 @@ impl Display for PandocResourceSpec {
             f,
             "{}Name: {}\nDescription: {}\nVersion: {}.\nDocs: {}\n{}\nDependencies:\n{}\nLaTeX packages:\n{}\n{}\n",
             separator,
-            format!("{}_{}", extension, snake_case_filename),
+            format_args!("{}_{}", extension, snake_case_filename),
             self.description,
             self.version,
             self.docs,
@@ -162,7 +162,7 @@ fn impl_pandoc_resource_gen(resources_toml_path: &str, mut ast: ItemEnum) -> Tok
             .into_os_string()
             .into_string()
             .expect("Error converting resource path to String");
-        let filename = resource.contents_file.split("/").last().unwrap();
+        let filename = resource.contents_file.split('/').last().unwrap();
         license_quote.extend(quote! {
             #enum_name::#name => Some(#license),
         });

@@ -1,7 +1,7 @@
 use regex::{Captures, Regex, RegexBuilder};
 
 /// Label appended to headers to add the classes `.unnumbered` and `.unlisted`
-pub(crate) const UNNUMBERED_UNLISTED: &'static str = " .unnumbered .unlisted";
+pub(crate) const UNNUMBERED_UNLISTED: &str = " .unnumbered .unlisted";
 
 /// Type of MD header: Atx (#), Setext1 (====) or Setext2(----).
 #[allow(dead_code)]
@@ -20,7 +20,7 @@ pub(crate) fn is_atx_header(line: &str) -> bool {
             r"^[ ]{0,3}#{1,6}(\s|$).*$?"
         ).unwrap();
     }
-    ATX_RE.is_match(&line)
+    ATX_RE.is_match(line)
 }
 
 /// Custom replacer needed to write one or two `#` in function of the SETEXT
@@ -42,19 +42,14 @@ fn setext_replacer(caps: &Captures) -> String {
     };
 
     // replace nothing if the prelude is a paragraph or 3 dashes (YAML header)
-    let new_header: String = if PARAGRAPH_RE.is_match(&prelude) || prelude.trim() == "---" {
+    let new_header: String = if PARAGRAPH_RE.is_match(prelude) || prelude.trim() == "---" {
         format!("{}{}", &caps["header"], &caps["underline"])
     } else {
         let formatted_header = caps["header"]
             .trim()
             .replace("\r\n", " ")
-            .replace("\r", " ")
-            .replace("\n", " ");
-        match &caps["underline"]
-            .chars()
-            .filter(|c| *c == '=' || *c == '-')
-            .next()
-        {
+            .replace(['\r', '\n'], " ");
+        match &caps["underline"].chars().find(|c| *c == '=' || *c == '-') {
             Some('=') => format!("# {}\n", &formatted_header),
             Some('-') => format!("## {}\n", &formatted_header),
             _ => panic!("Wrong underline in SETEXT replacer"),
@@ -146,19 +141,19 @@ pub(crate) fn new_header_level(
 /// # Returns
 ///
 /// The modified line and if the line has been transformed.
-pub(crate) fn transform_header<'a>(
+pub(crate) fn transform_header(
     line: &str,
     hierarchy_level: usize,
     first_transform: bool,
     unlist_headers: bool,
-    mut section_number: &mut Vec<u32>,
+    section_number: &mut Vec<u32>,
 ) -> (String, bool) {
-    if is_atx_header(&line) {
-        let new_header_level = new_header_level(&line, hierarchy_level, HeaderType::Atx);
-        update_section_number(&mut section_number, new_header_level);
+    if is_atx_header(line) {
+        let new_header_level = new_header_level(line, hierarchy_level, HeaderType::Atx);
+        update_section_number(section_number, new_header_level);
         // The header text is only the contents before the attributes and
         // without the starting and closing `#`
-        let header_text = header_text(&line);
+        let header_text = header_text(line);
         let transformed_line = if new_header_level > 6 {
             // Markdown only supports 6 levels, so following levels are coded as
             // simply bold text
@@ -166,7 +161,7 @@ pub(crate) fn transform_header<'a>(
         } else {
             // The last curly braces block is considered a set of attributes if
             // it is after the closing `#` or there are no closing `#`
-            let former_header_attrs = if let Some(attrs) = header_attributes(&line) {
+            let former_header_attrs = if let Some(attrs) = header_attributes(line) {
                 format!(" {}", attrs)
             } else {
                 String::new()
@@ -244,7 +239,7 @@ pub(crate) fn header_identifier_sanitize(text: &str) -> String {
         .as_bytes()
         .escape_ascii()
         .to_string()
-        .replace(r"\", r"-")
+        .replace('\\', r"-")
 }
 
 /// Extract the header text from an ATX header.
@@ -293,11 +288,7 @@ pub(crate) fn header_attributes(line: &str) -> Option<String> {
         ).unwrap();
     }
 
-    let attrs_match = HEADER_ATTRS_RE.captures(line);
-    if let Some(attrs) = attrs_match {
-        // the attributes are in the first capture (inside curly braces)
-        Some(attrs.get(1).unwrap().as_str().trim().to_string())
-    } else {
-        None
-    }
+    HEADER_ATTRS_RE
+        .captures(line)
+        .map(|attrs| attrs.get(1).unwrap().as_str().trim().to_string())
 }
