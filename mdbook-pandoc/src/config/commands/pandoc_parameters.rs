@@ -138,8 +138,7 @@ pub struct PandocCommandArguments {
     pub reference_links: Option<bool>,
     /// Reference location for footnotes and references.
     pub reference_location: Option<ReferenceLocation>,
-    /// The top-level-division, by default `part` when the book has parts and
-    /// `chapter` otherwise.
+    /// The top-level-division, using Pandoc defaults if it is not modified.
     pub top_level_division: Option<TopLevelDivision>,
     /// Use `listings` package for LaTeX code blocks.
     pub listings: Option<bool>,

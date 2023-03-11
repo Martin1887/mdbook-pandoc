@@ -122,15 +122,13 @@ pub enum ReferenceLocation {
     Section,
 }
 
-/// Values for the top-level-division, adding a `mdbook-pandoc-default` variant.
+/// Values for the top-level-division.
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize, strum_macros::Display)]
 #[serde(rename_all = "kebab-case")]
 #[strum(serialize_all = "kebab-case")]
 pub enum TopLevelDivision {
-    /// `part` if the book contains parts and `chapter` otherwise.
-    #[default]
-    MdbookPandocDefault,
     /// `default` defined by pandoc.
+    #[default]
     Default,
     Section,
     Chapter,
