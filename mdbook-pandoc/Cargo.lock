@@ -925,6 +925,7 @@ name = "mdbook-pandoc"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "chrono",
  "clap 4.1.4",
  "env_logger 0.10.0",
  "lazy_static",

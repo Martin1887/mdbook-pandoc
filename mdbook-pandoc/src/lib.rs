@@ -36,6 +36,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use chrono::Local;
 use config::{epub_metadata::EpubMetadata, MdBookPandocConfig};
 use env_logger::Env;
 use log::warn;
@@ -44,6 +45,22 @@ use parse::parse_book;
 
 const COMMAND_ERROR_MSG: &str = r#"Error launching a Pandoc command, check that \
 Pandoc is installed in your system and available in your path as `pandoc`"#;
+
+/// Initialize the log.
+pub fn init_logger() -> env_logger::Builder {
+    let mut builder = env_logger::Builder::from_env(Env::default().default_filter_or("warn"));
+    builder.format(|formatter, record| {
+        writeln!(
+            formatter,
+            "{} [{}] (mdbook_pandoc): {}",
+            Local::now().format("%Y-%m-%d %H:%M:%S"),
+            formatter.default_styled_level(record.level()),
+            record.args()
+        )
+    });
+
+    builder
+}
 
 pub struct PandocRenderer;
 impl Renderer for PandocRenderer {
@@ -56,8 +73,7 @@ impl Renderer for PandocRenderer {
     /// - parse book
     /// - convert book in the specified formats using pandoc.
     fn render(&self, ctx: &RenderContext) -> mdbook::errors::Result<()> {
-        let log_result =
-            env_logger::Builder::from_env(Env::default().default_filter_or("warn")).try_init();
+        let log_result = init_logger().try_init();
         if log_result.is_err() {
             warn!("Error initializing the log.");
         }

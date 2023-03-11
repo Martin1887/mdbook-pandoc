@@ -5,20 +5,17 @@ use std::{
     sync::Once,
 };
 
-use env_logger::Env;
 use log::warn;
 use mdbook::MDBook;
 
-use crate::{config::MdBookPandocConfig, process_metadata_block, PandocRenderer};
+use crate::{config::MdBookPandocConfig, init_logger, process_metadata_block, PandocRenderer};
 
 static INIT: Once = Once::new();
 
 /// Initialize the log in test mode.
 fn setup() {
     INIT.call_once(|| {
-        let log_result = env_logger::Builder::from_env(Env::default().default_filter_or("warn"))
-            .is_test(true)
-            .try_init();
+        let log_result = init_logger().is_test(true).try_init();
         if log_result.is_err() {
             warn!("Error initializing the log");
         }
