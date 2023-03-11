@@ -31,7 +31,9 @@ pub trait TomlLoad {
 /// Options not set in formats are inherited from the general settings.
 #[derive(Serialize, Deserialize)]
 pub struct MdBookPandocConfig {
+    /// General configuration of mdbook-pandoc.
     pub general: GeneralConfig,
+    /// Commands to be executed and their parameters.
     #[serde(flatten)]
     pub commands: HashMap<String, PandocCommand>,
 }
@@ -39,6 +41,9 @@ pub struct MdBookPandocConfig {
 /// General configuration that can be overwritten in each format.
 #[derive(Serialize, Deserialize)]
 pub struct GeneralConfig {
+    /// Log level, `INFO` by default.
+    #[serde(default = "GeneralConfig::default_log_level")]
+    pub log_level: log::LevelFilter,
     /// The labels used as parts names to separate preamble, chapters and annexes.
     #[serde(flatten)]
     pub labels: TitleLabels,
@@ -62,12 +67,17 @@ pub struct GeneralConfig {
 }
 
 impl GeneralConfig {
-    /// Return if unlist not main headers by default (`true`).
+    /// Return the default log level (`INFO`)
+    pub fn default_log_level() -> log::LevelFilter {
+        log::LevelFilter::Info
+    }
+
+    /// Return if unlist not main headers by default (`true`)
     pub fn default_unlist_not_main_headers() -> bool {
         true
     }
 
-    /// Return the default source format (`markdown`).
+    /// Return the default source format (`markdown)
     pub fn default_from_format() -> String {
         String::from("markdown")
     }

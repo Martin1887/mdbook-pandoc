@@ -15,7 +15,7 @@ static INIT: Once = Once::new();
 /// Initialize the log in test mode.
 fn setup() {
     INIT.call_once(|| {
-        let log_result = init_logger().is_test(true).try_init();
+        let log_result = init_logger(log::LevelFilter::Info).is_test(true).try_init();
         if log_result.is_err() {
             warn!("Error initializing the log");
         }

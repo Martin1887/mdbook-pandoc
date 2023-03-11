@@ -38,7 +38,6 @@ use std::{
 
 use chrono::Local;
 use config::{epub_metadata::EpubMetadata, MdBookPandocConfig};
-use env_logger::Env;
 use log::warn;
 use mdbook::{renderer::RenderContext, Renderer};
 use parse::parse_book;
@@ -47,8 +46,9 @@ const COMMAND_ERROR_MSG: &str = r#"Error launching a Pandoc command, check that 
 Pandoc is installed in your system and available in your path as `pandoc`"#;
 
 /// Initialize the log.
-pub fn init_logger() -> env_logger::Builder {
-    let mut builder = env_logger::Builder::from_env(Env::default().default_filter_or("warn"));
+pub fn init_logger(level: log::LevelFilter) -> env_logger::Builder {
+    let mut builder = env_logger::Builder::new();
+    builder.filter_level(level);
     builder.format(|formatter, record| {
         writeln!(
             formatter,
@@ -73,11 +73,6 @@ impl Renderer for PandocRenderer {
     /// - parse book
     /// - convert book in the specified formats using pandoc.
     fn render(&self, ctx: &RenderContext) -> mdbook::errors::Result<()> {
-        let log_result = init_logger().try_init();
-        if log_result.is_err() {
-            warn!("Error initializing the log.");
-        }
-
         let cfg = ctx
             .config
             .get_deserialized_opt::<MdBookPandocConfig, &str>("output.pandoc")
@@ -86,6 +81,11 @@ impl Renderer for PandocRenderer {
         let general_cfg = cfg.general;
         let title_labels = &general_cfg.labels;
         let unlist_headers: bool = general_cfg.unlist_not_main_headers;
+
+        let log_result = init_logger(general_cfg.log_level).try_init();
+        if log_result.is_err() {
+            warn!("Error initializing the log.");
+        }
 
         let parsed = process_metadata_block(
             parse_book(ctx, title_labels, unlist_headers),
