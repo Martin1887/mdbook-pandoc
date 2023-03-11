@@ -46,7 +46,7 @@ pub struct GeneralConfig {
     /// one in each chapter (`true` by default). Disabling this can be useful in
     /// slideshows and other document types or if the full book is written in
     /// only one MD file.
-    #[serde(default = "GeneralConfig::default_not_main_headers")]
+    #[serde(default = "GeneralConfig::default_unlist_not_main_headers")]
     pub unlist_not_main_headers: bool,
     /// The source format, `markdown` by default. Note that all source formats
     /// may not work because the mdbook-pandoc transformations.
@@ -62,10 +62,12 @@ pub struct GeneralConfig {
 }
 
 impl GeneralConfig {
-    pub fn default_not_main_headers() -> bool {
+    /// Return if unlist not main headers by default (`true`).
+    pub fn default_unlist_not_main_headers() -> bool {
         true
     }
 
+    /// Return the default source format (`markdown`).
     pub fn default_from_format() -> String {
         String::from("markdown")
     }
