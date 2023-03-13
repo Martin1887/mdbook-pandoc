@@ -92,7 +92,7 @@ impl PandocCommand {
     pub fn command(
         &self,
         dest_dir: &Path,
-        parsed_md_path: &PathBuf,
+        parsed_md_path: &Path,
         extension: &str,
         general_cfg: &GeneralConfig,
     ) -> Command {

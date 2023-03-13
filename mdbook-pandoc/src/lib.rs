@@ -30,6 +30,8 @@ mod tests;
 extern crate lazy_static;
 
 use std::{
+    cmp::Ordering,
+    collections::HashMap,
     env::set_current_dir,
     fs::{create_dir_all, File},
     io::Write,
@@ -37,7 +39,9 @@ use std::{
 };
 
 use chrono::Local;
-use config::{epub_metadata::EpubMetadata, MdBookPandocConfig};
+use config::{
+    commands::PandocCommand, epub_metadata::EpubMetadata, GeneralConfig, MdBookPandocConfig,
+};
 use log::warn;
 use mdbook::{renderer::RenderContext, Renderer};
 use parse::parse_book;
@@ -91,43 +95,92 @@ impl Renderer for PandocRenderer {
             parse_book(ctx, title_labels, unlist_headers),
             &general_cfg.epub_metadata_fields,
         );
-        let parsed_path = write_pandoc_md_file(&ctx.destination, &parsed);
+        let parsed_md_path = write_pandoc_md_file(&ctx.destination, &parsed);
 
-        // the path must be the book `src` folder because paths are relative to
-        // that directory
-        set_current_dir(&ctx.source_dir())?;
-        for (extension, pandoc_command) in cfg.commands {
-            pandoc_command.write_template_and_assets_files(&general_cfg);
-            let mut command =
-                pandoc_command.command(&ctx.destination, &parsed_path, &extension, &general_cfg);
-            let command_args_str = format!(
-                "{:#?}",
-                command
-                    .get_args()
-                    .collect::<Vec<&std::ffi::OsStr>>()
-                    .join(std::ffi::OsStr::new(" "))
-            );
-            log::info!(
-                "pandoc {}",
-                command_args_str
-                    .strip_prefix('"')
-                    .unwrap()
-                    .strip_suffix('"')
-                    .unwrap(),
-            );
-            let status = command.status().expect(COMMAND_ERROR_MSG);
-
-            if !status.success() {
-                log::error!("{}", status);
-            }
-        }
+        // Execute the commands
+        pandoc_commands(
+            &ctx.source_dir(),
+            &ctx.destination,
+            &parsed_md_path,
+            &general_cfg,
+            &cfg.commands,
+        )?;
 
         Ok(())
     }
 }
 
+/// Execute the Pandoc commands in the correct order.
+fn pandoc_commands(
+    source_dir: &Path,
+    destination: &Path,
+    parsed_md_path: &Path,
+    general_cfg: &GeneralConfig,
+    commands: &HashMap<String, PandocCommand>,
+) -> mdbook::errors::Result<()> {
+    // the path must be the book `src` folder because paths are relative to
+    // that directory
+    set_current_dir(source_dir)?;
+
+    // sort commands using the `order` field, where a 0 value is like MAX
+    // (irrelevant order, can be put at the end)
+    let mut sorted_commands = commands.iter().collect::<Vec<(&String, &PandocCommand)>>();
+    sorted_commands.sort_unstable_by(|a, b| {
+        match (a.1.generic_args.order, b.1.generic_args.order) {
+            (0, 0) => Ordering::Equal,
+            (0, _) => Ordering::Greater,
+            (_, 0) => Ordering::Less,
+            (x, y) => x.partial_cmp(&y).unwrap(),
+        }
+    });
+
+    for (extension, pandoc_command) in sorted_commands {
+        execute_pandoc_command(
+            destination,
+            parsed_md_path,
+            extension,
+            general_cfg,
+            pandoc_command,
+        );
+    }
+
+    Ok(())
+}
+
+/// Execute the specified Pandoc command.
+fn execute_pandoc_command(
+    destination: &Path,
+    parsed_md_path: &Path,
+    extension: &str,
+    general_cfg: &GeneralConfig,
+    pandoc_command: &PandocCommand,
+) {
+    pandoc_command.write_template_and_assets_files(general_cfg);
+    let mut command = pandoc_command.command(destination, parsed_md_path, extension, general_cfg);
+    let command_args_str = format!(
+        "{:#?}",
+        command
+            .get_args()
+            .collect::<Vec<&std::ffi::OsStr>>()
+            .join(std::ffi::OsStr::new(" "))
+    );
+    log::info!(
+        "pandoc {}",
+        command_args_str
+            .strip_prefix('"')
+            .unwrap()
+            .strip_suffix('"')
+            .unwrap(),
+    );
+    let status = command.status().expect(COMMAND_ERROR_MSG);
+
+    if !status.success() {
+        log::error!("{}", status);
+    }
+}
+
 /// Write the parsed contents into the Pandoc MD file and return that path
-/// (`./book/pandoc/md/book.md`)
+/// (`./book/pandoc/md/book.md`).
 fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
     if !dest_path.is_dir() {
         create_dir_all(dest_path).expect("Error creating the destination directory");

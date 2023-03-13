@@ -19,6 +19,10 @@ pub struct PandocCommandSharedParameters {
     /// inside quotes, e.g. "pandoc.latex.pdf". This manner allows generating
     /// several files with the same final extension.
     pub filename: Option<Filename>,
+    /// Execution order, where 0 (default value) means whatever order. Commands
+    /// with the same order value will be executed in any order.
+    #[serde(default)]
+    pub order: u64,
     /// The added extensions to the source format without the `+` character.
     pub added_extensions: Option<Vec<String>>,
     /// The removed extensions to the source format without the `-` character.
