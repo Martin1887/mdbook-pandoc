@@ -1,5 +1,6 @@
 # This step is optional and adds the evaluation to the generated MD file
 [output.pandoc.md]
+order = 1
 format = "markdown"
 template = "md_homework_evaluation"
 wrap = "preserve"
@@ -33,6 +34,7 @@ variable = [
 ]
 
 [output.pandoc."homework_header.tex"]
+order = 2
 format = "latex"
 template = "latex_homework"
 
@@ -58,9 +60,13 @@ lua-filter = [
 ]
 
 [output.pandoc."final_homework.pdf"]
+order = 3
 format = "pdf"
 pdf-engine = "pdflatex"
 pdf-engine-opt = "-shell-escape"
+# if other rederers (like mdBook native HTML) are used, the path must be
+# modified
+# include-in-header = ["latex_exam_homework_lecture_definitions", {custom="../book/pandoc/book.homework_header.tex"}]
 include-in-header = ["latex_exam_homework_lecture_definitions", {custom="../book/book.homework_header.tex"}]
 added-extensions = ["lists_without_preceding_blankline"]
 

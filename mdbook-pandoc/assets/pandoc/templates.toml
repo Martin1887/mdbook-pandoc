@@ -129,7 +129,7 @@ contents_file = "templates/latex/apa6.latex"
 # exam, homework and lecture with complex builds
 # TODO: HTML lecture is a complex template that does not pay off now
 [[resources]]
-description = "Template for exams, some contents in German."
+description = "Template for exams"
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
 dependencies = []
@@ -137,7 +137,7 @@ latex_packages = ["exam", "tcolorbox"]
 license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/master/LICENSE.md", repository_url = "https://github.com/cagix/pandoc-lecture" }
 contents_file = "templates/latex/exam.latex"
 [[resources]]
-description = "MD intermediate template to evaluate homework, some contents in German."
+description = "MD intermediate template to evaluate homework"
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
 dependencies = []
@@ -145,7 +145,7 @@ latex_packages = []
 license = { name = "MIT", url = "https://github.com/cagix/pandoc-lecture/blob/master/LICENSE.md", repository_url = "https://github.com/cagix/pandoc-lecture" }
 contents_file = "templates/md/homework_evaluation.md"
 [[resources]]
-description = "Template for homework, some contents in German."
+description = "Template for homework"
 version = "Unreleased 2022/08/30"
 docs = "https://github.com/cagix/pandoc-lecture/blob/master/README.md"
 dependencies = []
