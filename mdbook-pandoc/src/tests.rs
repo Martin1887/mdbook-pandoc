@@ -1,5 +1,5 @@
 use std::{
-    fs::{remove_dir_all, File},
+    fs::{create_dir_all, remove_dir_all, File},
     io::Read,
     path::PathBuf,
     sync::Once,
@@ -40,7 +40,11 @@ fn test_parse_book() {
 
     // Clean the output directory.
     let output_dir_path = root_path.join("book/pandoc");
-    remove_dir_all(output_dir_path.clone()).expect("Error cleaning the output directory");
+    if output_dir_path.is_dir() {
+        remove_dir_all(output_dir_path.clone()).expect("Error cleaning the output directory");
+    } else {
+        create_dir_all(output_dir_path.clone()).expect("Error creating the output directory");
+    }
 
     let result_path = output_dir_path.join("book.md");
     let pdf_path = output_dir_path.join("book.latex.pdf");
