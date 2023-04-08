@@ -29,6 +29,7 @@ use std::{
     env::set_current_dir,
     fs::File,
     io::Read,
+    ops::Range,
     path::{Path, PathBuf},
 };
 
@@ -49,28 +50,49 @@ use preprocessor::*;
 /// wrong ones with a warning.
 fn transform_md(
     md: &str,
-    level: usize,
+    hierarchy_level: usize,
     source_path: &Option<PathBuf>,
     book_paths: &HashSet<PathBuf>,
     section_number: &mut Vec<u32>,
     unlist_headers: bool,
 ) -> String {
     let source_path_str = source_path.clone().unwrap().to_str().unwrap().to_string();
-    let mut formatted = format!("\n<!-- {} begins -->\n\n", source_path_str);
-    let md_atx_only = setext2atx(md);
-    let lines = md_atx_only.lines().chain("\n".lines());
-    let mut first_transform = true;
-    for line in lines {
-        let (transformed_line, is_transformed) =
-            transform_header(line, level, first_transform, unlist_headers, section_number);
-        formatted.push_str(&format!("{}\n", transformed_line));
+    let begin_mark = format!("\n<!-- {} begins -->\n\n", source_path_str);
+    let end_mark = &format!("\n<!-- {} ends -->\n", source_path_str);
 
-        if is_transformed {
-            first_transform = false;
-        }
+    // Clone replacing line breaks by `\n`
+    let mut headings_transformed: String = md
+        .lines()
+        .chain("\n".lines())
+        .collect::<Vec<&str>>()
+        .join("\n");
+
+    // It is important to use the transformed String to get the correct ranges
+    let headings: Vec<(Range<usize>, HeadingAttrs)> = get_headings(&headings_transformed);
+    let mut first_transform = true;
+    // ranges are changed after replacing, so after the first replace they must be updated
+    let mut replace_range_offset = 0_i64;
+    for (range, heading_attrs) in headings {
+        let transformed_line = transform_header(
+            &heading_attrs,
+            hierarchy_level,
+            first_transform,
+            unlist_headers,
+            section_number,
+        );
+        let fixed_range = Range {
+            start: (range.start as i64 + replace_range_offset) as usize,
+            end: (range.end as i64 + replace_range_offset) as usize,
+        };
+        headings_transformed.replace_range(fixed_range, &transformed_line);
+
+        replace_range_offset += transformed_line.len() as i64;
+        replace_range_offset -= range.len() as i64;
+
+        first_transform = false;
     }
 
-    formatted.push_str(&format!("\n<!-- {} ends -->\n", source_path_str));
+    let mut formatted = format!("{}{}{}", begin_mark, headings_transformed, end_mark);
 
     formatted = replace_math_delimiters(&formatted);
     formatted = replace_custom_mdbook_code_block_annotations(&formatted);

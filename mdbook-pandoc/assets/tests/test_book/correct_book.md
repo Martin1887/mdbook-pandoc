@@ -23,7 +23,7 @@ ibooks:
 title: Overwritten title
 ---
 
-## Chapter 1 {#h1__1__chapter-1 myattr=value}
+## Chapter 1 {#h1__1__chapter-1 .myclass}
 
 This is an example chapter. It has many subchapters like [Subsection](#h1__1__2__subsection), [Level 10 section](Introduction/Level10Section.md#   ) and
 [Level 9 section]( <Introduction/./Level9Section.md#>
@@ -36,6 +36,13 @@ More features can be found in [things](#h1__1__1__things) chapter. Links to sect
 [Subsection of the subsection](   #h1__1__2__1__subsection-of-the-subsection   ).
 
 Shortcuts links also work ([suffix]) and links to missing references report a warning: [suffix1], [suffix1][], [my link][suffix1].
+
+Headings inside code blocks or YAML blocks are not detected:
+
+```python
+# A comment
+print('Hello world')
+```
 
 ### Things {#h1__1__1__things .unnumbered .unlisted}
 
@@ -97,20 +104,17 @@ ibooks:
 ```
 
 
-
 ### Subsection {#h1__1__2__subsection}
-
 In this subsection we write text.
 
 #### Subsection  of the subsection {#h1__1__2__1__subsection-of-the-subsection .unnumbered .unlisted}
-
 
 This is a example subsection.
 
 ###### 4th level header {#h1__1__2__1__1__1__4th-level-header .unnumbered .unlisted}
 
-**6th level header**
 
+**6th level header**
 
 
 
@@ -120,10 +124,8 @@ This is a example subsection.
 Deeper level!
 
 
-
 ##### Level4 Section {#h1__1__2__2__2__level4-section}
 Level4 Section contents.
-
 
 
 ###### Level5 Section {#h1__1__2__2__2__1__level5-section}
@@ -160,17 +162,14 @@ Level9 Section contents.
 Level10 Section contents.
 
 
-
 # Part 3 {#h2__part-3}
 
 ## Conclusion {#h2__1__conclusion}
 
 This works like a charm!
 
-
 # Annexes {#h3__annexes}
 
 ## Suffix chapter {#h3__1__suffix-chapter}
 
 This is a suffix!
-

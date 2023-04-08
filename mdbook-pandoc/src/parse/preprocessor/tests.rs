@@ -1,175 +1,69 @@
 use super::super::*;
 use super::*;
 use mdbook::book::Chapter;
-
-#[test]
-fn test_atx_header() {
-    assert!(
-        matches!(is_atx_header("# Title {my_attr}"), true),
-        "Fail detecting Atx header with attributes"
-    );
-    assert!(
-        matches!(is_atx_header("## Subtitle ##"), true),
-        "Fail detecting Atx header"
-    );
-    assert!(
-        matches!(is_atx_header("#Title"), false),
-        "Fail detecting no header starting with '#'"
-    );
-    assert!(
-        matches!(is_atx_header(" ## Subtitle ##"), true),
-        "Fail detecting header starting with space"
-    );
-    assert!(
-        matches!(is_atx_header("   #### Section"), true),
-        "Fail detecting header starting with three spaces"
-    );
-    assert!(
-        matches!(is_atx_header("    # False title"), false),
-        "Fail detecting no header starting with four spaces"
-    );
-    assert!(
-        matches!(is_atx_header(" ####### Seventh level"), false),
-        "Fail detecting no title with 7 '#"
-    );
-}
-
-#[test]
-fn test_setext_header() {
-    assert_eq!(
-        setext2atx("Title\n===="),
-        String::from("# Title\n"),
-        "Fail detecting Setext header of level 1"
-    );
-    assert_eq!(
-        setext2atx("Paragraph\n\n Test\n  Subtitle with\nnewline\n-------------   "),
-        String::from("Paragraph\n\n## Test   Subtitle with newline\n"),
-        "Fail detecting Setext header of level 2 in several lines"
-    );
-    assert_eq!(
-        setext2atx(">Quote\n Title with\nnewline\n   ===="),
-        String::from(">Quote\n# Title with newline\n"),
-        "Fail detecting Setext header of level 1 in several lines after quote"
-    );
-    let paragraph_and_list = String::from("Paragraph\n- List item");
-    assert_eq!(
-        setext2atx(&paragraph_and_list),
-        paragraph_and_list,
-        "List item detected as SETEXT header"
-    );
-    let things = String::from("Thing\nOther things");
-    assert_eq!(
-        setext2atx(&things),
-        things,
-        "Fail detecting the line is not header"
-    );
-
-    let yaml_block = String::from("---\nfield1 = true\nfield2 = things\n---");
-    assert_eq!(
-        setext2atx(&yaml_block),
-        yaml_block,
-        "YAML block detected as h2"
-    );
-    let yaml_block_with_final_empty_line = String::from("---\nfield1=true\n\n---");
-    assert_eq!(
-        setext2atx(&yaml_block_with_final_empty_line),
-        yaml_block_with_final_empty_line,
-        "YAML block detected as h2"
-    );
-    let paragraph_and_hr = String::from("Things\n\n---");
-    assert_eq!(
-        setext2atx(&paragraph_and_hr),
-        paragraph_and_hr,
-        "hr after blank lines detected as h2"
-    );
-}
+use pulldown_cmark::HeadingLevel::*;
 
 #[test]
 fn test_new_header_level() {
-    assert_eq!(new_header_level("# Title", 0, HeaderType::Atx), 1);
-    assert_eq!(new_header_level("# Title", 2, HeaderType::Atx), 3);
-    assert_eq!(new_header_level("## Title", 0, HeaderType::Atx), 2);
-    assert_eq!(new_header_level("## Title", 1, HeaderType::Atx), 3);
-    assert_eq!(new_header_level("Title", 0, HeaderType::Setext1), 1);
-    assert_eq!(new_header_level("Title", 1, HeaderType::Setext1), 2);
-    assert_eq!(new_header_level("Title", 0, HeaderType::Setext2), 2);
-    assert_eq!(new_header_level("Title", 4, HeaderType::Setext2), 6);
-    assert_eq!(new_header_level("##### Title", 2, HeaderType::Atx), 7);
+    assert_eq!(new_header_level(H1, 0), 1);
+    assert_eq!(new_header_level(H1, 2), 3);
+    assert_eq!(new_header_level(H2, 0), 2);
+    assert_eq!(new_header_level(H2, 1), 3);
+    assert_eq!(new_header_level(H2, 4), 6);
+    assert_eq!(new_header_level(H5, 2), 7);
 }
 
 #[test]
 fn test_transform_header() {
     let mut section_number = vec![1];
+    let title_heading = HeadingAttrs {
+        id: None,
+        level: H1,
+        text: "Title".to_string(),
+        classes: Vec::new(),
+    };
     assert_eq!(
-        transform_header("# Title", 1, false, true, &mut section_number),
-        (
-            format!(
-                "## Title {{#{}{}}}",
-                header_identifier("Title", &section_number),
-                UNNUMBERED_UNLISTED
-            ),
-            true
+        transform_header(&title_heading, 1, false, true, &mut section_number),
+        format!(
+            "## Title {{#{} {} {}}}\n",
+            header_identifier("Title", &section_number),
+            UNNUMBERED,
+            UNLISTED
         )
     );
     assert_eq!(
-        transform_header("# Title", 1, false, false, &mut section_number),
-        (
-            format!(
-                "## Title {{#{}}}",
-                header_identifier("Title", &section_number),
-            ),
-            true
+        transform_header(&title_heading, 1, false, false, &mut section_number),
+        format!(
+            "## Title {{#{}}}\n",
+            header_identifier("Title", &section_number),
         )
     );
     assert_eq!(
-        transform_header("# Title", 1, true, true, &mut section_number),
-        (
-            format!(
-                "## Title {{#{}}}",
-                header_identifier("Title", &section_number),
-            ),
-            true
+        transform_header(&title_heading, 1, true, true, &mut section_number),
+        format!(
+            "## Title {{#{}}}\n",
+            header_identifier("Title", &section_number),
         )
-    );
-    assert_eq!(
-        transform_header("Things", 1, true, true, &mut section_number),
-        (String::from("Things"), false)
     );
 
     assert_eq!(
         transform_header(
-            "# Things # {attr1 attr2=val}",
+            &HeadingAttrs {
+                id: None,
+                level: H1,
+                text: "Things".to_string(),
+                classes: vec!["class1".to_string(), "class2".to_string()]
+            },
             1,
             false,
             false,
             &mut section_number
         ),
-        (
-            format!(
-                "## Things {{#{} attr1 attr2=val}}",
-                header_identifier("Things", &section_number)
-            ),
-            true
+        format!(
+            "## Things {{#{} .class1 .class2}}\n",
+            header_identifier("Things", &section_number)
         ),
         "Attributes not well captured"
-    );
-
-    assert_eq!(
-        transform_header(
-            "# Things  {attr1 attr2=val} #",
-            1,
-            false,
-            false,
-            &mut section_number
-        ),
-        (
-            format!(
-                "## Things  {{attr1 attr2=val}} {{#{}}}",
-                header_identifier("Things  {{attr1 attr2=val}}", &section_number)
-            ),
-            true
-        ),
-        "Header text inside curly braces wrongly handled as attributes"
     );
 }
 

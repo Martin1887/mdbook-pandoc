@@ -933,6 +933,7 @@ dependencies = [
  "log",
  "mdbook",
  "mdbook-pandoc-derive",
+ "pulldown-cmark",
  "regex",
  "serde",
  "serde_repr",

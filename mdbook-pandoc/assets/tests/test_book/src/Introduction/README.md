@@ -2,7 +2,7 @@
 title: Overwritten title
 ---
 
-# Chapter 1 # {myattr=value}
+# Chapter 1 # {.myclass}
 
 This is an example chapter. It has many subchapters like [Subsection](Subsection.md), [Level 10 section](Level10Section.md   ) and
 [Level 9 section]( <./Level9Section.md>
@@ -15,6 +15,13 @@ More features can be found in [things](#things) chapter. Links to sections in ot
 [Subsection of the subsection](   Subsection.md#subsection-of-the-subsection   ).
 
 Shortcuts links also work ([suffix]) and links to missing references report a warning: [suffix1], [suffix1][], [my link][suffix1].
+
+Headings inside code blocks or YAML blocks are not detected:
+
+```python
+# A comment
+print('Hello world')
+```
 
 ## Things ##
 

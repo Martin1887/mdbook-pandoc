@@ -1,197 +1,85 @@
-use regex::{Captures, Regex, RegexBuilder};
+use pulldown_cmark::HeadingLevel;
+use regex::Regex;
+
+use super::HeadingAttrs;
 
 /// Label appended to headers to add the classes `.unnumbered` and `.unlisted`
-pub(crate) const UNNUMBERED_UNLISTED: &str = " .unnumbered .unlisted";
+pub(crate) const UNNUMBERED: &str = ".unnumbered";
+pub(crate) const UNLISTED: &str = ".unlisted";
 
-/// Type of MD header: Atx (#), Setext1 (====) or Setext2(----).
-#[allow(dead_code)]
-pub(crate) enum HeaderType {
-    Atx,
-    Setext1,
-    Setext2,
-}
-
-/// Return `true` if the line is a ATX header and `false` otherwise.
-pub(crate) fn is_atx_header(line: &str) -> bool {
-    lazy_static! {
-        // 0-3 spaces before the first '#', at most 6 '#' and whitespace or end
-        // of line after the last '#'
-        static ref ATX_RE: Regex = Regex::new(
-            r"^[ ]{0,3}#{1,6}(\s|$).*$?"
-        ).unwrap();
+/// Return the equivalent number (1-6) of the heading level.
+pub(crate) fn heading_level_to_number(level: HeadingLevel) -> u8 {
+    match level {
+        HeadingLevel::H1 => 1,
+        HeadingLevel::H2 => 2,
+        HeadingLevel::H3 => 3,
+        HeadingLevel::H4 => 4,
+        HeadingLevel::H5 => 5,
+        HeadingLevel::H6 => 6,
     }
-    ATX_RE.is_match(line)
-}
-
-/// Custom replacer needed to write one or two `#` in function of the SETEXT
-/// header (`=` or `-`) and to check that the prelude is not a paragraph.
-fn setext_replacer(caps: &Captures) -> String {
-    lazy_static! {
-        // A paragraph cannot have more than 3 initial spaces nor starting by
-        // `>` and must have at least one letter or number.
-        static ref PARAGRAPH_RE: Regex = RegexBuilder::new(r#"^[ ]{0,3}[^>]+.*[\w\d].*$"#)
-            .multi_line(true)
-            .dot_matches_new_line(false)
-            .build()
-            .unwrap();
-    }
-
-    let prelude = match caps.name("prelude") {
-        Some(s) => s.as_str(),
-        None => "",
-    };
-
-    // replace nothing if the prelude is a paragraph or 3 dashes (YAML header)
-    let new_header: String = if PARAGRAPH_RE.is_match(prelude) || prelude.trim() == "---" {
-        format!("{}{}", &caps["header"], &caps["underline"])
-    } else {
-        let formatted_header = caps["header"]
-            .trim()
-            .replace("\r\n", " ")
-            .replace(['\r', '\n'], " ");
-        match &caps["underline"].chars().find(|c| *c == '=' || *c == '-') {
-            Some('=') => format!("# {}\n", &formatted_header),
-            Some('-') => format!("## {}\n", &formatted_header),
-            _ => panic!("Wrong underline in SETEXT replacer"),
-        }
-    };
-
-    format!("{}{}", prelude, new_header)
-}
-
-/// Replace SETEXT headers by the equivalent ATX ones in the whole text.
-pub(crate) fn setext2atx(md: &str) -> String {
-    lazy_static! {
-        // A SETEXT can have several lines and prelude must by anything except a
-        // paragraph. As negative lookaheads are not supported, the paragraph
-        // exception is checked in the replacer.
-        // Prelude is optional because the header can be at the first line.
-        // Line breaks are necessary in the middle of regex and all line endings
-        // may happen here because the MD text is not transformed yet.
-        static ref LINE_BREAK_RE_STR: &'static str = r"( \n | \r | \r\n )";
-        static ref ANY_LINE_RE_STR: &'static str = r".*";
-        static ref SETEXT_HEADER_RE_STR: String = format!(
-            r"[\ ]{{0,3}} ( .*[^\s].*{br}? )* .*[^\s].*{br}", br=*LINE_BREAK_RE_STR
-        );
-        static ref SETEXT_UNDERLINE_RE_STR: &'static str =
-            r"[\ ]{0,3} ( (=)+ | (-)+ ) [\ \t]*";
-        static ref SETEXT_RE_STR: String = format!(
-            r"^
-            (?P<prelude> {line} {br})?
-            (?P<header> {header})
-            (?P<underline> {underline})
-            $",
-            line=*ANY_LINE_RE_STR,
-            br=*LINE_BREAK_RE_STR,
-            header=*SETEXT_HEADER_RE_STR,
-            underline=*SETEXT_UNDERLINE_RE_STR
-        );
-        static ref SETEXT_RE: Regex = RegexBuilder::new(&SETEXT_RE_STR)
-            .multi_line(true)
-            .dot_matches_new_line(false)
-            .ignore_whitespace(true)
-            .build()
-            .unwrap();
-    }
-
-    SETEXT_RE.replace_all(md, setext_replacer).to_string()
 }
 
 /// Return the new level for the header adding the current level
 /// and the hierarchy level.
-pub(crate) fn new_header_level(
-    line: &str,
-    hierarchy_level: usize,
-    header_type: HeaderType,
-) -> usize {
-    let current_level: usize = match header_type {
-        // Atx header has priority over Setext headers, ignoring Setext headers
-        // as a normal line if Atx
-        HeaderType::Atx => {
-            let mut level = 0;
-            for current in line.chars() {
-                if current == '#' {
-                    level += 1;
-                } else {
-                    break;
-                }
-            }
-            level
-        }
-        HeaderType::Setext1 => 1,
-        HeaderType::Setext2 => 2,
-    };
+pub(crate) fn new_header_level(level: HeadingLevel, hierarchy_level: usize) -> usize {
+    let current_level = heading_level_to_number(level);
 
-    current_level + hierarchy_level
+    current_level as usize + hierarchy_level
 }
 
-/// Return the transformed `line` analyzing header patterns.
-/// If the `line` is a header, it is returned changing its level and appending
-/// id and '.unnumbered' and '.unlisted' classes to remove numbers and entries
-/// from TOC. Otherwise the same `String` is returned.
+/// Return the transformed header modifying the actual level using the
+/// hierarchy level of the MD (or bold text if greater than 6), setting
+/// automatic identifier and, only if not the first header and enabled, adding
+/// unlisted and unnumbered classes.
 ///
 /// # Parameters
 ///
-/// - `line`: The line of the header.
+/// - `heading`: The attributes of the heading.
 /// - `hierarchy_level`: The hierarchy level to be added to the current level header.
 /// - `first_transform`: `bool` to not remove from the table of contents the first header.
+/// - `unlist_headers`: If unlisted and unnumbered classes must be added to not first headers.
 /// - `section_number`: All the section numbers. Unnumbered headers are also counted and
 /// the section number is modified here in function of the level of the current header.
 ///
 /// # Returns
 ///
-/// The modified line and if the line has been transformed.
+/// The heading String.
 pub(crate) fn transform_header(
-    line: &str,
+    heading: &HeadingAttrs,
     hierarchy_level: usize,
     first_transform: bool,
     unlist_headers: bool,
     section_number: &mut Vec<u32>,
-) -> (String, bool) {
-    if is_atx_header(line) {
-        let new_header_level = new_header_level(line, hierarchy_level, HeaderType::Atx);
-        update_section_number(section_number, new_header_level);
-        // The header text is only the contents before the attributes and
-        // without the starting and closing `#`
-        let header_text = header_text(line);
-        let transformed_line = if new_header_level > 6 {
-            // Markdown only supports 6 levels, so following levels are coded as
-            // simply bold text
-            format!("**{}**\n", header_text)
-        } else {
-            // The last curly braces block is considered a set of attributes if
-            // it is after the closing `#` or there are no closing `#`
-            let former_header_attrs = if let Some(attrs) = header_attributes(line) {
-                format!(" {}", attrs)
-            } else {
-                String::new()
-            };
-            // The first transformation does not remove the numeration because
-            // it is the section title
-            let additional_attrs = if first_transform || !unlist_headers {
-                ""
-            } else {
-                UNNUMBERED_UNLISTED
-            };
-            let header_attrs = format!(
-                "#{}{}{}",
-                header_identifier(&header_text, section_number),
-                additional_attrs,
-                former_header_attrs
-            );
-
-            format!(
-                "{} {} {{{}}}",
-                "#".repeat(new_header_level),
-                header_text,
-                header_attrs
-            )
+) -> String {
+    let new_heading_level = new_header_level(heading.level, hierarchy_level);
+    // Add a dot prefix to classes
+    let mut new_attributes: Vec<String> =
+        heading.classes.iter().map(|c| format!(".{}", c)).collect();
+    update_section_number(section_number, new_heading_level);
+    // Markdown only supports 6 levels, so following levels are coded as
+    // simply bold text
+    if new_heading_level <= 6 {
+        // The first transformation does not remove the numeration because
+        // it is the section title
+        if !first_transform && unlist_headers {
+            new_attributes.push(UNNUMBERED.to_string());
+            new_attributes.push(UNLISTED.to_string());
         };
-
-        (transformed_line, true)
+        // The identifier must be the first attribute
+        // TODO: use the id if it exists (requires changes in other parts of the code)
+        new_attributes.insert(
+            0,
+            format!("#{}", header_identifier(&heading.text, section_number)),
+        );
+        format!(
+            "{} {} {{{}}}\n",
+            "#".repeat(new_heading_level),
+            heading.text,
+            new_attributes.join(" ")
+        )
     } else {
-        // Unmodified lines
-        (String::from(line), false)
+        // Bold text
+        format!("\n**{}**\n\n", heading.text)
     }
 }
 
@@ -240,55 +128,4 @@ pub(crate) fn header_identifier_sanitize(text: &str) -> String {
         .escape_ascii()
         .to_string()
         .replace('\\', r"-")
-}
-
-/// Extract the header text from an ATX header.
-pub(crate) fn header_text(line: &str) -> String {
-    lazy_static! {
-        // 1 ore more `#` followed by blanks at the start of the line
-        static ref FIRST_SHARPS_BLOCK_RE: Regex = Regex::new(
-            r"^\s*#+\s+"
-        ).unwrap();
-        // 1 or more `#` preceded by space or tab and with optional ending blanks
-        static ref FINAL_SHARPS_BLOCK_RE: Regex = Regex::new(
-            r"[ \t]#+\s*$"
-        ).unwrap();
-    }
-
-    let header_attrs = header_attributes(line);
-    let mut header = if let Some(attrs) = header_attrs {
-        line.replace(&format!("{{{}}}", attrs), "")
-            .trim()
-            .to_string()
-    } else {
-        line.trim().to_string()
-    };
-
-    // Remove the first `#` block
-    header = FIRST_SHARPS_BLOCK_RE
-        .replace(&header, "")
-        .trim()
-        .to_string();
-
-    // Remove the last `#` block if it is not preceded by `\`
-    header = FINAL_SHARPS_BLOCK_RE
-        .replace(&header, "")
-        .trim()
-        .to_string();
-
-    header
-}
-
-/// Extract the header attributes from an ATX header.
-pub(crate) fn header_attributes(line: &str) -> Option<String> {
-    lazy_static! {
-        // the final `{}` block of the line
-        static ref HEADER_ATTRS_RE: Regex = Regex::new(
-            r"\s+\{(.+)\}\s*$"
-        ).unwrap();
-    }
-
-    HEADER_ATTRS_RE
-        .captures(line)
-        .map(|attrs| attrs.get(1).unwrap().as_str().trim().to_string())
 }
