@@ -1,5 +1,5 @@
 use std::{
-    fs::{self, create_dir},
+    fs::{self, create_dir_all},
     path::{Path, PathBuf},
     process::Command,
 };
@@ -11,6 +11,7 @@ use crate::{
 
 use super::*;
 use anyhow::Error;
+use log::warn;
 use serde::{Deserialize, Serialize};
 
 use crate::actual_or_default;
@@ -213,7 +214,7 @@ impl PandocCommand {
     ) {
         let templates_dir = self.get_pandoc_actual_data_dir(general_cfg).join(subfolder);
         if !templates_dir.is_dir() {
-            create_dir(&templates_dir)
+            create_dir_all(&templates_dir)
                 .expect("Error creating the templates directory in the data-dir");
         }
         fs::write(templates_dir.join(filename), contents)
@@ -260,16 +261,25 @@ impl PandocCommand {
         } else {
             let home_var = std::env::var("HOME");
             if let Ok(home) = home_var {
-                let data_dir = Path::new(&home).join(".local/share/pandoc");
+                let xdg_data_home =
+                    std::env::var("XDG_DATA_HOME").unwrap_or(format!("{}/.local/.share", home));
+                let data_dir = Path::new(&xdg_data_home).join("/pandoc");
                 let legacy_data_dir = Path::new(&home).join(".pandoc");
-                if data_dir.is_dir() {
-                    Ok(data_dir.to_str().unwrap().to_string())
-                } else if legacy_data_dir.is_dir() {
+                // data dir has preference over legacy data dir
+                if legacy_data_dir.is_dir() && !data_dir.is_dir() {
                     Ok(legacy_data_dir.to_str().unwrap().to_string())
                 } else {
-                    Err(Error::msg(
-                        "Nor $HOME/.local/share/pandoc nor $HOME/.pandoc exist.",
-                    ))
+                    if !data_dir.is_dir() {
+                        warn!("Data directory does not exist, creating it");
+                        let create_dir_result = create_dir_all(&data_dir);
+                        if create_dir_result.is_err() {
+                            return Err(Error::msg(format!(
+                                "Error creating the data directory:\n{}",
+                                create_dir_result.unwrap_err()
+                            )));
+                        }
+                    }
+                    Ok(data_dir.to_str().unwrap().to_string())
                 }
             } else {
                 Err(Error::msg(
