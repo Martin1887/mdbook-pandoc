@@ -66,10 +66,15 @@ pub(crate) fn transform_header(
             new_attributes.push(UNLISTED.to_string());
         };
         // The identifier must be the first attribute
-        // TODO: use the id if it exists (requires changes in other parts of the code)
         new_attributes.insert(
             0,
-            format!("#{}", header_identifier(&heading.text, section_number)),
+            format!(
+                "#{}",
+                heading
+                    .id
+                    .clone()
+                    .unwrap_or_else(|| header_identifier(&heading.text, section_number),),
+            ),
         );
         format!(
             "{} {} {{{}}}\n",

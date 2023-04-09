@@ -65,6 +65,40 @@ fn test_transform_header() {
         ),
         "Attributes not well captured"
     );
+
+    assert_eq!(
+        transform_header(
+            &HeadingAttrs {
+                id: Some("myCustomId".to_string()),
+                level: H1,
+                text: "Things".to_string(),
+                classes: vec![]
+            },
+            1,
+            false,
+            false,
+            &mut section_number
+        ),
+        "## Things {#myCustomId}\n".to_string(),
+        "Id not well captured"
+    );
+
+    assert_eq!(
+        transform_header(
+            &HeadingAttrs {
+                id: Some("myCustomId".to_string()),
+                level: H1,
+                text: "Things".to_string(),
+                classes: vec!["class1".to_string(), "class2".to_string()]
+            },
+            1,
+            false,
+            false,
+            &mut section_number
+        ),
+        "## Things {#myCustomId .class1 .class2}\n".to_string(),
+        "Id or classes not well captured"
+    );
 }
 
 #[test]

@@ -105,7 +105,8 @@ fn fix_links(text: &str, external: bool) -> String {
     PATH_RE.replace_all(text, replacer).to_string()
 }
 
-/// Find the id of the first matching header including the `#` character.
+/// Find the id of the first matching header including the `#` character in
+/// the returned value.
 /// Since Markdown links only include
 /// the header name, the first possible header match in the text is chosen.
 /// So, if several headers contain the same name in the same file, the first
@@ -135,8 +136,9 @@ pub(crate) fn find_header_id_in_text(
     }
     let mut header_id = None;
     for caps in HEADER_ID_RE.captures_iter(text) {
-        // Remove the section number of the header comparing only the kebab-case
-        if let Some(id) = caps["headerid"].split("__").last() {
+        // Remove the `#` and the section number of the headerid
+        // (if no custom header) comparing only the kebab-case
+        if let Some(id) = caps["headerid"][1..].split("__").last() {
             if first_header || id == header {
                 header_id = Some(caps["headerid"].to_string());
                 break;

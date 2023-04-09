@@ -201,16 +201,17 @@ fn test_find_header_id_in_text() {
     setup();
     let text = get_transformed_readme();
     assert_eq!(
-        "#h1__chapter-1",
-        find_header_id_in_text("chapter-1", &text, false).unwrap()
+        "#main-chapter",
+        find_header_id_in_text("main-chapter", &text, false).unwrap()
     );
     assert_eq!(
         "#h1__1__things",
         find_header_id_in_text("things", &text, false).unwrap()
     );
     assert_eq!(
-        "#h1__chapter-1",
-        find_header_id_in_text("things", &text, true).unwrap()
+        "#main-chapter",
+        find_header_id_in_text("things", &text, true).unwrap(),
+        "Requesting the first header, it its not returned"
     );
 }
 

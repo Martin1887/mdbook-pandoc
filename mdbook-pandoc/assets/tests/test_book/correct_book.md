@@ -23,7 +23,7 @@ ibooks:
 title: Overwritten title
 ---
 
-## Chapter 1 {#h1__1__chapter-1 .myclass}
+## Chapter 1 {#main-chapter .myclass}
 
 This is an example chapter. It has many subchapters like [Subsection](#h1__1__2__subsection), [Level 10 section](Introduction/Level10Section.md#   ) and
 [Level 9 section]( <Introduction/./Level9Section.md#>
@@ -31,6 +31,8 @@ This is an example chapter. It has many subchapters like [Subsection](#h1__1__2_
 The annexes can be found in [Annexes][suffix].
 
 [suffix]: #h3__1__suffix-chapter "Annexes"
+
+Links to headings with custom ids is of course also supported: [Chapter 1](#main-chapter).
 
 More features can be found in [things](#h1__1__1__things) chapter. Links to sections in other files also work:
 [Subsection of the subsection](   #h1__1__2__1__subsection-of-the-subsection   ).

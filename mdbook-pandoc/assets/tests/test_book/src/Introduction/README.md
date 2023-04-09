@@ -2,7 +2,7 @@
 title: Overwritten title
 ---
 
-# Chapter 1 # {.myclass}
+# Chapter 1 # {#main-chapter .myclass}
 
 This is an example chapter. It has many subchapters like [Subsection](Subsection.md), [Level 10 section](Level10Section.md   ) and
 [Level 9 section]( <./Level9Section.md>
@@ -10,6 +10,8 @@ This is an example chapter. It has many subchapters like [Subsection](Subsection
 The annexes can be found in [Annexes][suffix].
 
 [suffix]: ../suffix.md "Annexes"
+
+Links to headings with custom ids is of course also supported: [Chapter 1](#main-chapter).
 
 More features can be found in [things](#things) chapter. Links to sections in other files also work:
 [Subsection of the subsection](   Subsection.md#subsection-of-the-subsection   ).
