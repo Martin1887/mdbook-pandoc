@@ -151,7 +151,7 @@ pub struct PandocCommandArguments {
     /// Slide level for slides, number from 0 to 6 or empty for automatic.
     pub slide_level: Option<SlideLevel>,
     /// Wrap sections in `<section>` tags and attach identifiers to it instead
-    /// of the header.
+    /// of the heading.
     pub section_divs: Option<bool>,
     /// E-mail obfuscation, default value is `none`.
     pub email_obfuscation: Option<EmailObfuscation>,

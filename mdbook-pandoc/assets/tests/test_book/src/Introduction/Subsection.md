@@ -7,6 +7,6 @@ Subsection  of the subsection
 
 This is a example subsection.
 
-#### 4th level header
+#### 4th level heading
 
-###### 6th level header
+###### 6th level heading

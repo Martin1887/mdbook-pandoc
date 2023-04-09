@@ -47,12 +47,12 @@ pub struct GeneralConfig {
     /// The labels used as parts names to separate preamble, chapters and annexes.
     #[serde(flatten)]
     pub labels: TitleLabels,
-    /// Add ` .unnumbered .unlisted` attributes to headers that are not the main
+    /// Add ` .unnumbered .unlisted` attributes to headings that are not the main
     /// one in each chapter (`true` by default). Disabling this can be useful in
     /// slideshows and other document types or if the full book is written in
     /// only one MD file.
-    #[serde(default = "GeneralConfig::default_unlist_not_main_headers")]
-    pub unlist_not_main_headers: bool,
+    #[serde(default = "GeneralConfig::default_unlist_not_main_headings")]
+    pub unlist_not_main_headings: bool,
     /// The source format, `markdown` by default. Note that all source formats
     /// may not work because the mdbook-pandoc transformations.
     #[serde(default = "GeneralConfig::default_from_format")]
@@ -72,8 +72,8 @@ impl GeneralConfig {
         log::LevelFilter::Info
     }
 
-    /// Return if unlist not main headers by default (`true`)
-    pub fn default_unlist_not_main_headers() -> bool {
+    /// Return if unlist not main headings by default (`true`)
+    pub fn default_unlist_not_main_headings() -> bool {
         true
     }
 

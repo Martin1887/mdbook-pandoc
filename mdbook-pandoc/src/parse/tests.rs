@@ -228,12 +228,12 @@ fn test_initial_hierarchy_level() {
 }
 
 #[test]
-fn test_write_chapters_header() {
+fn test_write_chapters_heading() {
     let mut parsed_content = String::new();
     let mut section_number = vec![0];
     let chapters_label = "Chapters";
 
-    write_chapters_header(
+    write_chapters_heading(
         &mut parsed_content,
         &mut section_number,
         chapters_label,
@@ -244,7 +244,7 @@ fn test_write_chapters_header() {
     assert_eq!(parsed_content, String::new());
 
     parsed_content = String::new();
-    write_chapters_header(
+    write_chapters_heading(
         &mut parsed_content,
         &mut section_number,
         chapters_label,
@@ -255,7 +255,7 @@ fn test_write_chapters_header() {
     assert_eq!(parsed_content, String::new());
 
     parsed_content = String::new();
-    write_chapters_header(
+    write_chapters_heading(
         &mut parsed_content,
         &mut section_number,
         chapters_label,
@@ -266,7 +266,7 @@ fn test_write_chapters_header() {
     assert!(parsed_content.contains("Chapters"));
 
     parsed_content = String::new();
-    write_chapters_header(
+    write_chapters_heading(
         &mut parsed_content,
         &mut section_number,
         chapters_label,

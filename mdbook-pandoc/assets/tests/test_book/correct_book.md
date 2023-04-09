@@ -113,16 +113,16 @@ In this subsection we write text.
 
 This is a example subsection.
 
-###### 4th level header {#h1__1__2__1__1__1__4th-level-header .unnumbered .unlisted}
+###### 4th level heading {#h1__1__2__1__1__1__4th-level-heading .unnumbered .unlisted}
 
 
-**6th level header**
+**6th level heading**
 
 
 
 #### Subsubsection {#h1__1__2__2__subsubsection}
 
-##### Another header but with únicoñe {#h1__1__2__2__1__another-header-but-with--xc3-xbanico-xc3-xb1e .unnumbered .unlisted}
+##### Another heading but with únicoñe {#h1__1__2__2__1__another-heading-but-with--xc3-xbanico-xc3-xb1e .unnumbered .unlisted}
 Deeper level!
 
 

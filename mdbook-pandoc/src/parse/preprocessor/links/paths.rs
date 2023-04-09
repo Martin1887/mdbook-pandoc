@@ -42,7 +42,7 @@ impl Replacer for SourcePathReplacer {
         if path.is_file() {
             replace = true;
             // if the path is MD file of the book, append a `#` to link
-            // in a posterior step to the first header of the file
+            // in a posterior step to the first heading of the file
             if self.book_paths.contains(&path.canonicalize().unwrap()) {
                 path_str.push('#');
             }

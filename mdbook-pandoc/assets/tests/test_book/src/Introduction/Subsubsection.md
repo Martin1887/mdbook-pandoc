@@ -1,4 +1,4 @@
 # Subsubsection
 
-## Another header but with únicoñe
+## Another heading but with únicoñe
 Deeper level!

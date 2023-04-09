@@ -12,7 +12,7 @@ fn verify_cli() {
 fn test_write_in_book_config() {
     let initial_contents = r#"
 [output.pandoc.general]
-unlist_not_main_headers = false
+unlist_not_main_headings = false
 "#;
     let destination_file = concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -44,7 +44,7 @@ preamble_label = "My custom preamble"
         String::from_utf8_lossy(&read(&destination_file).unwrap()).trim(),
         r#"
 [output.pandoc.general]
-unlist_not_main_headers = false
+unlist_not_main_headings = false
 
 
 

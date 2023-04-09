@@ -1,20 +1,7 @@
-//! Parse the source Markdown files concatenating them and modifying the levels
-//! of headers:
-//! - If the book have prefixes or suffixes a part is created for each of them.
-//! - If parts are created for prefixes and/or suffixes and the numbered
-//! chapters don't have parts then a part is created for the chapters, the
-//! original parts are used for the numbered chapters otherwise.
-//! - The headers of the files are downgraded adding the level of the file
-//! (e.g. a chapter inside a part has level 1 so its 1-level header becomes 2-level).
-//! - If a header's level becomes bigger than 6 then the text is simply bold.
-//! - Setext headers (underlined ones) are changed to atx (hashes prefix).
-//! - Headers that are not the main one are labeled with `{.unnumbered .unlisted}`
-//! to remove numbers and avoid that they appear in the table of contents.
-//! - Each Markdown file must have a main 1st level header as the first header
-//! of the file and that header is used as its header, the name of the file is
-//! ignored.
+//! Parse the Markdown source files concatenating them and modifying the levels
+//! of headings as specified in the documentation.
 
-/// Preprocessing functions for headers, delimiters and paths.
+/// Preprocessing functions for headings, delimiters and paths.
 mod preprocessor;
 #[cfg(test)]
 mod tests;
@@ -37,9 +24,9 @@ use crate::config::TitleLabels;
 use preprocessor::*;
 
 /// Transform the full Markdown file following these steps:
-/// 1. Replace all the SETEXT headings by the equivalent ATX headers via regex.
+/// 1. Replace all the SETEXT headings by the equivalent ATX headings via regex.
 /// 2. Write the mark indicating the beginning of the MD file.
-/// 3. Iterate over lines to transform the header into the correct level and
+/// 3. Iterate over lines to transform the heading into the correct level and
 /// adding identifiers and classes.
 /// 4. Write the mark indicating the end of the MD file.
 /// 5. Replace the mdBook math delimiters by the Pandoc ones.
@@ -54,7 +41,7 @@ fn transform_md(
     source_path: &Option<PathBuf>,
     book_paths: &HashSet<PathBuf>,
     section_number: &mut Vec<u32>,
-    unlist_headers: bool,
+    unlist_headings: bool,
 ) -> String {
     let source_path_str = source_path.clone().unwrap().to_str().unwrap().to_string();
     let begin_mark = format!("\n<!-- {} begins -->\n\n", source_path_str);
@@ -73,11 +60,11 @@ fn transform_md(
     // ranges are changed after replacing, so after the first replace they must be updated
     let mut replace_range_offset = 0_i64;
     for (range, heading_attrs) in headings {
-        let transformed_line = transform_header(
+        let transformed_line = transform_heading(
             &heading_attrs,
             hierarchy_level,
             first_transform,
-            unlist_headers,
+            unlist_headings,
             section_number,
         );
         let fixed_range = Range {
@@ -104,13 +91,13 @@ fn transform_md(
 }
 
 /// Concatenate recursively a list of `BookItem` (with their children) and
-/// parse headers, delimiters and paths.
+/// parse headings, delimiters and paths.
 fn recursively_concatenate_book(
     items: &[BookItem],
     level: usize,
     book_paths: &HashSet<PathBuf>,
     section_number: &mut Vec<u32>,
-    unlist_headers: bool,
+    unlist_headings: bool,
 ) -> (String, Vec<String>) {
     let mut source_paths = Vec::new();
     let mut parsed_contents = String::new();
@@ -124,14 +111,14 @@ fn recursively_concatenate_book(
                     &c.source_path,
                     book_paths,
                     section_number,
-                    unlist_headers,
+                    unlist_headings,
                 ));
                 let (sub_contents, sub_paths) = &recursively_concatenate_book(
                     &c.sub_items,
                     level + 1,
                     book_paths,
                     section_number,
-                    unlist_headers,
+                    unlist_headings,
                 );
                 parsed_contents.push_str(sub_contents);
                 source_paths.push(c.source_path.clone().unwrap().to_str().unwrap().to_string());
@@ -140,7 +127,7 @@ fn recursively_concatenate_book(
             // Separators are ignored, they make no sense in documents
             BookItem::Separator => (),
             BookItem::PartTitle(title) => {
-                parsed_contents.push_str(&format_part_header(title, section_number));
+                parsed_contents.push_str(&format_part_heading(title, section_number));
             }
         }
     }
@@ -266,17 +253,17 @@ fn analyze_summary(
     )
 }
 
-/// Format a part header.
-fn format_part_header(text: &str, section_number: &mut Vec<u32>) -> String {
+/// Format a part heading.
+fn format_part_heading(text: &str, section_number: &mut Vec<u32>) -> String {
     update_section_number(section_number, 1);
     format!(
         "\n# {} {{#{}}}",
         text,
-        header_identifier(text, section_number)
+        heading_identifier(text, section_number)
     )
 }
 
-fn write_chapters_header(
+fn write_chapters_heading(
     parsed_content: &mut String,
     section_number: &mut Vec<u32>,
     chapters_label: &str,
@@ -285,7 +272,7 @@ fn write_chapters_header(
     empty_suffixes: bool,
 ) {
     if (!empty_prefixes || !empty_suffixes) && !chapters_have_parts {
-        parsed_content.push_str(&format_part_header(chapters_label, section_number));
+        parsed_content.push_str(&format_part_heading(chapters_label, section_number));
     }
 }
 
@@ -314,16 +301,16 @@ fn parse_book_contents(
     chapters_have_parts: bool,
     initial_level: usize,
     title_labels: &TitleLabels,
-    unlist_headers: bool,
+    unlist_headings: bool,
 ) -> String {
     // The whole document section number is initialized to 0 in order the first
-    // header is 1
+    // heading is 1
     let mut section_number = vec![0];
     let mut source_paths = Vec::new();
     let mut parsed_content = String::new();
 
     if !prefix_chapters.is_empty() {
-        parsed_content.push_str(&format_part_header(
+        parsed_content.push_str(&format_part_heading(
             &title_labels.preamble,
             &mut section_number,
         ));
@@ -332,13 +319,13 @@ fn parse_book_contents(
             initial_level,
             book_paths,
             &mut section_number,
-            unlist_headers,
+            unlist_headings,
         );
         parsed_content.push_str(sub_contents);
         source_paths.extend_from_slice(sub_paths);
     }
 
-    write_chapters_header(
+    write_chapters_heading(
         &mut parsed_content,
         &mut section_number,
         &title_labels.chapters,
@@ -351,13 +338,13 @@ fn parse_book_contents(
         initial_level,
         book_paths,
         &mut section_number,
-        unlist_headers,
+        unlist_headings,
     );
     parsed_content.push_str(sub_contents);
     source_paths.extend_from_slice(sub_paths);
 
     if !suffix_chapters.is_empty() {
-        parsed_content.push_str(&format_part_header(
+        parsed_content.push_str(&format_part_heading(
             &title_labels.annexes,
             &mut section_number,
         ));
@@ -366,7 +353,7 @@ fn parse_book_contents(
             initial_level,
             book_paths,
             &mut section_number,
-            unlist_headers,
+            unlist_headings,
         );
         parsed_content.push_str(sub_contents);
         source_paths.extend_from_slice(sub_paths);
@@ -382,7 +369,11 @@ fn parse_book_contents(
 /// Parse a full mdBook getting (and adding) parts and concatenating prefixes,
 /// numbered chapters and suffixes, returning the result as String. writing the contents in the file
 /// `book/pandoc/md/book.md` and returning that path.
-pub fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels, unlist_headers: bool) -> String {
+pub fn parse_book(
+    ctx: &RenderContext,
+    title_labels: &TitleLabels,
+    unlist_headings: bool,
+) -> String {
     // Set the current working directory to the `src` path (everything is relative to the summary)
     let src_path = ctx.root.join("src");
     set_current_dir(&src_path).expect("Error setting the current dir to root path");
@@ -403,6 +394,6 @@ pub fn parse_book(ctx: &RenderContext, title_labels: &TitleLabels, unlist_header
         chapters_have_parts,
         initial_level,
         title_labels,
-        unlist_headers,
+        unlist_headings,
     )
 }

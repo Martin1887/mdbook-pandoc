@@ -12,7 +12,7 @@ pub(crate) struct HeadingAttrs {
     pub(crate) classes: Vec<String>,
 }
 
-/// Return all the parsed headers and their position to replace them in the str.
+/// Return all the parsed headings and their position to replace them in the str.
 pub(crate) fn get_headings(md: &str) -> Vec<(Range<usize>, HeadingAttrs)> {
     lazy_static! {
         static ref METADATA_RE: Regex = RegexBuilder::new(r"(^\n?|\n\n)(---\n)(.+?)\n---($|\n)")
@@ -23,7 +23,7 @@ pub(crate) fn get_headings(md: &str) -> Vec<(Range<usize>, HeadingAttrs)> {
     }
     let mut headings = Vec::new();
     let mut parsing_heading = false;
-    // YAML headers must be modified replacing the end delimiter to
+    // Metadata headers must be modified replacing the end delimiter to
     // `...` instead of `---` because pulldown_cmark does not support metadata
     // blocks and handle them as h2 setext headings
     let metadata_blocks_fixed = METADATA_RE.replace_all(md, format!("$1$2$3\n...$4"));

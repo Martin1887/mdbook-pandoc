@@ -4,17 +4,17 @@ use mdbook::book::Chapter;
 use pulldown_cmark::HeadingLevel::*;
 
 #[test]
-fn test_new_header_level() {
-    assert_eq!(new_header_level(H1, 0), 1);
-    assert_eq!(new_header_level(H1, 2), 3);
-    assert_eq!(new_header_level(H2, 0), 2);
-    assert_eq!(new_header_level(H2, 1), 3);
-    assert_eq!(new_header_level(H2, 4), 6);
-    assert_eq!(new_header_level(H5, 2), 7);
+fn test_new_heading_level() {
+    assert_eq!(new_heading_level(H1, 0), 1);
+    assert_eq!(new_heading_level(H1, 2), 3);
+    assert_eq!(new_heading_level(H2, 0), 2);
+    assert_eq!(new_heading_level(H2, 1), 3);
+    assert_eq!(new_heading_level(H2, 4), 6);
+    assert_eq!(new_heading_level(H5, 2), 7);
 }
 
 #[test]
-fn test_transform_header() {
+fn test_transform_heading() {
     let mut section_number = vec![1];
     let title_heading = HeadingAttrs {
         id: None,
@@ -23,31 +23,31 @@ fn test_transform_header() {
         classes: Vec::new(),
     };
     assert_eq!(
-        transform_header(&title_heading, 1, false, true, &mut section_number),
+        transform_heading(&title_heading, 1, false, true, &mut section_number),
         format!(
             "## Title {{#{} {} {}}}\n",
-            header_identifier("Title", &section_number),
+            heading_identifier("Title", &section_number),
             UNNUMBERED,
             UNLISTED
         )
     );
     assert_eq!(
-        transform_header(&title_heading, 1, false, false, &mut section_number),
+        transform_heading(&title_heading, 1, false, false, &mut section_number),
         format!(
             "## Title {{#{}}}\n",
-            header_identifier("Title", &section_number),
+            heading_identifier("Title", &section_number),
         )
     );
     assert_eq!(
-        transform_header(&title_heading, 1, true, true, &mut section_number),
+        transform_heading(&title_heading, 1, true, true, &mut section_number),
         format!(
             "## Title {{#{}}}\n",
-            header_identifier("Title", &section_number),
+            heading_identifier("Title", &section_number),
         )
     );
 
     assert_eq!(
-        transform_header(
+        transform_heading(
             &HeadingAttrs {
                 id: None,
                 level: H1,
@@ -61,13 +61,13 @@ fn test_transform_header() {
         ),
         format!(
             "## Things {{#{} .class1 .class2}}\n",
-            header_identifier("Things", &section_number)
+            heading_identifier("Things", &section_number)
         ),
         "Attributes not well captured"
     );
 
     assert_eq!(
-        transform_header(
+        transform_heading(
             &HeadingAttrs {
                 id: Some("myCustomId".to_string()),
                 level: H1,
@@ -84,7 +84,7 @@ fn test_transform_header() {
     );
 
     assert_eq!(
-        transform_header(
+        transform_heading(
             &HeadingAttrs {
                 id: Some("myCustomId".to_string()),
                 level: H1,
@@ -180,9 +180,9 @@ fn test_update_section_number() {
 }
 
 #[test]
-fn test_header_identifier_sanitize() {
+fn test_heading_identifier_sanitize() {
     assert_eq!(
-        header_identifier_sanitize("Title with  spaces, 21^numbers, +things+ and_DASHES__yes"),
+        heading_identifier_sanitize("Title with  spaces, 21^numbers, +things+ and_DASHES__yes"),
         "title-with-spaces-21-numbers-things-and-dashes-yes"
     );
 }

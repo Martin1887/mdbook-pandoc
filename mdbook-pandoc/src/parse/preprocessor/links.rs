@@ -1,4 +1,4 @@
-/// Fix references to headers of the same MD or to another MD of the book.
+/// Fix references to headings of the same MD or to another MD of the book.
 mod internal_references;
 /// Fix relative paths.
 mod paths;

@@ -3,7 +3,7 @@
 //! tools for some formats like PDF.
 //!
 //! The following opinionated rules are applied to the book, supposing that
-//! headers that are not the main header are used only to highlight and
+//! headings that are not the main heading are used only to highlight and
 //! separate elements in the page but they must not be in the table of contents
 //! nor be numbered (if an actual title is desired its contents should be in a
 //! different Markdown file):
@@ -11,14 +11,17 @@
 //! - If parts are created for prefixes and/or suffixes and the numbered
 //! chapters don't have parts then a part is created for the chapters, the
 //! original parts are used for the numbered chapters otherwise.
-//! - The headers of the files are downgraded adding the level of the file
-//! (e.g. a chapter inside a part has level 1 so its 1-level header becomes 2-level).
-//! - If a header's level becomes bigger than 6 then the text is simply bold.
-//! - Setext headers (underlined ones) are changed to atx (hashes prefix).
-//! - Headers that are not the main one are labeled with `{.unnumbered .unlisted}`
-//! to remove numbers and avoid that they appear in the table of contents.
-//! - Each Markdown file must have a main 1st level header as the first header
-//! of the file and that header is used as its header, the name of the file is
+//! - The heading of the files are downgraded adding the level of the file
+//! (e.g. a chapter inside a part has level 1 so its 1-level heading becomes 2-level).
+//! - If a heading's level becomes bigger than 6 then the text is simply a
+//! different paragraph with bold text.
+//! - Setext headings (underlined ones) are changed to ATX (hashes prefix).
+//! - Headings that are not the main one are labeled with `{.unnumbered .unlisted}`
+//! to remove numbers and avoid that they appear in the table of contents unless
+//! this behaviour is disabled setting as `false` the `unlist_not_main_headings`
+//! configuration parameter.
+//! - Each Markdown file must have a main 1st level heading as the first heading
+//! of the file and that heading is used as its heading, the name of the file is
 //! ignored.
 
 pub mod config;
@@ -84,7 +87,7 @@ impl Renderer for PandocRenderer {
             .unwrap();
         let general_cfg = cfg.general;
         let title_labels = &general_cfg.labels;
-        let unlist_headers: bool = general_cfg.unlist_not_main_headers;
+        let unlist_headings: bool = general_cfg.unlist_not_main_headings;
 
         let log_result = init_logger(general_cfg.log_level).try_init();
         if log_result.is_err() {
@@ -92,7 +95,7 @@ impl Renderer for PandocRenderer {
         }
 
         let parsed = process_metadata_block(
-            parse_book(ctx, title_labels, unlist_headers),
+            parse_book(ctx, title_labels, unlist_headings),
             &general_cfg.epub_metadata_fields,
         );
         let parsed_md_path = write_pandoc_md_file(&ctx.destination, &parsed);
