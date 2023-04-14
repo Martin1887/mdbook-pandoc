@@ -49,6 +49,7 @@ pub(crate) fn transform_heading(
     hierarchy_level: usize,
     first_transform: bool,
     unlist_headings: bool,
+    headings_auto_identifiers: bool,
     section_number: &mut Vec<u32>,
 ) -> String {
     let new_heading_level = new_heading_level(heading.level, hierarchy_level);
@@ -66,21 +67,28 @@ pub(crate) fn transform_heading(
             new_attributes.push(UNLISTED.to_string());
         };
         // The identifier must be the first attribute
-        new_attributes.insert(
-            0,
-            format!(
-                "#{}",
-                heading
-                    .id
-                    .clone()
-                    .unwrap_or_else(|| heading_identifier(&heading.text, section_number),),
-            ),
-        );
+        if heading.id.is_some() || headings_auto_identifiers {
+            new_attributes.insert(
+                0,
+                format!(
+                    "#{}",
+                    heading
+                        .id
+                        .clone()
+                        .unwrap_or_else(|| heading_identifier(&heading.text, section_number),),
+                ),
+            );
+        }
+        let heading_attributes_str = if new_attributes.is_empty() {
+            "".to_string()
+        } else {
+            format!(" {{{}}}", new_attributes.join(" "))
+        };
         format!(
-            "{} {} {{{}}}\n",
+            "{} {}{}\n",
             "#".repeat(new_heading_level),
             heading.text,
-            new_attributes.join(" ")
+            heading_attributes_str,
         )
     } else {
         // Bold text

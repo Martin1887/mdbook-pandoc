@@ -23,7 +23,7 @@ fn test_transform_heading() {
         classes: Vec::new(),
     };
     assert_eq!(
-        transform_heading(&title_heading, 1, false, true, &mut section_number),
+        transform_heading(&title_heading, 1, false, true, true, &mut section_number),
         format!(
             "## Title {{#{} {} {}}}\n",
             heading_identifier("Title", &section_number),
@@ -32,18 +32,23 @@ fn test_transform_heading() {
         )
     );
     assert_eq!(
-        transform_heading(&title_heading, 1, false, false, &mut section_number),
+        transform_heading(&title_heading, 1, false, false, true, &mut section_number),
         format!(
             "## Title {{#{}}}\n",
             heading_identifier("Title", &section_number),
         )
     );
     assert_eq!(
-        transform_heading(&title_heading, 1, true, true, &mut section_number),
+        transform_heading(&title_heading, 1, true, true, true, &mut section_number),
         format!(
             "## Title {{#{}}}\n",
             heading_identifier("Title", &section_number),
         )
+    );
+    assert_eq!(
+        transform_heading(&title_heading, 1, true, true, false, &mut section_number),
+        "## Title\n",
+        "Heading auto-identifier wrongly set when disabled"
     );
 
     assert_eq!(
@@ -57,6 +62,7 @@ fn test_transform_heading() {
             1,
             false,
             false,
+            true,
             &mut section_number
         ),
         format!(
@@ -77,6 +83,7 @@ fn test_transform_heading() {
             1,
             false,
             false,
+            true,
             &mut section_number
         ),
         "## Things {#myCustomId}\n".to_string(),
@@ -94,6 +101,7 @@ fn test_transform_heading() {
             1,
             false,
             false,
+            true,
             &mut section_number
         ),
         "## Things {#myCustomId .class1 .class2}\n".to_string(),
@@ -112,6 +120,7 @@ fn test_chapter_change_section_number() {
         &HashSet::new(),
         &mut section_number,
         true,
+        true,
     );
     assert_eq!(section_number, vec![1, 1, 1]);
     recursively_concatenate_book(
@@ -125,6 +134,7 @@ fn test_chapter_change_section_number() {
         &HashSet::new(),
         &mut section_number,
         false,
+        true,
     );
     assert_eq!(section_number, vec![1, 1, 2])
 }

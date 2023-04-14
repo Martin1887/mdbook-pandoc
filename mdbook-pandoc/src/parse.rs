@@ -42,6 +42,7 @@ fn transform_md(
     book_paths: &HashSet<PathBuf>,
     section_number: &mut Vec<u32>,
     unlist_headings: bool,
+    headings_auto_identifiers: bool,
 ) -> String {
     let source_path_str = source_path.clone().unwrap().to_str().unwrap().to_string();
     let begin_mark = format!("\n<!-- {} begins -->\n\n", source_path_str);
@@ -65,6 +66,7 @@ fn transform_md(
             hierarchy_level,
             first_transform,
             unlist_headings,
+            headings_auto_identifiers,
             section_number,
         );
         let fixed_range = Range {
@@ -98,6 +100,7 @@ fn recursively_concatenate_book(
     book_paths: &HashSet<PathBuf>,
     section_number: &mut Vec<u32>,
     unlist_headings: bool,
+    headings_auto_identifiers: bool,
 ) -> (String, Vec<String>) {
     let mut source_paths = Vec::new();
     let mut parsed_contents = String::new();
@@ -112,6 +115,7 @@ fn recursively_concatenate_book(
                     book_paths,
                     section_number,
                     unlist_headings,
+                    headings_auto_identifiers,
                 ));
                 let (sub_contents, sub_paths) = &recursively_concatenate_book(
                     &c.sub_items,
@@ -119,6 +123,7 @@ fn recursively_concatenate_book(
                     book_paths,
                     section_number,
                     unlist_headings,
+                    headings_auto_identifiers,
                 );
                 parsed_contents.push_str(sub_contents);
                 source_paths.push(c.source_path.clone().unwrap().to_str().unwrap().to_string());
@@ -302,6 +307,7 @@ fn parse_book_contents(
     initial_level: usize,
     title_labels: &TitleLabels,
     unlist_headings: bool,
+    headings_auto_identifiers: bool,
 ) -> String {
     // The whole document section number is initialized to 0 in order the first
     // heading is 1
@@ -320,6 +326,7 @@ fn parse_book_contents(
             book_paths,
             &mut section_number,
             unlist_headings,
+            headings_auto_identifiers,
         );
         parsed_content.push_str(sub_contents);
         source_paths.extend_from_slice(sub_paths);
@@ -339,6 +346,7 @@ fn parse_book_contents(
         book_paths,
         &mut section_number,
         unlist_headings,
+        headings_auto_identifiers,
     );
     parsed_content.push_str(sub_contents);
     source_paths.extend_from_slice(sub_paths);
@@ -354,6 +362,7 @@ fn parse_book_contents(
             book_paths,
             &mut section_number,
             unlist_headings,
+            headings_auto_identifiers,
         );
         parsed_content.push_str(sub_contents);
         source_paths.extend_from_slice(sub_paths);
@@ -373,6 +382,7 @@ pub fn parse_book(
     ctx: &RenderContext,
     title_labels: &TitleLabels,
     unlist_headings: bool,
+    headings_auto_identifiers: bool,
 ) -> String {
     // Set the current working directory to the `src` path (everything is relative to the summary)
     let src_path = ctx.root.join("src");
@@ -395,5 +405,6 @@ pub fn parse_book(
         initial_level,
         title_labels,
         unlist_headings,
+        headings_auto_identifiers,
     )
 }

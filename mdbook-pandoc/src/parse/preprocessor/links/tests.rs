@@ -66,6 +66,7 @@ fn get_transformed_readme() -> String {
         &get_book_paths(),
         &mut section_number,
         true,
+        true,
     )
 }
 
@@ -80,6 +81,7 @@ fn get_transformed_book() -> String {
         &source_path,
         &get_book_paths(),
         &mut section_number,
+        true,
         true,
     ));
 

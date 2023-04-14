@@ -88,6 +88,7 @@ impl Renderer for PandocRenderer {
         let general_cfg = cfg.general;
         let title_labels = &general_cfg.labels;
         let unlist_headings: bool = general_cfg.unlist_not_main_headings;
+        let headings_auto_identifiers: bool = general_cfg.headings_auto_identifiers;
 
         let log_result = init_logger(general_cfg.log_level).try_init();
         if log_result.is_err() {
@@ -95,7 +96,12 @@ impl Renderer for PandocRenderer {
         }
 
         let parsed = process_metadata_block(
-            parse_book(ctx, title_labels, unlist_headings),
+            parse_book(
+                ctx,
+                title_labels,
+                unlist_headings,
+                headings_auto_identifiers,
+            ),
             &general_cfg.epub_metadata_fields,
         );
         let parsed_md_path = write_pandoc_md_file(&ctx.destination, &parsed);

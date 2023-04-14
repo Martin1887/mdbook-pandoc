@@ -53,6 +53,10 @@ pub struct GeneralConfig {
     /// only one MD file.
     #[serde(default = "GeneralConfig::default_unlist_not_main_headings")]
     pub unlist_not_main_headings: bool,
+    /// Enable mdbook-pandoc custom headings auto-identifiers, useful to easy
+    /// linking other chapters of the book (enabled by default).
+    #[serde(default = "GeneralConfig::default_headings_auto_identifiers")]
+    pub headings_auto_identifiers: bool,
     /// The source format, `markdown` by default. Note that all source formats
     /// may not work because the mdbook-pandoc transformations.
     #[serde(default = "GeneralConfig::default_from_format")]
@@ -67,17 +71,22 @@ pub struct GeneralConfig {
 }
 
 impl GeneralConfig {
-    /// Return the default log level (`INFO`)
+    /// Return the default log level (`INFO`).
     pub fn default_log_level() -> log::LevelFilter {
         log::LevelFilter::Info
     }
 
-    /// Return if unlist not main headings by default (`true`)
+    /// Return if unlist not main headings by default (`true`).
     pub fn default_unlist_not_main_headings() -> bool {
         true
     }
 
-    /// Return the default source format (`markdown)
+    /// Return if custom headings auto-identifiers are set by default (`true`).
+    pub fn default_headings_auto_identifiers() -> bool {
+        true
+    }
+
+    /// Return the default source format (`markdown`).
     pub fn default_from_format() -> String {
         String::from("markdown")
     }
