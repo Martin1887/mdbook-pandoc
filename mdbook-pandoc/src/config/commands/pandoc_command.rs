@@ -261,9 +261,13 @@ impl PandocCommand {
         } else {
             let home_var = std::env::var("HOME");
             if let Ok(home) = home_var {
-                let xdg_data_home =
-                    std::env::var("XDG_DATA_HOME").unwrap_or(format!("{}/.local/.share", home));
-                let data_dir = Path::new(&xdg_data_home).join("/pandoc");
+                let xdg_data_home_var = std::env::var("XDG_DATA_HOME").unwrap_or_default();
+                let xdg_data_home = if !xdg_data_home_var.is_empty() {
+                    PathBuf::from(xdg_data_home_var)
+                } else {
+                    PathBuf::from(&home).join(".local/share")
+                };
+                let data_dir = Path::new(&xdg_data_home).join("pandoc");
                 let legacy_data_dir = Path::new(&home).join(".pandoc");
                 // data dir has preference over legacy data dir
                 if legacy_data_dir.is_dir() && !data_dir.is_dir() {
