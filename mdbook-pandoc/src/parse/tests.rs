@@ -235,6 +235,7 @@ fn test_write_chapters_heading() {
 
     write_chapters_heading(
         &mut parsed_content,
+        true,
         &mut section_number,
         chapters_label,
         true,
@@ -246,6 +247,7 @@ fn test_write_chapters_heading() {
     parsed_content = String::new();
     write_chapters_heading(
         &mut parsed_content,
+        true,
         &mut section_number,
         chapters_label,
         false,
@@ -257,6 +259,7 @@ fn test_write_chapters_heading() {
     parsed_content = String::new();
     write_chapters_heading(
         &mut parsed_content,
+        true,
         &mut section_number,
         chapters_label,
         false,
@@ -268,6 +271,7 @@ fn test_write_chapters_heading() {
     parsed_content = String::new();
     write_chapters_heading(
         &mut parsed_content,
+        true,
         &mut section_number,
         chapters_label,
         true,
