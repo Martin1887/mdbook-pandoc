@@ -132,7 +132,11 @@ fn recursively_concatenate_book(
             // Separators are ignored, they make no sense in documents
             BookItem::Separator => (),
             BookItem::PartTitle(title) => {
-                parsed_contents.push_str(&format_part_heading(title, section_number));
+                parsed_contents.push_str(&format_part_heading(
+                    title,
+                    headings_auto_identifiers,
+                    section_number,
+                ));
             }
         }
     }
@@ -259,17 +263,23 @@ fn analyze_summary(
 }
 
 /// Format a part heading.
-fn format_part_heading(text: &str, section_number: &mut Vec<u32>) -> String {
+fn format_part_heading(
+    text: &str,
+    headings_auto_identifiers: bool,
+    section_number: &mut Vec<u32>,
+) -> String {
     update_section_number(section_number, 1);
-    format!(
-        "\n# {} {{#{}}}",
-        text,
-        heading_identifier(text, section_number)
-    )
+    let attributes = if headings_auto_identifiers {
+        format!(" {{#{}}}", heading_identifier(text, section_number))
+    } else {
+        "".to_string()
+    };
+    format!("\n# {}{}", text, attributes)
 }
 
 fn write_chapters_heading(
     parsed_content: &mut String,
+    headings_auto_identifiers: bool,
     section_number: &mut Vec<u32>,
     chapters_label: &str,
     chapters_have_parts: bool,
@@ -277,7 +287,11 @@ fn write_chapters_heading(
     empty_suffixes: bool,
 ) {
     if (!empty_prefixes || !empty_suffixes) && !chapters_have_parts {
-        parsed_content.push_str(&format_part_heading(chapters_label, section_number));
+        parsed_content.push_str(&format_part_heading(
+            chapters_label,
+            headings_auto_identifiers,
+            section_number,
+        ));
     }
 }
 
@@ -318,6 +332,7 @@ fn parse_book_contents(
     if !prefix_chapters.is_empty() {
         parsed_content.push_str(&format_part_heading(
             &title_labels.preamble,
+            headings_auto_identifiers,
             &mut section_number,
         ));
         let (sub_contents, sub_paths) = &recursively_concatenate_book(
@@ -334,6 +349,7 @@ fn parse_book_contents(
 
     write_chapters_heading(
         &mut parsed_content,
+        headings_auto_identifiers,
         &mut section_number,
         &title_labels.chapters,
         chapters_have_parts,
@@ -354,6 +370,7 @@ fn parse_book_contents(
     if !suffix_chapters.is_empty() {
         parsed_content.push_str(&format_part_heading(
             &title_labels.annexes,
+            headings_auto_identifiers,
             &mut section_number,
         ));
         let (sub_contents, sub_paths) = &recursively_concatenate_book(
