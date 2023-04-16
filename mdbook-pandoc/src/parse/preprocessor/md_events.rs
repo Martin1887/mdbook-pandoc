@@ -36,8 +36,13 @@ pub(crate) fn get_headings(md: &str) -> Vec<(Range<usize>, HeadingAttrs)> {
             End(tag) => end_tag(tag, range, &mut headings, &mut parsing_heading),
             Text(text) => {
                 if parsing_heading {
-                    let mut last = headings.last_mut().unwrap();
-                    last.1.text = text.to_string();
+                    let last = headings.last_mut().unwrap();
+                    if !last.1.text.is_empty() {
+                        // each line of the heading is passed in a different
+                        // event, so line breaks are replaced by spaces
+                        last.1.text.push(' ');
+                    }
+                    last.1.text.push_str(text.as_ref());
                 }
             }
             _ => {}
