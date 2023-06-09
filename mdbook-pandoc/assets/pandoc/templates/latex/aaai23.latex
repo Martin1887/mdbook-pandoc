@@ -1,0 +1,82 @@
+\documentclass[letterpaper]{article}
+$if(anonymous)$
+\usepackage[submission]{aaai23}
+$else$
+\usepackage{aaai23}
+$endif$
+
+\usepackage{times} % DO NOT CHANGE THIS
+\usepackage{helvet} % DO NOT CHANGE THIS
+\usepackage{courier} % DO NOT CHANGE THIS
+\usepackage[hyphens]{url} % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm} % DO NOT CHANGE THIS
+\usepackage{graphicx}  % DO NOT CHANGE THIS
+\usepackage{natbib}  % DO NOT CHANGE THIS
+\usepackage{caption}  % DO NOT CHANGE THIS
+\frenchspacing % DO NOT CHANGE THIS
+\setlength{\pdfpagewidth}{8.5in} % DO NOT CHANGE THIS
+\setlength{\pdfpageheight}{11in} % DO NOT CHANGE THIS
+
+$if(algorithm)$
+\usepackage{algorithm}
+\usepackage{algorithmic}
+$endif$
+
+$if(listings)$
+\usepackage{newfloat}
+\usepackage{listings}
+\DeclareCaptionStyle{ruled}{labelfont=normalfont,labelsep=colon,strut=off} % DO NOT CHANGE THIS
+\lstset{%
+	basicstyle={\footnotesize\ttfamily},% footnotesize acceptable for monospace
+	numbers=left,numberstyle=\footnotesize,xleftmargin=2em,% show line numbers, remove this entire line if you don't want the numbers.
+	aboveskip=0pt,belowskip=0pt,%
+	showstringspaces=false,tabsize=2,breaklines=true}
+\floatstyle{ruled}
+\newfloat{listing}{tb}{lst}{}
+\floatname{listing}{Listing}
+$endif$
+
+
+%
+% Keep the \pdfinfo as shown here. There's no need
+% for you to add the /Title and /Author tags.
+\pdfinfo{
+/TemplateVersion (2023.1)
+}
+
+
+\setcounter{secnumdepth}{$sectionscounter$} %May be changed to 1 or 2 if section numbers are desired.
+
+\title{$title$}
+
+$if(author)$
+\author{
+$for(author)$
+    $author$
+$endfor$
+}
+$endif$
+
+$if(affiliations)$
+\affiliations{
+$for(affiliations)$
+    $affiliations$
+$endfor$
+}
+$endif$
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+$abstract$
+\end{abstract}
+
+$body$
+
+\bibliography{$bibliography$}
+
+\end{document}

@@ -1,0 +1,42 @@
+[output.pandoc.general]
+# headings cannot have identifiers to avoid automatic hyperref links
+headings_auto_identifiers = false
+
+
+[output.pandoc."aaai23.pdf"]
+format = "pdf"
+latex-engine = "pdflatex"
+template = "latex_aaai23"
+no-highlight = true
+number-sections = false
+removed-extensions = ["auto_identifiers"]
+toc = false
+natbib = true
+citeproc = true
+bibliography = []
+
+# This metadata is better in a YAML metadata block or in a YAML file.
+# See the AAAI submission instructions for authors of the authors kit for
+# the options for these fields.
+metadata = [
+    "title=<title>",
+    "author=<author>",
+    "affiliations=<affilitiations>",
+    "abstract=<abstract>"
+]
+
+variable = [
+    # remove this variable entirely for camera-ready submissions, setting to
+    # false is not enough
+    "anonymous=true",
+    "algorithm=true",
+    "listings=false",
+    # 0 for no sections numbers, 1 for sections and 2 for sections and subsections
+    "sectionscounter=2"
+]
+
+assets = [
+    "bst_aaai23",
+    "sty_aaai23"
+]
+

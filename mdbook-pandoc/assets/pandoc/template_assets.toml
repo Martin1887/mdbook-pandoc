@@ -232,6 +232,27 @@ contents_file = "misc/simauth.cls"
 
 
 #############
+# aaai23
+#############
+[[resources]]
+description = "aaai23 LaTeX style."
+version = "Unreleased 2023/06/09"
+docs = ""
+dependencies = []
+latex_packages = []
+license = { name = "UNLICENSE", url = "", repository_url = "https://www.aaai.org/Publications/Templates/AuthorKit23.zip" }
+contents_file = "misc/aaai23.sty"
+[[resources]]
+description = "aaai23 bibliography style."
+version = "Unreleased 2023/06/09"
+docs = ""
+dependencies = []
+latex_packages = []
+license = { name = "UNLICENSE", url = "", repository_url = "https://www.aaai.org/Publications/Templates/AuthorKit23.zip" }
+contents_file = "misc/aaai23.bst"
+
+
+#############
 # Beamer themes
 #############
 

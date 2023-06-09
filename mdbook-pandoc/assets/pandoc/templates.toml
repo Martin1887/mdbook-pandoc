@@ -256,6 +256,16 @@ license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/s
 contents_file = "templates/roff/mla8.roff"
 
 
+# AAAI
+[[resources]]
+description = "AAAI format, 2023 version."
+version = "Unreleased 2023/06/09"
+docs = "(None)" 
+dependencies = []
+latex_packages = []
+license = { name = "UNLICENSE", url = "", repository_url = "https://www.aaai.org/Publications/Templates/AuthorKit23.zip" }
+contents_file = "templates/latex/aaai23.latex"
+
 ################
 # EPUB
 ################

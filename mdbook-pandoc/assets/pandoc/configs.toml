@@ -83,6 +83,10 @@ description = "MLA-formatted PDF, ROFF, DOCX and ODT."
 contents_file = "configs/mla8.toml"
 
 [[configs]]
+description = "AAAI23."
+contents_file = "configs/aaai23.toml"
+
+[[configs]]
 description = "Simple book template."
 contents_file = "configs/simple_book.toml"
 
