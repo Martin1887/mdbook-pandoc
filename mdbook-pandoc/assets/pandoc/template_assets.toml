@@ -232,24 +232,24 @@ contents_file = "misc/simauth.cls"
 
 
 #############
-# aaai23
+# aaai24
 #############
 [[resources]]
-description = "aaai23 LaTeX style."
-version = "Unreleased 2023/06/09"
+description = "aaai24 LaTeX style."
+version = "Unreleased 2023/07/13"
 docs = ""
 dependencies = []
 latex_packages = []
-license = { name = "UNLICENSE", url = "", repository_url = "https://www.aaai.org/Publications/Templates/AuthorKit23.zip" }
-contents_file = "misc/aaai23.sty"
+license = { name = "UNLICENSE", url = "", repository_url = "https://aaai.org/wp-content/uploads/2023/06/AuthorKit24.zip" }
+contents_file = "misc/aaai24.sty"
 [[resources]]
-description = "aaai23 bibliography style."
-version = "Unreleased 2023/06/09"
+description = "aaai24 bibliography style."
+version = "Unreleased 2023/07/13"
 docs = ""
 dependencies = []
 latex_packages = []
-license = { name = "UNLICENSE", url = "", repository_url = "https://www.aaai.org/Publications/Templates/AuthorKit23.zip" }
-contents_file = "misc/aaai23.bst"
+license = { name = "UNLICENSE", url = "", repository_url = "https://aaai.org/wp-content/uploads/2023/06/AuthorKit24.zip" }
+contents_file = "misc/aaai24.bst"
 
 
 #############

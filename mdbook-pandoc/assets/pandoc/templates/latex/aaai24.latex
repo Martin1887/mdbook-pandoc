@@ -1,8 +1,8 @@
 \documentclass[letterpaper]{article}
 $if(anonymous)$
-\usepackage[submission]{aaai23}
+\usepackage[submission]{aaai24}
 $else$
-\usepackage{aaai23}
+\usepackage{aaai24}
 $endif$
 
 \usepackage{times} % DO NOT CHANGE THIS
@@ -43,7 +43,7 @@ $endif$
 % Keep the \pdfinfo as shown here. There's no need
 % for you to add the /Title and /Author tags.
 \pdfinfo{
-/TemplateVersion (2023.1)
+/TemplateVersion (2024.1)
 }
 
 
@@ -72,7 +72,7 @@ $endif$
 \maketitle
 
 \begin{abstract}
-$abstract$
+	$abstract$
 \end{abstract}
 
 $body$

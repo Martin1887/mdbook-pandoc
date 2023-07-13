@@ -3,10 +3,10 @@
 headings_auto_identifiers = false
 
 
-[output.pandoc."aaai23.pdf"]
+[output.pandoc."aaai24.pdf"]
 format = "pdf"
 latex-engine = "pdflatex"
-template = "latex_aaai23"
+template = "latex_aaai24"
 no-highlight = true
 number-sections = false
 removed-extensions = ["auto_identifiers"]
@@ -20,6 +20,8 @@ bibliography = []
 # the options for these fields.
 metadata = [
     "title=<title>",
+    # Note that the comma should be placed after the superscript, e.g.:
+    # George Ferguson\textsuperscript{\rm 4},
     "author=<author>",
     "affiliations=<affilitiations>",
     "abstract=<abstract>"
@@ -32,11 +34,11 @@ variable = [
     "algorithm=true",
     "listings=false",
     # 0 for no sections numbers, 1 for sections and 2 for sections and subsections
-    "sectionscounter=2"
+    "sectionscounter=0"
 ]
 
 assets = [
-    "bst_aaai23",
-    "sty_aaai23"
+    "bst_aaai24",
+    "sty_aaai24"
 ]
 
