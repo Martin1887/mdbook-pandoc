@@ -79,7 +79,7 @@ fn end_tag(
     if let Tag::Heading(_level, _id, _classes) = tag {
         // heading attributes are parsed at start, here only the end of the
         // range is changed
-        let mut last = headings.last_mut().unwrap();
+        let last = headings.last_mut().unwrap();
 
         last.0 = Range {
             start: last.0.start,
