@@ -34,7 +34,8 @@ fn test_format_extensions() {
     assert_eq!(
         added_command.args(&PathBuf::new(), "pdf", &added.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
@@ -55,7 +56,8 @@ fn test_format_extensions() {
     assert_eq!(
         added_and_removed_command.args(&PathBuf::new(), "pdf", &added.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
@@ -97,7 +99,8 @@ fn test_custom_args() {
     assert_eq!(
         command.args(&PathBuf::new(), "epub", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=epub4",
             "--output=epub.epub",
@@ -124,7 +127,8 @@ fn test_repeated_args() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -152,7 +156,8 @@ fn test_template() {
     assert_eq!(
         command.args(&PathBuf::new(), "pdf", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
@@ -178,7 +183,8 @@ fn test_dpi() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -204,7 +210,8 @@ fn test_highlight_style() {
     assert_eq!(
         command.args(&PathBuf::new(), "pdf", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
@@ -226,7 +233,8 @@ fn test_highlight_style() {
     assert_eq!(
         command.args(&PathBuf::new(), "pdf", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
@@ -261,7 +269,8 @@ fn test_toc_depth() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -287,7 +296,8 @@ fn test_reference_location() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -313,7 +323,8 @@ fn test_top_level_division() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -339,7 +350,8 @@ fn test_slide_level() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -365,7 +377,8 @@ fn test_email_obfuscation() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -391,7 +404,8 @@ fn test_epub_chapter_level() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -417,7 +431,8 @@ fn test_epub_subdirectory() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -443,7 +458,8 @@ fn test_ipynb_output() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -469,7 +485,8 @@ fn test_pdf_engine() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
@@ -495,7 +512,8 @@ fn test_tex_url() {
     assert_eq!(
         command.args(&PathBuf::new(), "docx", &parsed.general),
         vec![
-            "--self-contained",
+            "--embed-resources",
+            "--standalone",
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",

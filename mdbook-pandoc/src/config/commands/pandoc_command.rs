@@ -42,7 +42,8 @@ impl PandocCommand {
         let mut args = Vec::new();
         let format = self.format.to_string();
         let filename = actual_or_default!(combined_cfg, filename);
-        args.push("--self-contained".to_string());
+        args.push("--embed-resources".to_string());
+        args.push("--standalone".to_string());
         args.push("--eol=lf".to_string());
         args.push(format!("--to={}", format));
         args.push(format!(
