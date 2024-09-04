@@ -17,3 +17,8 @@ mdbook-pandoc/assets/tests/**/book
 
 # plantuml cache
 **/.mdbook-plantuml-cache/**
+
+# devenv files
+.direnv
+.devenv*
+devenv.local.nix
