@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Pozo"
+  given-names: "Martín"
+  orcid: "https://orcid.org/0009-0003-7998-3715"
+title: "mdbook-pandoc"
+version: 0.1.0
+url: "https://github.com/Martin1887/mdbook-pandoc"
