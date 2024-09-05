@@ -4,7 +4,7 @@ use std::{
     io::Write,
 };
 use strum::IntoEnumIterator;
-use toml_edit::Document;
+use toml_edit::DocumentMut;
 
 use clap::Subcommand;
 use mdbook_pandoc::config::{pandoc_config::PandocConfig, TomlLoad};
@@ -56,7 +56,7 @@ pub(crate) fn write_in_book_config(
     let mut general_table_exists = false;
     if let Ok(dest_contents) = read(&actual_dest_path) {
         let mut output_pandoc_exists = false;
-        let mut doc = String::from_utf8_lossy(&dest_contents).parse::<Document>()?;
+        let mut doc = String::from_utf8_lossy(&dest_contents).parse::<DocumentMut>()?;
         if doc.contains_key("output")
             && doc["output"].is_table_like()
             && doc["output"]
@@ -82,7 +82,7 @@ pub(crate) fn write_in_book_config(
 
     // Write an empty `[output.pandoc.general]` table only if the contents
     // and the destination file do not already have it
-    let doc = String::from_utf8_lossy(contents).parse::<Document>()?;
+    let doc = String::from_utf8_lossy(contents).parse::<DocumentMut>()?;
     let contents_contains_general = doc.contains_key("output")
         && doc["output"].is_table_like()
         && doc["output"]

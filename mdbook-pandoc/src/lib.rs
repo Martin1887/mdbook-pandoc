@@ -9,20 +9,20 @@
 //! different Markdown file):
 //! - If the book have prefixes or suffixes a part is created for each of them.
 //! - If parts are created for prefixes and/or suffixes and the numbered
-//! chapters don't have parts then a part is created for the chapters, the
-//! original parts are used for the numbered chapters otherwise.
+//!   chapters don't have parts then a part is created for the chapters, the
+//!   original parts are used for the numbered chapters otherwise.
 //! - The heading of the files are downgraded adding the level of the file
-//! (e.g. a chapter inside a part has level 1 so its 1-level heading becomes 2-level).
+//!   (e.g. a chapter inside a part has level 1 so its 1-level heading becomes 2-level).
 //! - If a heading's level becomes bigger than 6 then the text is simply a
-//! different paragraph with bold text.
+//!   different paragraph with bold text.
 //! - Setext headings (underlined ones) are changed to ATX (hashes prefix).
 //! - Headings that are not the main one are labeled with `{.unnumbered .unlisted}`
-//! to remove numbers and avoid that they appear in the table of contents unless
-//! this behaviour is disabled setting as `false` the `unlist_not_main_headings`
-//! configuration parameter.
+//!   to remove numbers and avoid that they appear in the table of contents unless
+//!   this behaviour is disabled setting as `false` the `unlist_not_main_headings`
+//!   configuration parameter.
 //! - Each Markdown file must have a main 1st level heading as the first heading
-//! of the file and that heading is used as its heading, the name of the file is
-//! ignored.
+//!   of the file and that heading is used as its heading, the name of the file is
+//!   ignored.
 
 pub mod config;
 pub mod parse;
@@ -57,11 +57,12 @@ pub fn init_logger(level: log::LevelFilter) -> env_logger::Builder {
     let mut builder = env_logger::Builder::new();
     builder.filter_level(level);
     builder.format(|formatter, record| {
+        let style = formatter.default_level_style(record.level());
         writeln!(
             formatter,
-            "{} [{}] (mdbook_pandoc): {}",
+            "{} [{style}{}{style:#}] (mdbook_pandoc): {}",
             Local::now().format("%Y-%m-%d %H:%M:%S"),
-            formatter.default_styled_level(record.level()),
+            record.level(),
             record.args()
         )
     });
@@ -207,7 +208,7 @@ fn write_pandoc_md_file(dest_path: &Path, parsed_content: &str) -> PathBuf {
 /// Write and clean the metadata header following these rules:
 /// - If the metadata is `null` or empty, nothing is modified.
 /// - If the metadata has some values, a new metadata block is added at the
-/// start of the document.
+///   start of the document.
 fn process_metadata_block(
     mut parsed_contents: String,
     metadata_block: &Option<EpubMetadata>,
