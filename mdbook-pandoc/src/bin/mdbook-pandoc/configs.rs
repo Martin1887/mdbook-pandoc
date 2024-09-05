@@ -49,7 +49,10 @@ pub(crate) fn write_in_book_config(
 ) -> Result<()> {
     let actual_dest_path = destination_file.unwrap_or("book.toml".to_string());
 
-    let mut append_file = OpenOptions::new().append(true).open(&actual_dest_path)?;
+    let mut append_file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&actual_dest_path)?;
     let mut general_table_exists = false;
     if let Ok(dest_contents) = read(&actual_dest_path) {
         let mut output_pandoc_exists = false;
