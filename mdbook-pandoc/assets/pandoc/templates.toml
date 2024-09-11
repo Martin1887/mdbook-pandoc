@@ -109,7 +109,7 @@ description = "Sound and versatile LaTeX template for academic books."
 version = "Unreleased 2019/01/21"
 docs = "https://github.com/periodicpoint/arabica/blob/master/README.md"
 dependencies = []
-latex_packages = ["lplfitch", "ccaption", "wrapfig", "picinpar"]
+latex_packages = ["lplfitch", "ccaption", "ccicons", "wrapfig", "picinpar", "xelatex"]
 license = { name = "MIT", url = "https://github.com/periodicpoint/arabica/blob/master/LICENSE.md", repository_url = "https://github.com/periodicpoint/arabica"}
 contents_file = "templates/latex/arabica.latex"
 
@@ -118,7 +118,7 @@ description = "Simple APA 6 template."
 version = "Unreleased 2013/07/04"
 docs = "(None)"
 dependencies = []
-latex_packages = []
+latex_packages = ["apa6"]
 license = { name = "UNLICENSE", url = "", repository_url = "https://bitbucket.org/zuline/md2latex/src/master/" } 
 contents_file = "templates/latex/apa6.latex"
 
@@ -217,7 +217,7 @@ description = "Rjournal."
 version = "Unreleased 2017/06/27"
 docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
 dependencies = []
-latex_packages = []
+latex_packages = ["inconsolata"]
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates" }
 contents_file = "templates/latex/rjournal.latex"
 [[resources]]
@@ -329,4 +329,4 @@ docs = "(None)"
 dependencies = []
 latex_packages = []
 license = { name = "BSD-3-Clause", url = "", repository_url = "https://github.com/jgm/pandoc-templates" }
-contents_file = "templates/latex/default20230307.latex"
+contents_file = "templates/latex/default20240910.latex"

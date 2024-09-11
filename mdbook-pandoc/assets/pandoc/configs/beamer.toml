@@ -6,7 +6,7 @@ pdf-engine = "pdflatex"
 # An issue with background images has been resolved in the default Pandoc LaTeX
 # template very recently, so if you use a background image, this template will
 # be probably needed.
-template = "latex_default20230307"
+template = "latex_default20240910"
 
 # To change the units defined for the item separators, after the first build
 # edit the `beamer_itemsep.latex` and load it as a custom header file.
