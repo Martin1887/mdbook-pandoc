@@ -24,7 +24,8 @@ use crate::config::TitleLabels;
 use preprocessor::*;
 
 /// Transform the full Markdown file following these steps:
-/// 1. Replace all the SETEXT headings by the equivalent ATX headings via regex.
+/// 1. Replace all the SETEXT headings by the equivalent ATX headings via
+///    pulldown-cmark.
 /// 2. Write the mark indicating the beginning of the MD file.
 /// 3. Iterate over lines to transform the heading into the correct level and
 ///    adding identifiers and classes.

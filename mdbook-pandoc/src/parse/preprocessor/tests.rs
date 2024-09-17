@@ -21,6 +21,7 @@ fn test_transform_heading() {
         level: H1,
         text: "Title".to_string(),
         classes: Vec::new(),
+        attrs: Vec::new(),
     };
     assert_eq!(
         transform_heading(&title_heading, 1, false, true, true, &mut section_number),
@@ -57,7 +58,8 @@ fn test_transform_heading() {
                 id: None,
                 level: H1,
                 text: "Things".to_string(),
-                classes: vec!["class1".to_string(), "class2".to_string()]
+                classes: vec!["class1".to_string(), "class2".to_string()],
+                attrs: Vec::new(),
             },
             1,
             false,
@@ -78,7 +80,8 @@ fn test_transform_heading() {
                 id: Some("myCustomId".to_string()),
                 level: H1,
                 text: "Things".to_string(),
-                classes: vec![]
+                classes: vec![],
+                attrs: Vec::new(),
             },
             1,
             false,
@@ -96,7 +99,8 @@ fn test_transform_heading() {
                 id: Some("myCustomId".to_string()),
                 level: H1,
                 text: "Things".to_string(),
-                classes: vec!["class1".to_string(), "class2".to_string()]
+                classes: vec!["class1".to_string(), "class2".to_string()],
+                attrs: Vec::new(),
             },
             1,
             false,
@@ -106,6 +110,42 @@ fn test_transform_heading() {
         ),
         "## Things {#myCustomId .class1 .class2}\n".to_string(),
         "Id or classes not well captured"
+    );
+    assert_eq!(
+        transform_heading(
+            &HeadingAttrs {
+                id: Some("myCustomId".to_string()),
+                level: H1,
+                text: "Things".to_string(),
+                classes: vec!["class1".to_string(), "class2".to_string()],
+                attrs: vec![("myattr".to_string(), None)],
+            },
+            1,
+            false,
+            false,
+            true,
+            &mut section_number
+        ),
+        "## Things {#myCustomId .class1 .class2 myattr=none}\n".to_string(),
+        "custom attribute not well captured"
+    );
+    assert_eq!(
+        transform_heading(
+            &HeadingAttrs {
+                id: Some("myCustomId".to_string()),
+                level: H1,
+                text: "Things".to_string(),
+                classes: Vec::new(),
+                attrs: vec![("myattr".to_string(), Some("myvalue".to_string()))],
+            },
+            1,
+            false,
+            false,
+            true,
+            &mut section_number
+        ),
+        "## Things {#myCustomId myattr=myvalue}\n".to_string(),
+        "custom attribute with value not well captured"
     );
 }
 

@@ -1017,7 +1017,7 @@ dependencies = [
  "log",
  "mdbook",
  "mdbook-pandoc-derive",
- "pulldown-cmark 0.9.6",
+ "pulldown-cmark 0.12.1",
  "regex",
  "serde",
  "serde_repr",
@@ -1389,17 +1389,6 @@ dependencies = [
 
 [[package]]
 name = "pulldown-cmark"
-version = "0.9.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57206b407293d2bcd3af849ce869d52068623f19e1b5ff8e8778e3309439682b"
-dependencies = [
- "bitflags 2.6.0",
- "memchr",
- "unicase",
-]
-
-[[package]]
-name = "pulldown-cmark"
 version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "76979bea66e7875e7509c4ec5300112b316af87fa7a252ca91c448b32dfe3993"
@@ -1407,6 +1396,17 @@ dependencies = [
  "bitflags 2.6.0",
  "memchr",
  "pulldown-cmark-escape",
+ "unicase",
+]
+
+[[package]]
+name = "pulldown-cmark"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "666f0f59e259aea2d72e6012290c09877a780935cc3c18b1ceded41f3890d59c"
+dependencies = [
+ "bitflags 2.6.0",
+ "memchr",
  "unicase",
 ]
 

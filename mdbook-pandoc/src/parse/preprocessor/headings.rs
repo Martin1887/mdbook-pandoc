@@ -39,7 +39,7 @@ pub(crate) fn new_heading_level(level: HeadingLevel, hierarchy_level: usize) -> 
 /// - `first_transform`: `bool` to not remove from the table of contents the first heading.
 /// - `unlist_headings`: If unlisted and unnumbered classes must be added to not first headings.
 /// - `section_number`: All the section numbers. Unnumbered headings are also counted and
-/// the section number is modified here in function of the level of the current headings.
+///   the section number is modified here in function of the level of the current headings.
 ///
 /// # Returns
 ///
@@ -56,6 +56,13 @@ pub(crate) fn transform_heading(
     // Add a dot prefix to classes
     let mut new_attributes: Vec<String> =
         heading.classes.iter().map(|c| format!(".{}", c)).collect();
+    new_attributes.append(
+        &mut heading
+            .attrs
+            .iter()
+            .map(|(a, v)| format!("{}={}", a, v.as_ref().unwrap_or(&"none".to_string())))
+            .collect::<Vec<String>>(),
+    );
     update_section_number(section_number, new_heading_level);
     // Markdown only supports 6 levels, so following levels are coded as
     // simply bold text
