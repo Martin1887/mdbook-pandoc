@@ -44,43 +44,6 @@ license = { name = "UNLICENSE", url = "", repository_url = "" }
 contents_file = "misc/rgb.tex"
 
 #############
-# Biometrical
-#############
-[[resources]]
-description = "Biometrical bibliography style."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "LaTeX Project Public License", url = "http://mirrors.ctan.org/macros/latex/base/lppl.txt", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/biometrical.bst" } 
-contents_file = "misc/biometrical.bst"
-[[resources]]
-description = "w-art.cls generated using docstrip utility."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-art.cls" } 
-contents_file = "misc/w-art.cls"
-[[resources]]
-description = "w-bimj.clo generated using docstrip utility."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-bimj.clo" } 
-contents_file = "misc/w-bimj.clo"
-[[resources]]
-description = "w-thm.sty generated using docstrip utility."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "Copyright 2002--2004 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim, all rights reserved.  Copying of this file is authorized only if either: no changes in the file or rename the modified file.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrical-journal/w-thm.sty" } 
-contents_file = "misc/w-thm.sty"
-
-
-#############
 # Biometrics
 #############
 [[resources]]
@@ -107,57 +70,6 @@ dependencies = []
 latex_packages = []
 license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrics/endrotfloat.sty" } 
 contents_file = "misc/endrotfloat.sty"
-
-
-#############
-# Biometrika
-#############
-[[resources]]
-description = "Biometrika lineno sty."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/Biomet-lineno.sty" } 
-contents_file = "misc/Biomet-lineno.sty"
-[[resources]]
-description = "Biometrika bibliography style."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "Copyright (C) 1994-98 Patrick W. Daly, for non-profit purposes", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/biometrika.bst" } 
-contents_file = "misc/biometrika.bst"
-[[resources]]
-description = "Biometrika cls."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "Copyright (2007) The Oxford University Press, it may only be used in the preparation of papers to be published by The Oxford University Press.", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biometrika/biometrika.cls" } 
-contents_file = "misc/biometrika.cls"
-
-
-#############
-# Biostatistics
-#############
-[[resources]]
-description = "Biostatistics cls."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biostatistics/bio.cls" } 
-contents_file = "misc/bio.cls"
-[[resources]]
-description = "Biostatistics bibliography style."
-version = "Unreleased 2017/06/27"
-docs = "https://github.com/sachsmc/pandoc-journal-templates/wiki" 
-dependencies = []
-latex_packages = []
-license = { name = "UNLICENSE", url = "", repository_url = "https://github.com/sachsmc/pandoc-journal-templates/blob/master/biostatistics/biorefs.bst" } 
-contents_file = "misc/biorefs.bst"
-
 
 #############
 # ims

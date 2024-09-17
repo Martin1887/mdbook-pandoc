@@ -1,6 +1,6 @@
 [output.pandoc."stats_in_med.pdf"]
 format = "pdf"
-latex-engine = "pdflatex"
+pdf-engine = "latexmk"
 template = "latex_stats_in_med"
 added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
 no-highlight = true
@@ -11,4 +11,16 @@ natbib = true
 assets = [
     "bst_statmed",
     "cls_simauth"
+]
+
+# This metadata is better in a YAML metadata block or in a YAML file.
+metadata = [
+    "year:year",
+    "authabbr:authabbr",
+    "title:title",
+    # fields: name, affilnum, address.num, address.address
+    "author:author",
+    "corraddr:corraddr",
+    "abstract:abstract",
+    "keywords:keywords"
 ]

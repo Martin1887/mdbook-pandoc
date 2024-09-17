@@ -1,6 +1,6 @@
 [output.pandoc."amstat.pdf"]
 format = "pdf"
-latex-engine = "pdflatex"
+pdf-engine = "pdflatex"
 template = "latex_amstat"
 added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
 no-highlight = true
@@ -8,3 +8,15 @@ number-sections = false
 toc = false
 citeproc = true
 csl = "csl_apa_no_doi_no_issue"
+
+# This metadata is better in a YAML metadata block or in a YAML file.
+metadata = [
+    "title=<title>",
+    # Fields: name, affiliation, email.
+    "author=<author>",
+    "date=<date>",
+    "abstract=<abstract>",
+    "keywords=<keywords>",
+    "authorfootnote=<authorfootnote>",
+]
+

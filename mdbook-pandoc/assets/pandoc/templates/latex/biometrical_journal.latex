@@ -9,8 +9,6 @@
 $if(highlighting-macros)$
 $highlighting-macros$
 $endif$
-% This is necessary to have links
-\usepackage{hyperref}
 
 \usepackage[]{graphicx}
 \usepackage{tikz}

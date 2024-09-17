@@ -9,4 +9,6 @@ variable = [
     "papersize:a4paper",
     "clasoption:openright"
 ]
+# Use citeproc and a bib file for references
 # bibliography = "<path>.bib"
+# citeproc = true

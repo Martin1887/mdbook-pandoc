@@ -51,20 +51,8 @@ description = "AMSTAT journal."
 contents_file = "configs/amstat.toml"
 
 [[configs]]
-description = "Biometrical journal."
-contents_file = "configs/biometrical_journal.toml"
-
-[[configs]]
 description = "Biometrics journal."
 contents_file = "configs/biometrics.toml"
-
-[[configs]]
-description = "Biometrika journal."
-contents_file = "configs/biometrika.toml"
-
-[[configs]]
-description = "Biostatistics journal."
-contents_file = "configs/biostatistics.toml"
 
 [[configs]]
 description = "IMS journal."

@@ -5,14 +5,13 @@ headings_auto_identifiers = false
 
 [output.pandoc."aaai24.pdf"]
 format = "pdf"
-latex-engine = "pdflatex"
+pdf-engine = "latexmk"
 template = "latex_aaai24"
 no-highlight = true
 number-sections = false
 removed-extensions = ["auto_identifiers"]
 toc = false
 natbib = true
-citeproc = true
 bibliography = []
 
 # This metadata is better in a YAML metadata block or in a YAML file.
@@ -24,7 +23,7 @@ metadata = [
     # George Ferguson\textsuperscript{\rm 4},
     "author=<author>",
     "affiliations=<affilitiations>",
-    "abstract=<abstract>"
+    "abstract=<abstract>",
 ]
 
 variable = [
@@ -34,11 +33,7 @@ variable = [
     "algorithm=true",
     "listings=false",
     # 0 for no sections numbers, 1 for sections and 2 for sections and subsections
-    "sectionscounter=0"
+    "sectionscounter=0",
 ]
 
-assets = [
-    "bst_aaai24",
-    "sty_aaai24"
-]
-
+assets = ["bst_aaai24", "sty_aaai24"]

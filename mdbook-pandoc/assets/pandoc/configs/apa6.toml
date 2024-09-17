@@ -3,6 +3,8 @@ format = "pdf"
 added_extensions = ["tex_math_double_backslash"]
 template = "latex_apa6"
 
+citeproc = true
+
 bibliography = ["bibliography.bib"]
 
 # These variables and metadata are better inside a YAML metadata block or file

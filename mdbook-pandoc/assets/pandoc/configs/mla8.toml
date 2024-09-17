@@ -1,6 +1,6 @@
 [output.pandoc."mla8.pdf"]
 format = "pdf"
-latex-engine = "pdflatex"
+pdf-engine = "pdflatex"
 template = "latex_mla8"
 csl = "csl_mla8"
 number-sections = false

@@ -1,6 +1,6 @@
 [output.pandoc."rjournal.pdf"]
 format = "pdf"
-latex-engine = "pdflatex"
+pdf-engine = "latexmk"
 template = "latex_rjournal"
 added-extensions = ["simple_tables", "table_captions", "yaml_metadata_block"]
 no-highlight = true

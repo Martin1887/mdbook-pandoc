@@ -22,6 +22,9 @@ metadata = [
     "linkReferences:true"
 ]
 
+citeproc = true
+bibliography = ["bibliography.bib"]
+
 [output.pandoc."simple_book.epub"]
 format = "epub"
 template = "epub_simple_book"
@@ -47,6 +50,9 @@ metadata = [
     "linkReferences:true"
 ]
 
+citeproc = true
+bibliography = ["bibliography.bib"]
+
 [output.pandoc."simple_book.html"]
 format = "html"
 template = "html_simple_book"
@@ -71,6 +77,9 @@ metadata = [
     "linkReferences:true"
 ]
 
+citeproc = true
+bibliography = ["bibliography.bib"]
+
 [output.pandoc."simple_book.docx"]
 format = "docx"
 reference-doc = "docx_simple_book"
@@ -93,3 +102,6 @@ metadata = [
     "mainfont:DejaVu Sans",
     "linkReferences:true"
 ]
+
+citeproc = true
+bibliography = ["bibliography.bib"]
