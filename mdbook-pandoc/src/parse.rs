@@ -30,11 +30,10 @@ use preprocessor::*;
 /// 3. Iterate over lines to transform the heading into the correct level and
 ///    adding identifiers and classes.
 /// 4. Write the mark indicating the end of the MD file.
-/// 5. Replace the mdBook math delimiters by the Pandoc ones.
-/// 6. Replace the mdBook custom code block annotations by nothing
-///    (not supported by Pandoc) .
-/// 7. Translate relative paths to start in the `src` folder.
-/// 8. Fix the internal links using the unique identifiers and removing the
+/// 5. Replace the mdBook custom code block annotations by nothing
+///    (not supported by Pandoc).
+/// 6. Translate relative paths to start in the `src` folder.
+/// 7. Fix the internal links using the unique identifiers and removing the
 ///    wrong ones with a warning.
 fn transform_md(
     md: &str,
@@ -84,7 +83,6 @@ fn transform_md(
 
     let mut formatted = format!("{}{}{}", begin_mark, headings_transformed, end_mark);
 
-    formatted = replace_math_delimiters(&formatted);
     formatted = replace_custom_mdbook_code_block_annotations(&formatted);
     formatted = translate_relative_paths(&formatted, source_path, book_paths);
     formatted = fix_internal_links(&formatted);

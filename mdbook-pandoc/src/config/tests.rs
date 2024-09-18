@@ -39,7 +39,7 @@ fn test_format_extensions() {
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
-            "--from=markdown+one+plus",
+            "--from=markdown+one+plus+tex_math_double_backslash",
             "--number-sections",
             "--toc"
         ]
@@ -61,7 +61,7 @@ fn test_format_extensions() {
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
-            "--from=markdown+one+plus-minus",
+            "--from=markdown+one+plus+tex_math_double_backslash-minus",
             "--number-sections",
             "--toc"
         ]
@@ -132,7 +132,7 @@ fn test_repeated_args() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--metadata=title:Great",
@@ -161,7 +161,7 @@ fn test_template() {
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--template=eisvogel.latex"
@@ -188,7 +188,7 @@ fn test_dpi() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--dpi=300"
@@ -215,7 +215,7 @@ fn test_highlight_style() {
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--highlight-style=tango"
@@ -238,7 +238,7 @@ fn test_highlight_style() {
             "--eol=lf",
             "--to=pdf",
             "--output=book.pdf",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--highlight-style=vulcan"
@@ -274,7 +274,7 @@ fn test_toc_depth() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--toc-depth=4"
@@ -301,7 +301,7 @@ fn test_reference_location() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--reference-location=block"
@@ -328,7 +328,7 @@ fn test_top_level_division() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--top-level-division=section"
@@ -355,7 +355,7 @@ fn test_slide_level() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--slide-level=2"
@@ -382,7 +382,7 @@ fn test_email_obfuscation() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--email-obfuscation=javascript"
@@ -409,7 +409,7 @@ fn test_epub_chapter_level() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--epub-chapter-level=4"
@@ -436,7 +436,7 @@ fn test_epub_subdirectory() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--epub-subdirectory=other"
@@ -463,7 +463,7 @@ fn test_ipynb_output() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--ipynb-output=all"
@@ -490,7 +490,7 @@ fn test_pdf_engine() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--pdf-engine=tectonic"
@@ -517,7 +517,7 @@ fn test_tex_url() {
             "--eol=lf",
             "--to=docx",
             "--output=book.docx",
-            "--from=markdown",
+            "--from=markdown+tex_math_double_backslash",
             "--number-sections",
             "--toc",
             "--katex"

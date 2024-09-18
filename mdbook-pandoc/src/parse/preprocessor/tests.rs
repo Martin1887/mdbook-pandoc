@@ -236,34 +236,3 @@ fn test_heading_identifier_sanitize() {
         "title-with-spaces-21-numbers-things-and-dashes-yes"
     );
 }
-
-#[test]
-fn test_replace_math_delimiters() {
-    assert_eq!("Without math", replace_math_delimiters("Without math"));
-    // inline math
-    assert_eq!(
-        r"Inline math $x + 1$",
-        replace_math_delimiters(r"Inline math \\( x + 1 \\)")
-    );
-    assert_eq!(
-        r"Inline math $x + 1$",
-        replace_math_delimiters(r"Inline math \\(   x + 1   \\)")
-    );
-    assert_eq!(
-        r"Inline math $x + 1$",
-        replace_math_delimiters(r"Inline math \\(x + 1\\)")
-    );
-    // display math
-    assert_eq!(
-        r"Inline math $$x + 1$$",
-        replace_math_delimiters(r"Inline math \\[ x + 1 \\]")
-    );
-    assert_eq!(
-        r"Inline math $$x + 1$$",
-        replace_math_delimiters(r"Inline math \\[   x + 1   \\]")
-    );
-    assert_eq!(
-        r"Inline math $$x + 1$$",
-        replace_math_delimiters(r"Inline math \\[x + 1\\]")
-    );
-}

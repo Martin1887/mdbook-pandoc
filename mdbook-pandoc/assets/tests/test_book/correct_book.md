@@ -48,8 +48,12 @@ print('Hello world')
 
 ### Things {#h1__1__1__things .unnumbered .unlisted}
 
-And here a LaTeX math formula: $\int x dx = \frac{x^2}{2} + C$ and also a block LaTeX math formula:
-$$\mu = \frac{1}{N} \sum_{i=0} x_i$$
+And here a LaTeX math formula with mdBook-style delimiters:
+\\(\int x dx = \frac{x^2}{2} + C\\) and also a block LaTeX math formula:
+\\[     \mu = \frac{1}{N} \sum_{i=0} x_i     \\]
+
+Markdown common math delimiters (`$inline math$` and `$$display math$$`) also
+work: $\int x dx = \frac{x^2}{2} + C\\$, $$\int x dx = \frac{x^2}{2} + C\\$$.
 
 And also an image with a bit of HTML:
 <div class="image_env">HTML <b>content</b></div>
@@ -79,12 +83,12 @@ fn no_playable_fun() {
     println!("Hello");
 }
 ```
+
 ```rust
 fn editable_fun() {
     println!("Edit this string if you want");
 }
 ```
-
 
 ```python
 def my_python_fun(name: str) -> str:
@@ -93,13 +97,13 @@ def my_python_fun(name: str) -> str:
 my_python_fun("world")
 ```
 
-
 ```
 def my_pseudocode_fun(str name):
     print("Hello, {}".format(name))
 ```
 
 Now a bit of a YAML file is included:
+
 ```yaml
 ibooks:
   version: 4.0
