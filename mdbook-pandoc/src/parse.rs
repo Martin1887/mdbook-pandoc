@@ -57,38 +57,74 @@ fn transform_md(
 
     // It is important to use the transformed String to get the correct ranges
     let headings: Vec<(Range<usize>, HeadingAttrs)> = get_headings(&headings_transformed);
-    let mut first_transform = true;
-    // ranges are changed after replacing, so after the first replace they must be updated
-    let mut replace_range_offset = 0_i64;
-    for (range, heading_attrs) in headings {
-        let transformed_line = transform_heading(
-            &heading_attrs,
-            hierarchy_level,
-            first_transform,
-            unlist_headings,
-            headings_auto_identifiers,
-            section_number,
-        );
-        let fixed_range = Range {
-            start: (range.start as i64 + replace_range_offset) as usize,
-            end: (range.end as i64 + replace_range_offset) as usize,
-        };
-        headings_transformed.replace_range(fixed_range, &transformed_line);
-
-        replace_range_offset += transformed_line.len() as i64;
-        replace_range_offset -= range.len() as i64;
-
-        first_transform = false;
-    }
+    transform_ranges(
+        &mut headings_transformed,
+        &headings,
+        &mut |heading_attrs: &HeadingAttrs,
+              _text: &str,
+              _range: &Range<usize>,
+              first_transform: bool| {
+            transform_heading(
+                heading_attrs,
+                hierarchy_level,
+                first_transform,
+                unlist_headings,
+                headings_auto_identifiers,
+                section_number,
+            )
+        },
+    );
 
     let mut formatted = format!("{}{}{}", begin_mark, headings_transformed, end_mark);
 
-    formatted = replace_custom_mdbook_code_block_annotations(&formatted);
+    let fenced_codeblocks = get_fenced_code_blocks_with_custom_attrs(&formatted);
+    transform_ranges(
+        &mut formatted,
+        &fenced_codeblocks,
+        &mut |code: &FencedCodeblock, text: &str, _range: &Range<usize>, _first_transform: bool| {
+            // The range contains the full code block, so only custom attributes
+            // are removed.
+            text.replace(&format!(",{}", &code.custom_attrs), "")
+        },
+    );
     formatted = translate_relative_paths(&formatted, source_path, book_paths);
     formatted = fix_internal_links(&formatted);
     check_ref_links(&formatted);
 
     formatted
+}
+
+/// Transform elements in body by ranges using transform_fn.
+fn transform_ranges<S>(
+    body: &mut String,
+    elements: &[(Range<usize>, S)],
+    #[allow(clippy::type_complexity)] transform_fn: &mut dyn FnMut(
+        &S,
+        &str,
+        &Range<usize>,
+        bool,
+    ) -> String,
+) {
+    let mut first_transform = true;
+    let mut replace_range_offset = 0_i64;
+    for (range, el) in elements {
+        let fixed_range = Range {
+            start: (range.start as i64 + replace_range_offset) as usize,
+            end: (range.end as i64 + replace_range_offset) as usize,
+        };
+        let transformed = transform_fn(
+            el,
+            &body[fixed_range.start..fixed_range.end],
+            range,
+            first_transform,
+        );
+        body.replace_range(fixed_range, &transformed);
+
+        replace_range_offset += transformed.len() as i64;
+        replace_range_offset -= range.len() as i64;
+
+        first_transform = false;
+    }
 }
 
 /// Concatenate recursively a list of `BookItem` (with their children) and

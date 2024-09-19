@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use pulldown_cmark::{Event::*, HeadingLevel, Options, Parser, Tag, TagEnd};
+use pulldown_cmark::{CodeBlockKind, Event::*, HeadingLevel, Options, Parser, Tag, TagEnd};
 
 /// Store the needed heading attributes to modify headings.
 #[derive(Debug)]
@@ -23,8 +23,8 @@ pub(crate) fn get_headings(md: &str) -> Vec<(Range<usize>, HeadingAttrs)> {
 
     for (event, range) in parser {
         match event {
-            Start(tag) => start_tag(tag, range, &mut headings, &mut parsing_heading),
-            End(tag) => end_tag(tag, range, &mut headings, &mut parsing_heading),
+            Start(tag) => start_heading_tag(tag, range, &mut headings, &mut parsing_heading),
+            End(tag) => end_heading_tag(tag, range, &mut headings, &mut parsing_heading),
             Text(text) => {
                 if parsing_heading {
                     let last = headings.last_mut().unwrap();
@@ -43,7 +43,7 @@ pub(crate) fn get_headings(md: &str) -> Vec<(Range<usize>, HeadingAttrs)> {
     headings
 }
 
-fn start_tag(
+fn start_heading_tag(
     tag: Tag,
     range: Range<usize>,
     headings: &mut Vec<(Range<usize>, HeadingAttrs)>,
@@ -71,7 +71,7 @@ fn start_tag(
     }
 }
 
-fn end_tag(
+fn end_heading_tag(
     tag: TagEnd,
     range: Range<usize>,
     headings: &mut [(Range<usize>, HeadingAttrs)],
@@ -88,4 +88,46 @@ fn end_tag(
         };
         *parsing_heading = false;
     }
+}
+
+/// Store the needed heading attributes to modify headings.
+#[derive(Debug)]
+pub(crate) struct FencedCodeblock {
+    /// The attrs that must be removed.
+    /// They are not an `Option` because for no custom attrs codeblocks objects
+    /// of this struct are not created.
+    pub(crate) custom_attrs: String,
+}
+
+/// Remove custom fenced code blocks attributes, since they are not supported
+/// by Pandoc.
+pub(crate) fn get_fenced_code_blocks_with_custom_attrs(
+    md: &str,
+) -> Vec<(Range<usize>, FencedCodeblock)> {
+    let mut fenced_codeblocks = Vec::new();
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_HEADING_ATTRIBUTES);
+    options.insert(Options::ENABLE_YAML_STYLE_METADATA_BLOCKS);
+    let parser = Parser::new_ext(md, options).into_offset_iter();
+
+    for (event, range) in parser {
+        if let Start(Tag::CodeBlock(CodeBlockKind::Fenced(attrs))) = event {
+            // only handle normal attrs, not the enclosed by curly
+            // braces used by Pandoc
+            if !attrs.is_empty() && !attrs.starts_with("{") && attrs.contains(",") {
+                let comma = attrs.find(',').unwrap();
+                fenced_codeblocks.push((
+                    Range {
+                        start: range.start,
+                        end: range.end,
+                    },
+                    FencedCodeblock {
+                        custom_attrs: attrs[comma + 1..attrs.len()].to_string(),
+                    },
+                ));
+            }
+        }
+    }
+
+    fenced_codeblocks
 }
