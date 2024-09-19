@@ -66,6 +66,50 @@ fn test_format_extensions() {
             "--toc"
         ]
     );
+    let no_double_backslash_cfg = r#"
+    [general]
+
+    [pdf]
+    format = "pdf"
+    removed-extensions = ["tex_math_double_backslash"]
+    "#;
+    let no_double_backslash: MdBookPandocConfig = toml::from_str(no_double_backslash_cfg).unwrap();
+    let no_double_backslash_command = no_double_backslash.commands.get("pdf").unwrap();
+    assert_eq!(
+        no_double_backslash_command.args(&PathBuf::new(), "pdf", &no_double_backslash.general),
+        vec![
+            "--embed-resources",
+            "--standalone",
+            "--eol=lf",
+            "--to=pdf",
+            "--output=book.pdf",
+            "--from=markdown-tex_math_double_backslash",
+            "--number-sections",
+            "--toc"
+        ]
+    );
+    let from_typst_cfg = r#"
+    [general]
+    from_format = "typst"
+
+    [pdf]
+    format = "pdf"
+    "#;
+    let from_typst: MdBookPandocConfig = toml::from_str(from_typst_cfg).unwrap();
+    let from_typst_command = from_typst.commands.get("pdf").unwrap();
+    assert_eq!(
+        from_typst_command.args(&PathBuf::new(), "pdf", &from_typst.general),
+        vec![
+            "--embed-resources",
+            "--standalone",
+            "--eol=lf",
+            "--to=pdf",
+            "--output=book.pdf",
+            "--from=typst",
+            "--number-sections",
+            "--toc"
+        ]
+    );
 }
 
 #[test]

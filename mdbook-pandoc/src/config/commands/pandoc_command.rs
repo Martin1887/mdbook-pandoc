@@ -57,17 +57,20 @@ impl PandocCommand {
 
         let mut from_format = format!("--from={}", general_cfg.from_format);
         let mut added_exts = actual_or_default!(combined_cfg, added_extensions);
+        let removed_exts = actual_or_default!(combined_cfg, removed_extensions);
         // For markdown format the double backslash math extension is added
-        // to automatically handle the format of mdBook for math.
+        // to automatically handle the format of mdBook for math (unless it is
+        // explicitly removed).
+        let math_double_backslash = "tex_math_double_backslash".to_string();
         if general_cfg.from_format == "markdown"
-            && !added_exts.contains(&"tex_math_double_backslash".to_string())
+            && !added_exts.contains(&math_double_backslash)
+            && !removed_exts.contains(&math_double_backslash)
         {
-            added_exts.push("tex_math_double_backslash".to_string());
+            added_exts.push(math_double_backslash);
         }
         if !added_exts.is_empty() {
             from_format.push_str(&format!("+{}", added_exts.join("+")));
         }
-        let removed_exts = actual_or_default!(combined_cfg, removed_extensions);
         if !removed_exts.is_empty() {
             from_format.push_str(&format!("-{}", removed_exts.join("-")));
         }
