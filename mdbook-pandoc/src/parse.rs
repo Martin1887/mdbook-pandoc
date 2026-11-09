@@ -6,11 +6,10 @@ mod preprocessor;
 #[cfg(test)]
 mod tests;
 
-use mdbook::{
-    book::{parse_summary, Summary, SummaryItem},
-    renderer::RenderContext,
-    BookItem,
-};
+use mdbook_renderer::book::BookItem;
+use mdbook_renderer::RenderContext;
+use mdbook_summary::{parse_summary, Summary, SummaryItem};
+
 use std::{
     collections::HashSet,
     env::set_current_dir,
@@ -215,6 +214,7 @@ fn map_chapters_parts_names(chapters: &[SummaryItem]) -> Vec<String> {
             SummaryItem::Link(l) => l.name.clone(),
             SummaryItem::PartTitle(t) => t.to_string(),
             SummaryItem::Separator => "".to_string(),
+            _ => "".to_string(),
         })
         .collect()
 }

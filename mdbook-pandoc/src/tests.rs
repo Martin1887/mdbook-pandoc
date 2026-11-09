@@ -6,7 +6,7 @@ use std::{
 };
 
 use log::warn;
-use mdbook::MDBook;
+use mdbook_driver::MDBook;
 
 use crate::{config::MdBookPandocConfig, init_logger, process_metadata_block, PandocRenderer};
 

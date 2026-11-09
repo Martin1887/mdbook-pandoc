@@ -1,6 +1,6 @@
 use super::super::*;
 use super::*;
-use mdbook::book::Chapter;
+use mdbook_renderer::book::Chapter;
 use pulldown_cmark::HeadingLevel::*;
 
 #[test]

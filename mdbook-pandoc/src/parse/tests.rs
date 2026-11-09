@@ -1,7 +1,8 @@
 use std::{collections::HashMap, sync::Once};
 
 use super::*;
-use mdbook::book::{Chapter, Link, Summary};
+use mdbook_renderer::book::Chapter;
+use mdbook_summary::Summary;
 
 /// Unique `Once` to set the current test dir by relative path only once in all
 /// tests.
@@ -35,21 +36,60 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
     ));
     let dummy_part = BookItem::PartTitle(String::from("Part 1"));
 
+    let without_parts = r#"
+# Title
+
+- [Link]()
+"#;
+
+    let with_parts = r#"
+# Title
+
+- [Link]()
+
+# Part 1
+"#;
+
+    let with_prefix = r#"
+# Title
+
+[PrefixLink]()
+
+- [Link]()
+"#;
+
+    let with_suffix = r#"
+# Title
+
+- [Link]()
+
+[Suffix Link]()
+"#;
+
+    let with_parts_and_suffix = r#"
+# Title
+
+- [Link]()
+
+# Part 1
+
+[Suffix Link]()
+"#;
+
+    let with_prefix_and_suffix = r#"
+# Title
+
+[PrefixLink]()
+
+- [Link]()
+
+[Suffix Link]()
+"#;
     map.insert(
         "without_parts",
         (
             vec![dummy_chapter.clone()],
-            Summary {
-                title: Some(String::from("Title")),
-                prefix_chapters: Vec::new(),
-                numbered_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-                suffix_chapters: Vec::new(),
-            },
+            parse_summary(without_parts).unwrap(),
         ),
     );
 
@@ -57,20 +97,7 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
         "with_parts",
         (
             vec![dummy_part.clone(), dummy_chapter.clone()],
-            Summary {
-                title: Some(String::from("Title")),
-                prefix_chapters: Vec::new(),
-                numbered_chapters: vec![
-                    SummaryItem::Link(Link {
-                        name: String::from("Link"),
-                        location: None,
-                        number: None,
-                        nested_items: Vec::new(),
-                    }),
-                    SummaryItem::PartTitle(String::from("Part 1")),
-                ],
-                suffix_chapters: Vec::new(),
-            },
+            parse_summary(with_parts).unwrap(),
         ),
     );
 
@@ -78,22 +105,7 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
         "with_prefix",
         (
             vec![dummy_prefix.clone(), dummy_chapter.clone()],
-            Summary {
-                title: Some(String::from("Title")),
-                prefix_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Prefix Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-                numbered_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-                suffix_chapters: Vec::new(),
-            },
+            parse_summary(with_prefix).unwrap(),
         ),
     );
 
@@ -101,22 +113,7 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
         "with_suffix",
         (
             vec![dummy_chapter.clone(), dummy_suffix.clone()],
-            Summary {
-                title: Some(String::from("Title")),
-                prefix_chapters: Vec::new(),
-                numbered_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-                suffix_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Suffix Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-            },
+            parse_summary(with_suffix).unwrap(),
         ),
     );
 
@@ -124,25 +121,7 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
         "with_parts_and_suffix",
         (
             vec![dummy_part, dummy_chapter.clone(), dummy_suffix.clone()],
-            Summary {
-                title: Some(String::from("Title")),
-                prefix_chapters: Vec::new(),
-                numbered_chapters: vec![
-                    SummaryItem::Link(Link {
-                        name: String::from("Link"),
-                        location: None,
-                        number: None,
-                        nested_items: Vec::new(),
-                    }),
-                    SummaryItem::PartTitle(String::from("Part 1")),
-                ],
-                suffix_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Suffix Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-            },
+            parse_summary(with_parts_and_suffix).unwrap(),
         ),
     );
 
@@ -150,27 +129,7 @@ fn get_test_data() -> HashMap<&'static str, (Vec<BookItem>, Summary)> {
         "with_prefix_and_suffix",
         (
             vec![dummy_prefix, dummy_chapter, dummy_suffix],
-            Summary {
-                title: Some(String::from("Title")),
-                prefix_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Prefix Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-                numbered_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-                suffix_chapters: vec![SummaryItem::Link(Link {
-                    name: String::from("Suffix Link"),
-                    location: None,
-                    number: None,
-                    nested_items: Vec::new(),
-                })],
-            },
+            parse_summary(with_prefix_and_suffix).unwrap(),
         ),
     );
 

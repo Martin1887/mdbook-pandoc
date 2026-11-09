@@ -46,7 +46,7 @@ use config::{
     commands::PandocCommand, epub_metadata::EpubMetadata, GeneralConfig, MdBookPandocConfig,
 };
 use log::warn;
-use mdbook::{renderer::RenderContext, Renderer};
+use mdbook_renderer::{RenderContext, Renderer};
 use parse::parse_book;
 
 const COMMAND_ERROR_MSG: &str = r#"Error launching a Pandoc command, check that \
@@ -80,10 +80,10 @@ impl Renderer for PandocRenderer {
     /// - reads configuration
     /// - parse book
     /// - convert book in the specified formats using pandoc.
-    fn render(&self, ctx: &RenderContext) -> mdbook::errors::Result<()> {
+    fn render(&self, ctx: &RenderContext) -> mdbook_renderer::errors::Result<()> {
         let cfg = ctx
             .config
-            .get_deserialized_opt::<MdBookPandocConfig, &str>("output.pandoc")
+            .get::<MdBookPandocConfig>("output.pandoc")
             .expect("Error reading the configuration file")
             .unwrap();
         let general_cfg = cfg.general;
@@ -127,7 +127,7 @@ fn pandoc_commands(
     parsed_md_path: &Path,
     general_cfg: &GeneralConfig,
     commands: &HashMap<String, PandocCommand>,
-) -> mdbook::errors::Result<()> {
+) -> mdbook_renderer::errors::Result<()> {
     // the path must be the book `src` folder because paths are relative to
     // that directory
     set_current_dir(source_dir)?;

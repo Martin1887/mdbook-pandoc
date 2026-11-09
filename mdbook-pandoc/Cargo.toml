@@ -26,10 +26,12 @@ members = ["mdbook-pandoc-derive", "mdbook-pandoc-derive-core"]
 
 [dev-dependencies]
 trybuild = "1.0"
+mdbook-driver = "*"
 
 [dependencies]
 mdbook-pandoc-derive = { path = "mdbook-pandoc-derive" }
-mdbook = "*"
+mdbook-renderer = "*"
+mdbook-summary = "*"
 regex = "1.10"
 lazy_static = "1.5"
 serde = { version = "1.0", features = ["derive"] }
@@ -45,4 +47,4 @@ strum = { version = "0.26", features = ["derive"] }
 strum_macros = "0.26"
 clap = { version = "4.5", features = ["derive"] }
 chrono = "0.4"
-pulldown-cmark = { version = "0.12", default-features = false }
+pulldown-cmark = { version = "0.13", default-features = false }

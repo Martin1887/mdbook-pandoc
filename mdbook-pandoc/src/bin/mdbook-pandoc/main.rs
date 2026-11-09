@@ -7,9 +7,9 @@ pub(crate) use assets::*;
 pub(crate) use configs::*;
 
 use clap::{Parser, Subcommand};
-use mdbook::{renderer::RenderContext, Renderer};
 use mdbook_pandoc::config::TomlLoad;
 use mdbook_pandoc::PandocRenderer;
+use mdbook_renderer::{RenderContext, Renderer};
 use strum::IntoEnumIterator;
 
 use std::fs::read;
